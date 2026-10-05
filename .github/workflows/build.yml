@@ -1,4 +1,4 @@
-name: Build Gish (Android & PC)
+name: Build Gish (Android & Native PC)
 
 on:
   push:
@@ -12,8 +12,11 @@ permissions:
   contents: write
 
 jobs:
-  build:
-    name: Build Game Packages
+  # ==========================================
+  # 1. ANDROID BUILD (Java / Android Gradle)
+  # ==========================================
+  build-android:
+    name: Build Android APK
     runs-on: ubuntu-latest
 
     steps:
@@ -33,35 +36,84 @@ jobs:
       - name: Grant Execute Permission for Gradlew
         run: chmod +x gradlew
 
-      - name: Build Android APK
+      - name: Build Android Debug APK
         run: ./gradlew :android:assembleDebug --stacktrace
 
-      - name: Build Desktop PC Distribution
-        run: ./gradlew :desktop:distZip :desktop:jar --stacktrace
-
-      - name: Upload Android APK Artifact
+      - name: Upload Android APK
         uses: actions/upload-artifact@v4
         with:
           name: Gish-Android-Debug-APK
           path: android/build/outputs/apk/debug/*.apk
           if-no-files-found: error
 
-      - name: Upload Desktop PC Artifact
+  # ==========================================
+  # 2. NATIVE PC BUILD (C++ / SDL2 / 60 FPS)
+  # ==========================================
+  build-pc-native:
+    name: Build Native Windows PC (60 FPS)
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up MSYS2 with MinGW64
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-SDL2
+
+      - name: Compile Native Gish.exe
+        shell: msys2 {0}
+        run: |
+          cd native-pc
+          g++ -O3 -std=c++17 -Isrc -static-libgcc -static-libstdc++ \
+            src/main.cpp src/renderer.cpp src/physics.cpp src/tilemap.cpp src/audio.cpp \
+            -o Gish.exe -lmingw32 -lSDL2main -lSDL2 -mwindows
+          cp /mingw64/bin/SDL2.dll .
+          cp /mingw64/bin/libwinpthread-1.dll .
+
+      - name: Package Native PC Release
+        shell: pwsh
+        run: |
+          cd native-pc
+          Compress-Archive -Path Gish.exe, SDL2.dll, libwinpthread-1.dll, resources -DestinationPath Gish-Native-PC-x64.zip
+
+      - name: Upload Native PC Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Gish-Desktop-PC-Build
-          path: |
-            desktop/build/distributions/*.zip
-            desktop/build/libs/*.jar
-          if-no-files-found: warn
+          name: Gish-Native-PC-x64
+          path: native-pc/Gish-Native-PC-x64.zip
+          if-no-files-found: error
+
+  # ==========================================
+  # 3. GITHUB RELEASES (On version tags)
+  # ==========================================
+  release:
+    name: Publish GitHub Release
+    needs: [build-android, build-pc-native]
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Android Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Gish-Android-Debug-APK
+          path: release-assets/
+
+      - name: Download PC Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Gish-Native-PC-x64
+          path: release-assets/
 
       - name: Create GitHub Release
-        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            android/build/outputs/apk/debug/*.apk
-            desktop/build/distributions/*.zip
-            desktop/build/libs/*.jar
+          files: release-assets/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
