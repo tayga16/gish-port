@@ -30,9 +30,6 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Grant Execute Permission for Gradlew
         run: chmod +x gradlew
 
@@ -75,6 +72,7 @@ jobs:
             -o Gish.exe -lmingw32 -lSDL2main -lSDL2 -mwindows
           cp /mingw64/bin/SDL2.dll .
           cp /mingw64/bin/libwinpthread-1.dll .
+          cp -r ../core/src/main/resources ./resources
 
       - name: Package Native PC Release
         shell: pwsh
