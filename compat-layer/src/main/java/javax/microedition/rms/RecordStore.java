@@ -98,6 +98,61 @@ public class RecordStore {
         }
     }
 
+    public synchronized RecordEnumeration enumerateRecords(
+            final RecordFilter filter,
+            final RecordComparator comparator,
+            final boolean keepUpdated) {
+        final List<Integer> ids = new ArrayList<Integer>();
+        for (int i = 0; i < records.size(); i++) {
+            byte[] data = records.get(i);
+            if (data != null) {
+                if (filter == null || filter.matches(data)) {
+                    ids.add(i + 1);
+                }
+            }
+        }
+
+        if (comparator != null) {
+            Collections.sort(ids, new Comparator<Integer>() {
+                public int compare(Integer a, Integer b) {
+                    byte[] r1 = records.get(a - 1);
+                    byte[] r2 = records.get(b - 1);
+                    return comparator.compare(r1, r2);
+                }
+            });
+        }
+
+        return new RecordEnumeration() {
+            private int cursor = 0;
+
+            public int numRecords() {
+                return ids.size();
+            }
+
+            public boolean hasNextElement() {
+                return cursor < ids.size();
+            }
+
+            public int nextRecordId() throws RecordStoreException {
+                if (!hasNextElement()) throw new RecordStoreException("No more records");
+                return ids.get(cursor++);
+            }
+
+            public byte[] nextRecord() throws RecordStoreException {
+                int id = nextRecordId();
+                return getRecord(id);
+            }
+
+            public void reset() {
+                cursor = 0;
+            }
+
+            public void destroy() {
+                ids.clear();
+            }
+        };
+    }
+
     private static File getSaveDir() {
         if (MIDlet.filesDir != null) {
             File dir = new File(MIDlet.filesDir, "rms");
