@@ -1,264 +1,221 @@
 package com.hardwire.blob;
 
-/*
- * Decompiled with CFR 0.152.
- */
 import java.util.Vector;
 
-/*
- * Duplicate member names - consider using --renamedupmembers true
- */
-final class ax
-extends h {
-    private int b;
-    private boolean a = false;
-    private boolean b = false;
+final class ax extends h {
+   private int b;
+   private boolean a = false;
+   private boolean b = false;
 
-    protected ax(ag object, int n2) {
-        super((ag)object);
-        this.b = n2;
-        switch (n2) {
-            case 0: {
-                object = this;
-                x x2 = ((x)this).a.b();
-                object = this;
-                ((h)this).a = x2;
-                return;
-            }
-            case 1: {
-                object = this;
-                x x3 = ((x)this).a.b();
-                object = this;
-                ((h)this).a = x3;
-                return;
-            }
-            case 2: {
-                this.b();
-                return;
-            }
-            case 3: {
-                this.b();
-                return;
-            }
-        }
-        throw new IllegalStateException();
-    }
+   protected ax(ag var1, int var2) {
+      super(var1);
+      this.b = var2;
+      switch (var2) {
+         case 0:
+            x var4 = super.a.b();
+            super.a = var4;
+            return;
+         case 1:
+            x var3 = super.a.b();
+            super.a = var3;
+            return;
+         case 2:
+            this.b();
+            return;
+         case 3:
+            this.b();
+            return;
+         default:
+            throw new IllegalStateException();
+      }
+   }
 
-    protected final void a() {
-        switch (this.b) {
-            case 0: {
-                j.a().a(0);
-                ax ax2 = this;
-                String[] stringArray = ((h)this).a;
-                if (((h)this).a == null || stringArray.length != 2) {
-                    stringArray = new String[2];
-                }
-                stringArray[0] = j.a().a(4);
-                ax2 = this;
-                stringArray[1] = ((x)ax2).a.c() ? j.a().a(20) : j.a().a(19);
-                String[] stringArray2 = stringArray;
-                ax2 = this;
-                ((h)this).a = stringArray2;
-                return;
+   protected final void a() {
+      switch (this.b) {
+         case 0:
+            j.a().a(0);
+            String[] var10;
+            if ((var10 = (this = this).a) == null || var10.length != 2) {
+               var10 = new String[2];
             }
-            case 1: {
-                j.a().a(0);
-                int n2 = 1;
-                ++n2;
-                ax ax3 = this;
-                if (((x)ax3).a.b()) {
-                    ++n2;
-                } else {
-                    ax3 = this;
-                    if (((x)ax3).a.d()) {
-                        this.a = true;
-                        ++n2;
-                    }
-                }
-                ax3 = this;
-                if (((x)ax3).a.e()) {
-                    this.b = true;
-                    ++n2;
-                }
-                ax3 = this;
-                String[] stringArray = ((h)ax3).a;
-                if (((h)ax3).a == null || stringArray.length != n2) {
-                    stringArray = new String[n2];
-                }
-                n2 = 0;
-                ax3 = this;
-                if (((x)ax3).a.b()) {
-                    ++n2;
-                    stringArray[0] = j.a().a(24);
-                } else if (this.a) {
-                    ++n2;
-                    stringArray[0] = j.a().a(1);
-                }
-                if (this.b) {
-                    stringArray[n2++] = j.a().a(2);
-                }
-                stringArray[n2++] = j.a().a(3);
-                ax3 = this;
-                stringArray[n2] = ((x)ax3).a.c() ? j.a().a(20) : j.a().a(19);
-                String[] stringArray3 = stringArray;
-                ax3 = this;
-                ((h)this).a = stringArray3;
-                return;
-            }
-            case 2: {
-                this.c();
-                return;
-            }
-            case 3: {
-                this.c();
-                return;
-            }
-        }
-        throw new IllegalStateException();
-    }
 
-    /*
-     * Unable to fully structure code
-     * Could not resolve type clashes
-     */
-    public final x a(int var1_1) {
-        switch (this.b) {
-            case 0: {
-                var2_4 /* !! */  = null;
-                var3_6 = this;
-                var2_4 /* !! */  = var3_6.a;
-                if (var1_1 < 0 || var1_1 > var2_4 /* !! */ .length - 1) {
-                    throw new IllegalArgumentException();
-                }
-                var3_6 = this;
-                var1_2 = var3_6.a[var1_1];
-                if (var1_2.equals(j.a().a(4))) {
-                    var3_6 = this;
-                    var2_4 /* !! */  = var3_6.a.i();
-                } else if (var1_2.equals(j.a().a(20))) {
-                    var3_6 = this;
-                    var2_4 /* !! */  = this.a(false, var3_6.a.d());
-                } else if (var1_2.equals(j.a().a(19))) {
-                    var3_6 = this;
-                    var2_4 /* !! */  = this.a(true, var3_6.a.d());
-                } else {
-                    throw new IllegalArgumentException();
-                }
-                var3_6 = this;
-                return var3_6.a.a(this, (x)var2_4 /* !! */ );
+            var10[0] = j.a().a(4);
+            if (super.a.c()) {
+               var10[1] = j.a().a(20);
+            } else {
+               var10[1] = j.a().a(19);
             }
-            case 1: {
-                var2_5 /* !! */  = null;
-                var3_7 = this;
-                var2_5 /* !! */  = var3_7.a;
-                if (var1_1 < 0 || var1_1 > var2_5 /* !! */ .length - 1) {
-                    throw new IllegalArgumentException();
-                }
-                var3_7 = this;
-                var1_3 = var3_7.a[var1_1];
-                if (!var1_3.equals(j.a().a(1)) || !this.a) ** GOTO lbl37
-                var3_7 = this;
-                var2_5 /* !! */  = var3_7.a.j();
-                ** GOTO lbl64
-lbl37:
-                // 1 sources
 
-                if (!var1_3.equals(j.a().a(24))) ** GOTO lbl-1000
-                var3_7 = this;
-                if (var3_7.a.b()) {
-                    v0 = this;
-                    var3_7 = v0;
-                    v1 = this;
-                    var3_7 = v1;
-                    var3_7 = this;
-                    var2_5 /* !! */  = v0.a.a(v1.a.a(), var3_7.a.c());
-                } else if (var1_3.equals(j.a().a(2)) && this.b) {
-                    var3_7 = this;
-                    var2_5 /* !! */  = var3_7.a.e();
-                } else if (var1_3.equals(j.a().a(3))) {
-                    var3_7 = this;
-                    var2_5 /* !! */  = var3_7.a.f();
-                } else if (var1_3.equals(j.a().a(20))) {
-                    var3_7 = this;
-                    var2_5 /* !! */  = this.a(false, var3_7.a.c());
-                } else if (var1_3.equals(j.a().a(19))) {
-                    var3_7 = this;
-                    var2_5 /* !! */  = this.a(true, var3_7.a.c());
-                } else {
-                    throw new IllegalArgumentException();
-                }
-lbl64:
-                // 6 sources
-
-                var3_7 = this;
-                return var3_7.a.a(this, (x)var2_5 /* !! */ );
+            String[] var9 = var10;
+            super.a = var9;
+            return;
+         case 1:
+            j.a().a(0);
+            int var1 = 1;
+            var1++;
+            if (super.a.b()) {
+               var1++;
+            } else if (super.a.d()) {
+               this.a = true;
+               var1++;
             }
-            case 2: {
-                return this.b(var1_1);
+
+            if (super.a.e()) {
+               this.b = true;
+               var1++;
             }
-            case 3: {
-                return this.b(var1_1);
+
+            String[] var2 = super.a;
+            if (super.a == null || var2.length != var1) {
+               var2 = new String[var1];
             }
-        }
-        throw new IllegalStateException();
-    }
 
-    private x a(boolean bl, x x2) {
-        ax ax2 = this;
-        ((x)ax2).a.b(bl);
-        ax2 = this;
-        return ((x)ax2).a.a(bl, x2);
-    }
+            var1 = 0;
+            if (super.a.b()) {
+               var1++;
+               var2[0] = j.a().a(24);
+            } else if (this.a) {
+               var1++;
+               var2[0] = j.a().a(1);
+            }
 
-    private void b() {
-        ax ax2 = this;
-        x x2 = ((x)ax2).a.c();
-        ax2 = this;
-        ((h)this).a = x2;
-    }
+            if (this.b) {
+               var2[var1++] = j.a().a(2);
+            }
 
-    private void c() {
-        j.a().a(0);
-        Object object = this.a();
-        String[] stringArray = new String[((Vector)object).size()];
-        for (int i2 = 0; i2 < stringArray.length; ++i2) {
-            ah ah2 = (ah)((Vector)object).elementAt(i2);
-            stringArray[i2] = ah2.a();
-        }
-        object = this;
-        ((h)this).a = stringArray;
-    }
+            var2[var1++] = j.a().a(3);
+            if (super.a.c()) {
+               var2[var1] = j.a().a(20);
+            } else {
+               var2[var1] = j.a().a(19);
+            }
 
-    private x b(int n2) {
-        Object var2_3 = null;
-        int n3 = n2;
-        Object object = null;
-        object = this.a();
-        if (n3 < 0 || n3 > ((Vector)object).size() - 1) {
+            String[] var8 = var2;
+            super.a = var8;
+            return;
+         case 2:
+            this.c();
+            return;
+         case 3:
+            this.c();
+            return;
+         default:
+            throw new IllegalStateException();
+      }
+   }
+
+   public final x a(int var1) {
+      switch (this.b) {
+         case 0:
+            this = this;
+            x var10 = null;
+            var10 = super.a;
+            if (var1 >= 0 && var1 <= ((Object[])var10).length - 1) {
+               String var7;
+               if ((var7 = super.a[var1]).equals(j.a().a(4))) {
+                  var10 = super.a.i();
+               } else if (var7.equals(j.a().a(20))) {
+                  var10 = this.a(false, super.a.d());
+               } else {
+                  if (!var7.equals(j.a().a(19))) {
+                     throw new IllegalArgumentException();
+                  }
+
+                  var10 = this.a(true, super.a.d());
+               }
+
+               return super.a.a(this, var10);
+            }
+
             throw new IllegalArgumentException();
-        }
-        if ((object = (ah)((Vector)object).elementAt(n3)) == null) {
-            throw new IllegalArgumentException();
-        }
-        ax ax2 = this;
-        x x2 = ((x)ax2).a.a((ah)object, (x)this);
-        ax2 = this;
-        return ((x)ax2).a.a(this, x2);
-    }
+         case 1:
+            this = this;
+            x var2 = null;
+            var2 = super.a;
+            if (var1 >= 0 && var1 <= ((Object[])var2).length - 1) {
+               String var6;
+               if ((var6 = super.a[var1]).equals(j.a().a(1)) && this.a) {
+                  var2 = super.a.j();
+               } else if (var6.equals(j.a().a(24)) && super.a.b()) {
+                  var2 = super.a.a(super.a.a(), super.a.c());
+               } else if (var6.equals(j.a().a(2)) && this.b) {
+                  var2 = super.a.e();
+               } else if (var6.equals(j.a().a(3))) {
+                  var2 = super.a.f();
+               } else if (var6.equals(j.a().a(20))) {
+                  var2 = this.a(false, super.a.c());
+               } else {
+                  if (!var6.equals(j.a().a(19))) {
+                     throw new IllegalArgumentException();
+                  }
 
-    private Vector a() {
-        switch (this.b) {
-            case 2: {
-                Object object = this;
-                object = ((x)object).a.a();
-                return ((aw)object).a;
+                  var2 = this.a(true, super.a.c());
+               }
+
+               return super.a.a(this, var2);
+            } else {
+               throw new IllegalArgumentException();
             }
-            case 3: {
-                ax ax2 = this;
-                return ((x)ax2).a.a();
-            }
-        }
-        throw new IllegalStateException();
-    }
+         case 2:
+            return this.b(var1);
+         case 3:
+            return this.b(var1);
+         default:
+            throw new IllegalStateException();
+      }
+   }
+
+   private x a(boolean var1, x var2) {
+      super.a.b(var1);
+      return super.a.a(var1, var2);
+   }
+
+   private void b() {
+      x var2 = super.a.c();
+      super.a = var2;
+   }
+
+   private void c() {
+      j.a().a(0);
+      Vector var1;
+      ax var5;
+      String[] var2 = new String[(var1 = (var5 = this).a()).size()];
+
+      for (int var3 = 0; var3 < var2.length; var3++) {
+         ah var4 = (ah)var1.elementAt(var3);
+         var2[var3] = var4.a();
+      }
+
+      var2 = var2;
+      var5.a = var2;
+   }
+
+   private x b(int var1) {
+      int var2 = null;
+      var2 = var1;
+      Vector var4 = null;
+      var4 = this.a();
+      if (var2 < 0 || var2 > var4.size() - 1) {
+         throw new IllegalArgumentException();
+      }
+
+      ah var6;
+      if ((var6 = (ah)var4.elementAt(var2)) == null) {
+         throw new IllegalArgumentException();
+      }
+
+      x var8 = super.a.a(var6, this);
+      return super.a.a(this, var8);
+   }
+
+   private Vector a() {
+      switch (this.b) {
+         case 2:
+            return super.a.a().a;
+         case 3:
+            return super.a.a();
+         default:
+            throw new IllegalStateException();
+      }
+   }
 }
-

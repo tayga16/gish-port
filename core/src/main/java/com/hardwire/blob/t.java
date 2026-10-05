@@ -1,158 +1,166 @@
 package com.hardwire.blob;
 
-/*
- * Decompiled with CFR 0.152.
- */
-/*
- * Duplicate member names - consider using --renamedupmembers true
- */
 public final class t {
-    public s a;
-    public s b;
-    public as a;
-    private aq a;
-    private int a;
-    private int b;
-    private int c;
-    public byte a;
-    private as b = new as();
+   public s a;
+   public s b;
+   public as a;
+   private aq a;
+   private int a;
+   private int b;
+   private int c;
+   public byte a;
+   private as b = new as();
 
-    public t(s s2, s s3, int n2, int n3, int n4) {
-        this.a = s2;
-        this.b = s3;
-        this.a = null;
-        this.b = n2;
-        this.c = n3;
-        this.a = n4;
-        if (this.a == -1) {
-            this.a = this.a.a.b(this.b.a).c();
-        }
-        if (this.c < -1) {
-            this.c = (int)((long)(-this.a) * (long)this.c >> 10);
-        }
-        this.a = 0;
-    }
+   public t(s var1, s var2, int var3, int var4, int var5) {
+      this.a = var1;
+      this.b = var2;
+      this.a = null;
+      this.b = var3;
+      this.c = var4;
+      this.a = var5;
+      if (this.a == -1) {
+         this.a = this.a.a.b(this.b.a).c();
+      }
 
-    public t(s s2, as as2, int n2, int n3, int n4) {
-        this.a = s2;
-        this.a = as2;
-        this.b = null;
-        this.a = null;
-        this.b = n2;
-        this.c = n3;
-        this.a = n4;
-        if (this.a == -1) {
-            this.a = this.a.a.b(this.a).c();
-        }
-        if (this.c < -1) {
-            this.c = (int)((long)(-this.a) * (long)this.c >> 10);
-        }
-        this.a = 0;
-    }
+      if (this.c < -1) {
+         this.c = (int)((long)(-this.a) * this.c >> 10);
+      }
 
-    public t(s s2, aq aq2, int n2, int n3, int n4) {
-        this.a = s2;
-        this.a = null;
-        this.b = null;
-        this.a = aq2;
-        this.b = 512;
-        this.c = 10240;
-        this.a = 0;
-        if (this.a == -1) {
-            this.a = this.a.a.b(this.a).c();
-        }
-        if (this.c < -1) {
-            this.c = (int)((long)(-this.a) * (long)this.c >> 10);
-        }
-        this.a = 0;
-    }
+      this.a = 0;
+   }
 
-    public final boolean a(boolean n2) {
-        int n3;
-        if ((this.a.b & 0x10) != 0 || this.b != null && (this.b.b & 0x10) != 0) {
-            return true;
-        }
-        if (this.b == null) {
+   public t(s var1, as var2, int var3, int var4, int var5) {
+      this.a = var1;
+      this.a = var2;
+      this.b = null;
+      this.a = null;
+      this.b = var3;
+      this.c = var4;
+      this.a = var5;
+      if (this.a == -1) {
+         this.a = this.a.a.b(this.a).c();
+      }
+
+      if (this.c < -1) {
+         this.c = (int)((long)(-this.a) * this.c >> 10);
+      }
+
+      this.a = 0;
+   }
+
+   public t(s var1, aq var2, int var3, int var4, int var5) {
+      this.a = var1;
+      this.a = null;
+      this.b = null;
+      this.a = var2;
+      this.b = 512;
+      this.c = 10240;
+      this.a = 0;
+      if (this.a == -1) {
+         this.a = this.a.a.b(this.a).c();
+      }
+
+      if (this.c < -1) {
+         this.c = (int)((long)(-this.a) * this.c >> 10);
+      }
+
+      this.a = 0;
+   }
+
+   public final boolean a(boolean var1) {
+      if ((this.a.b & 16) == 0 && (this.b == null || (this.b.b & 16) == 0)) {
+         if (this.b == null) {
             if (this.a == null) {
-                n3 = 1024 - this.a.a;
-                this.b.a = this.a.a.a - (int)((long)this.a.a.a.a * (long)n3 >> 10) - (int)((long)this.a.b.a.a * (long)this.a.a >> 10);
-                this.b.b = this.a.a.b - (int)((long)this.a.a.a.b * (long)n3 >> 10) - (int)((long)this.a.b.a.b * (long)this.a.a >> 10);
+               int var2 = 1024 - this.a.a;
+               this.b.a = this.a.a.a - (int)((long)this.a.a.a.a * var2 >> 10) - (int)((long)this.a.b.a.a * this.a.a >> 10);
+               this.b.b = this.a.a.b - (int)((long)this.a.a.a.b * var2 >> 10) - (int)((long)this.a.b.a.b * this.a.a >> 10);
             } else {
-                this.b.a = this.a.a.a - this.a.a;
-                this.b.b = this.a.a.b - this.a.b;
+               this.b.a = this.a.a.a - this.a.a;
+               this.b.b = this.a.a.b - this.a.b;
             }
-        } else {
+         } else {
             this.b.a = this.a.a.a - this.b.a.a;
             this.b.b = this.a.a.b - this.b.a.b;
-        }
-        n3 = this.b.c();
-        if (n3 == 0) {
+         }
+
+         int var7;
+         if ((var7 = this.b.c()) == 0) {
             return false;
-        }
-        if (n2 != 0 && this.c != -1 && (this.c > this.a && n3 > this.c || this.c < this.a && n3 < this.c)) {
+         }
+
+         if (!var1 || this.c == -1 || (this.c <= this.a || var7 <= this.c) && (this.c >= this.a || var7 >= this.c)) {
+            var1 = var7 - this.a;
+            if (this.a == 1 && var1 < 0) {
+               return false;
+            }
+
+            if (this.a == 2 && var1 > 0) {
+               return false;
+            }
+
+            if (this.b == 512) {
+               var1 >>= 1;
+            } else if (this.b < 1024) {
+               var1 = (int)((long)this.b * var1 >> 10);
+            }
+
+            this.b.a = (this.b.a << 10) / var7;
+            this.b.b = (this.b.b << 10) / var7;
+            var7 = var1;
+            int var3 = var1;
+            if (this.b != null && this.b.a != Integer.MAX_VALUE) {
+               if (this.a.a != Integer.MAX_VALUE) {
+                  if (this.a.a == this.b.a) {
+                     var7 = var3 = var1 >> 1;
+                  } else {
+                     var7 = var1 * this.b.a / (this.a.a + this.b.a);
+                     var3 = var1 - var7;
+                  }
+               }
+
+               this.b.a.a = this.b.a.a + (this.b.a * var3 >> 10);
+               this.b.a.b = this.b.a.b + (this.b.b * var3 >> 10);
+            } else if (this.a != null && this.a.a.a != Integer.MAX_VALUE && this.a.b.a != Integer.MAX_VALUE) {
+               if (this.a.a != Integer.MAX_VALUE) {
+                  int var4 = this.a.a.a + this.a.b.a >> 1;
+                  if (this.a.a == var4) {
+                     var7 = var3 = var1 >> 1;
+                  } else {
+                     var7 = var1 * var4 / (this.a.a + var4);
+                     var3 = var1 - var7;
+                  }
+               }
+
+               int var9 = this.b.a * var3 >> 10;
+               var1 = this.b.b * var3 >> 10;
+               this.a.a.a.a = this.a.a.a.a + (var9 * (1024 - this.a.a) >> 10);
+               this.a.a.a.b = this.a.a.a.b + (var1 * (1024 - this.a.a) >> 10);
+               this.a.b.a.a = this.a.b.a.a + (var9 * this.a.a >> 10);
+               this.a.b.a.b = this.a.b.a.b + (var1 * this.a.a >> 10);
+            }
+
+            if (this.a.a != Integer.MAX_VALUE) {
+               this.a.a.a = this.a.a.a - (this.b.a * var7 >> 10);
+               this.a.a.b = this.a.a.b - (this.b.b * var7 >> 10);
+            }
+
+            return false;
+         } else {
             return true;
-        }
-        n2 = n3 - this.a;
-        if (this.a == 1 && n2 < 0) {
-            return false;
-        }
-        if (this.a == 2 && n2 > 0) {
-            return false;
-        }
-        if (this.b == 512) {
-            n2 >>= 1;
-        } else if (this.b < 1024) {
-            n2 = (int)((long)this.b * (long)n2 >> 10);
-        }
-        this.b.a = (this.b.a << 10) / n3;
-        this.b.b = (this.b.b << 10) / n3;
-        n3 = n2;
-        int n4 = n2;
-        if (this.b != null && this.b.a != Integer.MAX_VALUE) {
-            if (this.a.a != Integer.MAX_VALUE) {
-                if (this.a.a == this.b.a) {
-                    n3 = n4 = n2 >> 1;
-                } else {
-                    n3 = n2 * this.b.a / (this.a.a + this.b.a);
-                    n4 = n2 - n3;
-                }
-            }
-            this.b.a.a += this.b.a * n4 >> 10;
-            this.b.a.b += this.b.b * n4 >> 10;
-        } else if (this.a != null && this.a.a.a != Integer.MAX_VALUE && this.a.b.a != Integer.MAX_VALUE) {
-            int n5;
-            if (this.a.a != Integer.MAX_VALUE) {
-                n5 = this.a.a.a + this.a.b.a >> 1;
-                if (this.a.a == n5) {
-                    n3 = n4 = n2 >> 1;
-                } else {
-                    n3 = n2 * n5 / (this.a.a + n5);
-                    n4 = n2 - n3;
-                }
-            }
-            n5 = this.b.a * n4 >> 10;
-            n2 = this.b.b * n4 >> 10;
-            this.a.a.a.a += n5 * (1024 - this.a.a) >> 10;
-            this.a.a.a.b += n2 * (1024 - this.a.a) >> 10;
-            this.a.b.a.a += n5 * this.a.a >> 10;
-            this.a.b.a.b += n2 * this.a.a >> 10;
-        }
-        if (this.a.a != Integer.MAX_VALUE) {
-            this.a.a.a -= this.b.a * n3 >> 10;
-            this.a.a.b -= this.b.b * n3 >> 10;
-        }
-        return false;
-    }
+         }
+      } else {
+         return true;
+      }
+   }
 
-    public final void a() {
-        this.a.b &= 0xFFFFFFF3;
-        if (this.b != null) {
-            this.b.b &= 0xFFFFFFF3;
-            return;
-        }
-        if (this.a != null) {
+   public final void a() {
+      this.a.b &= -13;
+      if (this.b != null) {
+         this.b.b &= -13;
+      } else {
+         if (this.a != null) {
             this.a.a = Integer.MAX_VALUE;
-        }
-    }
+         }
+      }
+   }
 }
-

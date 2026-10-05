@@ -1,15 +1,7 @@
 package com.hardwire.blob;
 
-/*
- * Decompiled with CFR 0.152.
- * 
- * Could not load the following classes:
- *  javax.microedition.lcdui.Graphics
- *  javax.microedition.lcdui.Image
- */
 import com.hardwire.blob.Main;
 import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,646 +9,1119 @@ import java.util.Vector;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
-/*
- * Duplicate member names - consider using --renamedupmembers true
- */
 public final class d {
-    public static int a = 0;
-    private static final String[] c = new String[]{"english", "deutsch", "fran\u00e7ais", "espa\u00f1ol", "italiano", "\u010de\u0161tina"};
-    public static final String[] a = new String[]{"en", "de", "fr", "es", "it", "cz"};
-    public static byte[][] a;
-    public static final short[] a;
-    public static final short[] b;
-    public static final short[] c;
-    public static final short[] d;
-    public static final short[] e;
-    public static final short[] f;
-    public static final short[] g;
-    public static final String[] b;
-    public boolean[] a;
-    private static char[][] a;
-    private static String[] d;
-    private static String[] e;
-    private static int[] a;
-    private static final int[] b;
-    private static int[][] a;
-    private static int[] c;
-    private static int[] d;
-    private static Main a;
-    private static Image[] a;
-    private static int[] e;
-    private static int[][] b;
-    private static int[][] c;
-    private static boolean[][] a;
-    private byte[][] b;
-    private byte[][][] a;
-    private byte[] a;
+   public static int a = 0;
+   private static final String[] c = new String[]{"english", "deutsch", "français", "español", "italiano", "čeština"};
+   public static final String[] a = new String[]{"en", "de", "fr", "es", "it", "cz"};
+   public static byte[][] a;
+   public static final short[] a = new short[]{
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131,
+      132,
+      133,
+      134
+   };
+   public static final short[] b = new short[]{139, 140, 141, 142, 143};
+   public static final short[] c = new short[]{
+      73,
+      74,
+      75,
+      76,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      85,
+      86,
+      87,
+      88,
+      89,
+      91,
+      92,
+      104,
+      105,
+      106,
+      108,
+      109,
+      110,
+      111,
+      113,
+      114,
+      115,
+      116,
+      118,
+      119,
+      120,
+      121,
+      122,
+      124,
+      125,
+      126,
+      127,
+      129,
+      130,
+      131,
+      132,
+      134
+   };
+   public static final short[] d = new short[]{
+      42, 63, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 188, 189
+   };
+   public static final short[] e = new short[]{46, 72, 184, 185, 186, 187, 190, 191, 192, 193};
+   public static final short[] f = new short[]{47, 96, 194, 195, 196, 197, 198, 199, 200, 201};
+   public static final short[] g = new short[]{
+      42,
+      63,
+      161,
+      162,
+      163,
+      164,
+      165,
+      166,
+      167,
+      168,
+      169,
+      170,
+      171,
+      172,
+      173,
+      174,
+      175,
+      176,
+      177,
+      178,
+      179,
+      180,
+      181,
+      182,
+      183,
+      188,
+      189,
+      46,
+      72,
+      184,
+      185,
+      186,
+      187,
+      190,
+      191,
+      192,
+      193,
+      47,
+      96,
+      194,
+      195,
+      196,
+      197,
+      198,
+      199,
+      200,
+      201,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131,
+      132,
+      133,
+      134,
+      139,
+      140,
+      141,
+      142,
+      143,
+      93,
+      -111,
+      -222
+   };
+   public static final String[] b = new String[]{
+      "c0",
+      "c1",
+      "c2",
+      "c3",
+      "c4",
+      "c5",
+      "c6",
+      "c7",
+      "c8",
+      "c9",
+      "c10",
+      "c11",
+      "c12",
+      "c13",
+      "c14",
+      "c15",
+      "c16",
+      "c17",
+      "c18",
+      "c19",
+      "c20",
+      "c21",
+      "c22",
+      "c23",
+      "c24",
+      "c25",
+      "c26",
+      "d0",
+      "d1",
+      "d2",
+      "d3",
+      "d4",
+      "d5",
+      "d6",
+      "d7",
+      "d8",
+      "d9",
+      "r0",
+      "r1",
+      "r2",
+      "r3",
+      "r4",
+      "r5",
+      "r6",
+      "r7",
+      "r8",
+      "r9",
+      "s0",
+      "s1",
+      "s2",
+      "s3",
+      "s4",
+      "s5",
+      "s6",
+      "s7",
+      "s8",
+      "s9",
+      "s10",
+      "s11",
+      "s12",
+      "s13",
+      "s14",
+      "s15",
+      "s16",
+      "s17",
+      "s18",
+      "e0",
+      "e1",
+      "e2",
+      "e3",
+      "e4",
+      "e5",
+      "e6",
+      "e7",
+      "e8",
+      "e9",
+      "e10",
+      "e11",
+      "e12",
+      "e13",
+      "e14",
+      "e15",
+      "h0",
+      "h1",
+      "h2",
+      "h3",
+      "h4",
+      "h5",
+      "h6",
+      "h7",
+      "h8",
+      "h9",
+      "h10",
+      "h11",
+      "h12",
+      "h13",
+      "h14",
+      "h15",
+      "pl0",
+      "pl1",
+      "pl2",
+      "pl3",
+      "pl4",
+      "i",
+      "train2",
+      "ai0"
+   };
+   public boolean[] a;
+   private static char[][] a = new char[][]{
+      {'e', 'ˇ'},
+      {'s', 'ˇ'},
+      {'c', 'ˇ'},
+      {'r', 'ˇ'},
+      {'z', 'ˇ'},
+      {'y', '´'},
+      {'a', '´'},
+      {'i', '´'},
+      {'e', '´'},
+      {'u', '´'},
+      {'u', '°'},
+      {'d', 'ˇ'},
+      {'t', 'ˇ'},
+      {'n', 'ˇ'},
+      {'a', '¨'},
+      {'a', '°'},
+      {'a', '§'},
+      {'o', '¨'},
+      {'e', '`'},
+      {'a', '`'},
+      {'e', '§'},
+      {'u', '¨'},
+      {'u', '§'},
+      {'u', '`'},
+      {'o', '§'},
+      {'o', '´'},
+      {'o', '`'},
+      {'i', '`'},
+      {'i', '§'},
+      {'n', '˜'},
+      {'\''},
+      {'\''},
+      {'\''}
+   };
+   private static String[] d = new String[]{
+      "abcdefghijklmnopqrstuvwxyz0123456789.,:;'\"!?/()#@*-_ˇ§¨°´`˜¿¡ßç",
+      "013",
+      "abcdefghijklmnopqrstuvwxyz0123456789.,:;'\"!?/()#@*-_ˇ§¨°´`˜¿¡ßç",
+      "abcdefghijklmnopqrstuvwxyz0123456789.,:;'\"!?/()#@*-_ˇ§¨°´`˜¿¡ßç",
+      "abcdefghijklmnopqrstuvwxyz0123456789.,:;'\"!?/()#@*-_ˇ§¨°´`˜¿¡ßç"
+   };
+   private static String[] e = new String[]{"ˇ´`§°¨˜", "", "ˇ´`§°¨˜", "ˇ´`§°¨˜", "ˇ´`§°¨˜"};
+   private static int[] a = new int[]{5, 1, 5, 3};
+   private static final int[] b = new int[]{
+      17,
+      17,
+      17,
+      17,
+      17,
+      17,
+      17,
+      17,
+      9,
+      17,
+      17,
+      17,
+      25,
+      17,
+      17,
+      17,
+      17,
+      17,
+      17,
+      21,
+      17,
+      17,
+      25,
+      19,
+      17,
+      17,
+      17,
+      11,
+      17,
+      17,
+      17,
+      17,
+      17,
+      17,
+      17,
+      17,
+      9,
+      9,
+      9,
+      9,
+      9,
+      18,
+      9,
+      17,
+      21,
+      13,
+      13,
+      25,
+      21,
+      15,
+      17,
+      17,
+      17,
+      17,
+      17,
+      9,
+      16,
+      16,
+      17,
+      17,
+      9,
+      19,
+      17
+   };
+   private static int[][] a;
+   private static int[] c = new int[]{17, 6, 17, 11};
+   private static int[] d = new int[]{-1, 1, -1, 0};
+   private static Main a;
+   private static Image[] a;
+   private static int[] e;
+   private static int[][] b;
+   private static int[][] c;
+   private static boolean[][] a;
+   private byte[][] b;
+   private byte[][][] a;
+   private byte[] a;
 
-    public static int a(int n2) {
-        if (d.a.a.e == 0) {
-            for (int i2 = 0; i2 < a.length - 1; ++i2) {
-                if (a[i2] != n2) continue;
-                return a[i2 + 1];
+   public static int a(int var0) {
+      if (a.a.e == 0) {
+         for (int var1 = 0; var1 < a.length - 1; var1++) {
+            if (a[var1] == var0) {
+               return a[var1 + 1];
             }
-        } else {
-            for (int i3 = 0; i3 < d.length - 1; ++i3) {
-                if (d[i3] != n2) continue;
-                return d[i3 + 1];
+         }
+      } else {
+         for (int var2 = 0; var2 < d.length - 1; var2++) {
+            if (d[var2] == var0) {
+               return d[var2 + 1];
             }
-        }
-        return -1;
-    }
+         }
+      }
 
-    public static int a(short[] sArray, int n2) {
-        for (int i2 = 0; i2 < sArray.length; ++i2) {
-            if (sArray[i2] != n2) continue;
-            return i2;
-        }
-        return -1;
-    }
+      return -1;
+   }
 
-    private void a(boolean[] blArray) {
-        for (int i2 = 0; i2 < blArray.length; ++i2) {
-            if (!blArray[i2]) continue;
-            this.a[i2] = 3;
-        }
-        this.a[13] = 3;
-        this.a[157] = 3;
-        this.a[156] = 3;
-        this.a[155] = 3;
-    }
+   public static int a(short[] var0, int var1) {
+      for (int var2 = 0; var2 < var0.length; var2++) {
+         if (var0[var2] == var1) {
+            return var2;
+         }
+      }
 
-    private static boolean[] a(int n2) {
-        boolean[] blArray = new boolean[n2];
-        for (int i2 = 0; i2 < n2; ++i2) {
-            blArray[i2] = false;
-        }
-        blArray[8] = true;
-        blArray[28] = true;
-        blArray[20] = true;
-        blArray[21] = true;
-        blArray[22] = true;
-        blArray[23] = true;
-        blArray[30] = true;
-        blArray[31] = true;
-        blArray[49] = true;
-        blArray[55] = true;
-        blArray[56] = true;
-        blArray[57] = true;
-        blArray[60] = true;
-        blArray[61] = true;
-        blArray[64] = true;
-        blArray[14] = true;
-        blArray[17] = true;
-        blArray[138] = true;
-        blArray[144] = true;
-        blArray[152] = true;
-        blArray[137] = true;
-        blArray[153] = true;
-        blArray[146] = true;
-        blArray[154] = true;
-        blArray[160] = true;
-        blArray[202] = true;
-        blArray[203] = true;
-        blArray[206] = true;
-        blArray[207] = true;
-        blArray[208] = true;
-        blArray[209] = true;
-        blArray[210] = true;
-        blArray[211] = true;
-        blArray[212] = true;
-        blArray[213] = true;
-        return blArray;
-    }
+      return -1;
+   }
 
-    public final void a() {
-        this.a = null;
-        this.a = new boolean[200];
-        this.b = null;
-        this.a = null;
-        this.a = new byte[200][][];
-    }
+   private void a(boolean[] var1) {
+      for (int var2 = 0; var2 < var1.length; var2++) {
+         if (var1[var2]) {
+            this.a[var2] = 3;
+         }
+      }
 
-    public final void b() {
-        int n2;
-        if (this.a != null) {
-            for (n2 = 0; n2 < this.a.length; ++n2) {
-                this.a[n2] = null;
+      this.a[13] = 3;
+      this.a[155] = this.a[156] = this.a[157] = 3;
+   }
+
+   private static boolean[] a(int var0) {
+      boolean[] var1 = new boolean[var0];
+
+      for (int var2 = 0; var2 < var0; var2++) {
+         var1[var2] = false;
+      }
+
+      var1[8] = true;
+      var1[28] = true;
+      var1[20] = true;
+      var1[21] = true;
+      var1[22] = true;
+      var1[23] = true;
+      var1[30] = true;
+      var1[31] = true;
+      var1[49] = true;
+      var1[55] = true;
+      var1[56] = true;
+      var1[57] = true;
+      var1[60] = true;
+      var1[61] = true;
+      var1[64] = true;
+      var1[14] = true;
+      var1[17] = true;
+      var1[138] = true;
+      var1[144] = true;
+      var1[152] = true;
+      var1[137] = true;
+      var1[153] = true;
+      var1[146] = true;
+      var1[154] = true;
+      var1[160] = true;
+      var1[202] = true;
+      var1[203] = true;
+      var1[206] = true;
+      var1[207] = true;
+      var1[208] = true;
+      var1[209] = true;
+      var1[210] = true;
+      var1[211] = true;
+      var1[212] = true;
+      var1[213] = true;
+      return var1;
+   }
+
+   public final void a() {
+      this.a = null;
+      this.a = new boolean[200];
+      this.b = null;
+      this.a = null;
+      this.a = new byte[200][][];
+   }
+
+   public final void b() {
+      if (this.a != null) {
+         for (int var1 = 0; var1 < this.a.length; var1++) {
+            this.a[var1] = null;
+         }
+      }
+
+      if (this.b != null) {
+         for (int var2 = 0; var2 < this.b.length; var2++) {
+            this.b[var2] = null;
+         }
+      }
+   }
+
+   public final void c() {
+      boolean var1 = false;
+
+      for (int var2 = 0; var2 < this.a.length; var2++) {
+         if (!this.a[var2]) {
+            this.a[var2] = null;
+         } else if (this.a[var2] == null) {
+            var1 = true;
+         }
+      }
+
+      if (var1) {
+         InputStream var14 = null;
+
+         try {
+            var14 = Main.a("/tl_pointer." + a[a]);
+            ByteArrayOutputStream var13 = new ByteArrayOutputStream();
+
+            for (int var4 = 0; var4 < this.a.length; var4++) {
+               int var3;
+               if (this.a[var4] && this.a[var4] == null) {
+                  while ((var3 = var14.read()) != 124 && var3 != -1 && var3 != 0) {
+                     var13.write(var3);
+                  }
+
+                  this.a[var4] = a(3, a(3, a(var13.toByteArray())), ad.a - 10);
+                  var13.reset();
+               } else {
+                  while ((var3 = var14.read()) != 124 && var3 != -1 && var3 != 0) {
+                  }
+               }
+
+               if (var3 == 0) {
+                  break;
+               }
             }
-        }
-        if (this.b != null) {
-            for (n2 = 0; n2 < this.b.length; ++n2) {
-                this.b[n2] = null;
-            }
-        }
-    }
-
-    /*
-     * Enabled aggressive block sorting
-     * Enabled unnecessary exception pruning
-     * Enabled aggressive exception aggregation
-     */
-    public final void c() {
-        block18: {
-            boolean bl = false;
-            for (int i2 = 0; i2 < this.a.length; ++i2) {
-                if (!this.a[i2]) {
-                    this.a[i2] = null;
-                    continue;
-                }
-                if (this.a[i2] != null) continue;
-                bl = true;
-            }
-            if (!bl) return;
-            InputStream inputStream = null;
+         } catch (Exception var11) {
+         } finally {
             try {
-                inputStream = Main.a("/tl_pointer." + a[a]);
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                for (int i3 = 0; i3 < this.a.length; ++i3) {
-                    int n2;
-                    if (!this.a[i3] || this.a[i3] != null) {
-                        while ((n2 = inputStream.read()) != 124 && n2 != -1 && n2 != 0) {
-                        }
-                    } else {
-                        while ((n2 = inputStream.read()) != 124 && n2 != -1 && n2 != 0) {
-                            byteArrayOutputStream.write(n2);
-                        }
-                        this.a[i3] = d.a(3, d.a(3, d.a(byteArrayOutputStream.toByteArray())), ad.a - 10);
-                        byteArrayOutputStream.reset();
-                    }
-                    if (n2 != 0) {
-                        continue;
-                    }
-                    break;
-                }
+               var14.close();
+            } catch (IOException var10) {
             }
-            catch (Exception exception) {
-                try {
-                    inputStream.close();
-                }
-                catch (IOException iOException) {}
-                break block18;
+         }
+
+         System.gc();
+      }
+   }
+
+   public d(Main var1) {
+      a = var1;
+   }
+
+   public static void d() {
+      a = new Image[4];
+      e = new int[4];
+      b = new int[4][];
+      c = new int[4][];
+      a = new boolean[4][];
+      a(0, (int)8);
+      a(1, (int)7);
+      a(2, (int)237);
+      a(3, (int)230);
+      a = new byte[c.length][];
+
+      for (int var0 = 0; var0 < a.length; var0++) {
+         a[var0] = a(0, c[var0]);
+      }
+
+      System.gc();
+   }
+
+   public static int b(int var0) {
+      return c[0];
+   }
+
+   public final void a(Graphics var1, int var2, String var3, int var4, int var5, int var6) {
+      a(var1, var2, a(var2, var3), var4, var5, Integer.MIN_VALUE, Integer.MAX_VALUE, var6);
+   }
+
+   public final void a(Graphics var1, int var2, int var3, int var4, int var5) {
+      if (this.b[var2] != null) {
+         a(var1, this.a[var2], this.b[var2], var3, var4, Integer.MIN_VALUE, Integer.MAX_VALUE, var5);
+      }
+   }
+
+   public final void a(Graphics var1, int var2, byte[] var3, int var4, int var5, int var6) {
+      a(var1, var2, var3, var4, var5, Integer.MIN_VALUE, Integer.MAX_VALUE, var6);
+   }
+
+   public static void a(Graphics var0, int var1, byte[] var2, int var3, int var4, int var5, int var6, int var7) {
+      if (var2 != null) {
+         if ((var7 & 8) != 0) {
+            byte[] var8 = var2;
+            var3 -= a(var1, var8, var8.length);
+         } else if ((var7 & 1) != 0) {
+            byte[] var17 = var2;
+            var3 -= a(var1, var17, var17.length) >> 1;
+         }
+
+         if ((var7 & 32) != 0 || (var7 & 64) != 0) {
+            var4 -= e[var1];
+         } else if ((var7 & 2) != 0) {
+            var4 -= e[var1] >> 1;
+         }
+
+         var7 = var0.getClipX();
+         int var18 = var0.getClipY();
+         int var9 = var0.getClipWidth();
+         int var10 = var0.getClipHeight();
+         int var14 = var2.length;
+
+         for (int var15 = 0; var15 < var14; var15++) {
+            if (var2[var15] != -3) {
+               if (var2[var15] == -1) {
+                  var3 += c[var1] + d[var1];
+               } else {
+                  int var11 = var3;
+                  if (a[var1][var2[var15]]) {
+                     var11 += (a[var1][var2[var15 - 1]] >> 1) - (a[var1][var2[var15]] >> 1);
+                  }
+
+                  if (var11 < var6 && var11 + a[var1][var2[var15]] >= var5) {
+                     int var12 = var11 < var5 ? var5 : var11;
+                     int var13;
+                     var13 = (var13 = var11 + a[var1][var2[var15]]) > var6 ? var6 : var13;
+                     var0.setClip(var12, var4, var13 - var12, e[var1]);
+                     var0.drawImage(a[var1], var11 - b[var1][var2[var15]], var4 - c[var1][var2[var15]], 20);
+                  }
+
+                  if (var15 < var14 - 1) {
+                     if (a[var1][var2[var15]]) {
+                        var3 += a[var1][var2[var15 - 1]] + d[var1];
+                     } else if (var2[var15 + 1] == -1 && !a[var1][var2[var15]] || var2[var15 + 1] != -1 && !a[var1][var2[var15 + 1]]) {
+                        var3 += a[var1][var2[var15]] + d[var1];
+                     }
+                  }
+               }
             }
-            catch (Throwable throwable) {
-                try {
-                    inputStream.close();
-                    throw throwable;
-                }
-                catch (IOException iOException) {}
-                throw throwable;
+         }
+
+         var0.setClip(var7, var18, var9, var10);
+      }
+   }
+
+   public final byte a(int var1) {
+      return this.a[var1];
+   }
+
+   public final byte[] a(int var1) {
+      return this.b[var1];
+   }
+
+   public final byte[][] a(int var1) {
+      return this.a[var1];
+   }
+
+   public static int c(int var0) {
+      return e[var0];
+   }
+
+   public static int a(int var0, String var1) {
+      byte[] var3 = a(0, var1);
+      boolean var2 = false;
+      return a(0, var3, var3.length);
+   }
+
+   public final int d(int var1) {
+      if (this.b[var1] == null) {
+         return 0;
+      }
+
+      byte var10000 = this.a[var1];
+      byte[] var2 = this.b[var1];
+      return a(var10000, var2, var2.length);
+   }
+
+   public static int a(int var0, byte[] var1) {
+      return a(var0, var1, var1.length);
+   }
+
+   private static int a(int var0, byte[] var1, int var2) {
+      int var3 = 0;
+
+      for (int var4 = 0; var4 < var2; var4++) {
+         if (var1[var4] != -3) {
+            if (var1[var4] == -1) {
+               var3 += c[var0] + d[var0];
+            } else if (!a[var0][var1[var4]]) {
+               var3 += a[var0][var1[var4]] + d[var0];
             }
-            try {
-                inputStream.close();
+         }
+      }
+
+      return var3;
+   }
+
+   public static int a(int var0, byte var1) {
+      if (var1 == -1) {
+         return c[var0] + d[var0];
+      } else {
+         return var1 != -3 && !a[var0][var1] ? a[var0][var1] + d[var0] : 0;
+      }
+   }
+
+   public static byte a(int var0, char var1) {
+      return (byte)d[var0].indexOf(var1);
+   }
+
+   public static byte[] a(int var0, String var1) {
+      var1 = var1.toLowerCase();
+      StringBuffer var2 = new StringBuffer();
+
+      for (int var3 = 0; var3 < var1.length(); var3++) {
+         int var4;
+         if ((var4 = "ěščřžýáíéúůďťňäåâöèàêüûùôóòìîñ´’‘".indexOf(var1.charAt(var3))) == -1) {
+            var2.append(var1.charAt(var3));
+         } else {
+            var2.append(a[var4][0]);
+            if (a[var4].length > 1) {
+               var2.append(a[var4][1]);
             }
-            catch (IOException iOException) {}
-        }
-        System.gc();
-    }
+         }
+      }
 
-    public d(Main main) {
-        a = main;
-    }
+      byte[] var7 = new byte[var2.length()];
 
-    public static void d() {
-        a = new Image[4];
-        e = new int[4];
-        b = new int[4][];
-        c = new int[4][];
-        a = new boolean[4][];
-        d.a(0, 8);
-        d.a(1, 7);
-        d.a(2, 237);
-        d.a(3, 230);
-        a = new byte[c.length][];
-        for (int i2 = 0; i2 < a.length; ++i2) {
-            d.a[i2] = d.a(0, c[i2]);
-        }
-        System.gc();
-    }
+      for (int var8 = 0; var8 < var7.length; var8++) {
+         char var6;
+         if ((var6 = var2.charAt(var8)) == ' ') {
+            var7[var8] = -1;
+         } else if (var6 == '~') {
+            var7[var8] = -2;
+         } else if (var6 == '^') {
+            var7[var8] = -3;
+         } else {
+            var7[var8] = (byte)d[var0].indexOf(var6);
+         }
+      }
 
-    public static int b(int n2) {
-        return c[0];
-    }
+      return var7;
+   }
 
-    public final void a(Graphics graphics, int n2, String string, int n3, int n4, int n5) {
-        d.a(graphics, n2, d.a(n2, string), n3, n4, Integer.MIN_VALUE, Integer.MAX_VALUE, n5);
-    }
-
-    public final void a(Graphics graphics, int n2, int n3, int n4, int n5) {
-        if (this.b[n2] == null) {
-            return;
-        }
-        d.a(graphics, this.a[n2], this.b[n2], n3, n4, Integer.MIN_VALUE, Integer.MAX_VALUE, n5);
-    }
-
-    public final void a(Graphics graphics, int n2, byte[] byArray, int n3, int n4, int n5) {
-        d.a(graphics, n2, byArray, n3, n4, Integer.MIN_VALUE, Integer.MAX_VALUE, n5);
-    }
-
-    public static void a(Graphics graphics, int n2, byte[] byArray, int n3, int n4, int n5, int n6, int n7) {
-        byte[] byArray2;
-        if (byArray == null) {
-            return;
-        }
-        if ((n7 & 8) != 0) {
-            int n8 = n3;
-            byArray2 = byArray;
-            n3 = n2;
-            n3 = n8 - d.a(n3, byArray2, byArray2.length);
-        } else if ((n7 & 1) != 0) {
-            int n9 = n3;
-            byArray2 = byArray;
-            n3 = n2;
-            n3 = n9 - (d.a(n3, byArray2, byArray2.length) >> 1);
-        }
-        if ((n7 & 0x20) != 0 || (n7 & 0x40) != 0) {
-            n4 -= e[n2];
-        } else if ((n7 & 2) != 0) {
-            n4 -= e[n2] >> 1;
-        }
-        n7 = graphics.getClipX();
-        int n10 = graphics.getClipY();
-        int n11 = graphics.getClipWidth();
-        int n12 = graphics.getClipHeight();
-        int n13 = byArray.length;
-        for (int i2 = 0; i2 < n13; ++i2) {
-            if (byArray[i2] == -3) continue;
-            if (byArray[i2] == -1) {
-                n3 += c[n2] + d[n2];
-                continue;
+   public static byte[] a(int var0, int var1) {
+      byte var2 = (byte)d[var0].indexOf(48);
+      if (var1 <= 0) {
+         return new byte[]{var2};
+      } else if (var1 < 10) {
+         return new byte[]{(byte)(var2 + var1)};
+      } else if (var1 < 100) {
+         return new byte[]{(byte)(var2 + var1 / 10), (byte)(var2 + var1 % 10)};
+      } else if (var1 < 1000) {
+         return new byte[]{(byte)(var2 + var1 / 100), (byte)(var2 + var1 / 10 % 10), (byte)(var2 + var1 % 10)};
+      } else if (var1 < 10000) {
+         return new byte[]{(byte)(var2 + var1 / 1000), (byte)(var2 + var1 / 100 % 10), (byte)(var2 + var1 / 10 % 10), (byte)(var2 + var1 % 10)};
+      } else if (var1 < 100000) {
+         return new byte[]{
+            (byte)(var2 + var1 / 10000),
+            (byte)(var2 + var1 / 1000 % 10),
+            (byte)(var2 + var1 / 100 % 10),
+            (byte)(var2 + var1 / 10 % 10),
+            (byte)(var2 + var1 % 10)
+         };
+      } else {
+         return var1 < 1000000
+            ? new byte[]{
+               (byte)(var2 + var1 / 100000),
+               (byte)(var2 + var1 / 10000 % 10),
+               (byte)(var2 + var1 / 1000 % 10),
+               (byte)(var2 + var1 / 100 % 10),
+               (byte)(var2 + var1 / 10 % 10),
+               (byte)(var2 + var1 % 10)
             }
-            int n14 = n3;
-            if (a[n2][byArray[i2]]) {
-                n14 += (a[n2][byArray[i2 - 1]] >> 1) - (a[n2][byArray[i2]] >> 1);
-            }
-            if (n14 < n6 && n14 + a[n2][byArray[i2]] >= n5) {
-                int n15 = n14 < n5 ? n5 : n14;
-                int n16 = n14 + a[n2][byArray[i2]];
-                n16 = n16 > n6 ? n6 : n16;
-                graphics.setClip(n15, n4, n16 - n15, e[n2]);
-                graphics.drawImage(a[n2], n14 - b[n2][byArray[i2]], n4 - c[n2][byArray[i2]], 20);
-            }
-            if (i2 >= n13 - 1) continue;
-            if (a[n2][byArray[i2]]) {
-                n3 += a[n2][byArray[i2 - 1]] + d[n2];
-                continue;
-            }
-            if ((byArray[i2 + 1] != -1 || a[n2][byArray[i2]]) && (byArray[i2 + 1] == -1 || a[n2][byArray[i2 + 1]])) continue;
-            n3 += a[n2][byArray[i2]] + d[n2];
-        }
-        graphics.setClip(n7, n10, n11, n12);
-    }
+            : null;
+      }
+   }
 
-    public final byte a(int n2) {
-        return this.a[n2];
-    }
+   public final void e() {
+      this.b = null;
+      this.a = null;
+      System.gc();
+      InputStream var1 = null;
 
-    public final byte[] a(int n2) {
-        return this.b[n2];
-    }
+      try {
+         var1 = Main.a("/t_pointer." + a[a]);
+         Vector var2 = new Vector();
+         ByteArrayOutputStream var3 = new ByteArrayOutputStream();
+         int var5 = 0;
 
-    public final byte[][] a(int n2) {
-        return this.a[n2];
-    }
-
-    public static int c(int n2) {
-        return e[n2];
-    }
-
-    public static int a(int n2, String object) {
-        object = d.a(0, (String)object);
-        n2 = 0;
-        return d.a(0, (byte[])object, ((Object)object).length);
-    }
-
-    public final int d(int n2) {
-        if (this.b[n2] == null) {
-            return 0;
-        }
-        byte[] byArray = this.b[n2];
-        n2 = this.a[n2];
-        return d.a(n2, byArray, byArray.length);
-    }
-
-    public static int a(int n2, byte[] byArray) {
-        return d.a(n2, byArray, byArray.length);
-    }
-
-    private static int a(int n2, byte[] byArray, int n3) {
-        int n4 = 0;
-        for (int i2 = 0; i2 < n3; ++i2) {
-            if (byArray[i2] == -3) continue;
-            if (byArray[i2] == -1) {
-                n4 += c[n2] + d[n2];
-                continue;
-            }
-            if (a[n2][byArray[i2]]) continue;
-            n4 += a[n2][byArray[i2]] + d[n2];
-        }
-        return n4;
-    }
-
-    public static int a(int n2, byte by) {
-        if (by == -1) {
-            return c[n2] + d[n2];
-        }
-        if (by == -3 || a[n2][by]) {
-            return 0;
-        }
-        return a[n2][by] + d[n2];
-    }
-
-    public static byte a(int n2, char c2) {
-        return (byte)d[n2].indexOf(c2);
-    }
-
-    public static byte[] a(int n2, String string) {
-        int n3;
-        string = string.toLowerCase();
-        StringBuffer stringBuffer = new StringBuffer();
-        for (int i2 = 0; i2 < string.length(); ++i2) {
-            n3 = "\u011b\u0161\u010d\u0159\u017e\u00fd\u00e1\u00ed\u00e9\u00fa\u016f\u010f\u0165\u0148\u00e4\u00e5\u00e2\u00f6\u00e8\u00e0\u00ea\u00fc\u00fb\u00f9\u00f4\u00f3\u00f2\u00ec\u00ee\u00f1\u00b4\u2019\u2018".indexOf(string.charAt(i2));
-            if (n3 == -1) {
-                stringBuffer.append(string.charAt(i2));
-                continue;
-            }
-            stringBuffer.append(a[n3][0]);
-            if (a[n3].length <= 1) continue;
-            stringBuffer.append(a[n3][1]);
-        }
-        byte[] byArray = new byte[stringBuffer.length()];
-        for (n3 = 0; n3 < byArray.length; ++n3) {
-            char c2 = stringBuffer.charAt(n3);
-            byArray[n3] = c2 == ' ' ? -1 : (c2 == '~' ? -2 : (c2 == '^' ? -3 : (byte)d[n2].indexOf(c2)));
-        }
-        return byArray;
-    }
-
-    public static byte[] a(int n2, int n3) {
-        n2 = (byte)d[n2].indexOf(48);
-        if (n3 <= 0) {
-            return new byte[]{n2};
-        }
-        if (n3 < 10) {
-            return new byte[]{(byte)(n2 + n3)};
-        }
-        if (n3 < 100) {
-            return new byte[]{(byte)(n2 + n3 / 10), (byte)(n2 + n3 % 10)};
-        }
-        if (n3 < 1000) {
-            return new byte[]{(byte)(n2 + n3 / 100), (byte)(n2 + n3 / 10 % 10), (byte)(n2 + n3 % 10)};
-        }
-        if (n3 < 10000) {
-            return new byte[]{(byte)(n2 + n3 / 1000), (byte)(n2 + n3 / 100 % 10), (byte)(n2 + n3 / 10 % 10), (byte)(n2 + n3 % 10)};
-        }
-        if (n3 < 100000) {
-            return new byte[]{(byte)(n2 + n3 / 10000), (byte)(n2 + n3 / 1000 % 10), (byte)(n2 + n3 / 100 % 10), (byte)(n2 + n3 / 10 % 10), (byte)(n2 + n3 % 10)};
-        }
-        if (n3 < 1000000) {
-            return new byte[]{(byte)(n2 + n3 / 100000), (byte)(n2 + n3 / 10000 % 10), (byte)(n2 + n3 / 1000 % 10), (byte)(n2 + n3 / 100 % 10), (byte)(n2 + n3 / 10 % 10), (byte)(n2 + n3 % 10)};
-        }
-        return null;
-    }
-
-    /*
-     * Loose catch block
-     */
-    public final void e() {
-        block18: {
-            int n2;
-            int n3;
-            Object object;
-            InputStream inputStream;
-            block17: {
-                int n4;
-                this.b = null;
-                this.a = null;
-                System.gc();
-                inputStream = null;
-                inputStream = Main.a("/t_pointer." + a[a]);
-                object = new Vector<String>();
-                Closeable closeable = new ByteArrayOutputStream();
-                n3 = 0;
-                while ((n4 = inputStream.read()) != -1 && n4 != 0) {
-                    if (n4 == 124) {
-                        ((Vector)object).addElement(d.a(((ByteArrayOutputStream)closeable).toByteArray()));
-                        ((ByteArrayOutputStream)closeable).reset();
-                        continue;
-                    }
-                    ((ByteArrayOutputStream)closeable).write(n4);
-                    n3 += n4;
-                }
-                closeable = new DataInputStream(inputStream);
-                n2 = ((DataInputStream)closeable).readInt();
-                if (n3 == n2) break block17;
-                try {
-                    inputStream.close();
-                    return;
-                }
-                catch (IOException iOException) {
-                    return;
-                }
-            }
-            n2 = ((Vector)object).size();
-            this.b = new byte[n2][];
-            this.a = new byte[n2][][];
-            this.a = new byte[n2];
-            boolean[] blArray = d.a(n2);
-            for (n3 = 0; n3 < n2; ++n3) {
-                this.a[n3] = 0;
-            }
-            this.a(blArray);
-            int n5 = d.a();
-            int n6 = ad.a - 10;
-            for (int i2 = 0; i2 < n2; ++i2) {
-                String string = (String)((Vector)object).elementAt(i2);
-                if (blArray[i2]) {
-                    this.a[i2] = d.a(this.a[i2], d.a((int)this.a[i2], string), i2 == 207 || i2 == 208 || i2 == 209 || i2 == 210 || i2 == 211 || i2 == 212 || i2 == 213 ? n6 : n5);
-                    continue;
-                }
-                this.b[i2] = d.a((int)this.a[i2], string);
-            }
-            ((Vector)object).removeAllElements();
-            byte[][] byArray = this.a[28];
-            byte[][] byArrayArray = new byte[byArray.length + 1][];
-            object = byArrayArray;
-            byArrayArray[0] = byArray[0];
-            object[1] = d.a((int)this.a[28], "v" + a.getAppProperty("MIDlet-Version"));
-            System.arraycopy(byArray, 1, object, 2, byArray.length - 1);
-            this.a[28] = (byte[][])object;
-            try {
-                inputStream.close();
-            }
-            catch (IOException iOException) {
-                return;
-            }
-            catch (Exception exception) {
-                try {
-                    inputStream.close();
-                    break block18;
-                }
-                catch (IOException iOException) {
-                    return;
-                }
-            }
-            catch (Throwable throwable) {
-                try {
-                    inputStream.close();
-                }
-                catch (IOException iOException) {}
-                throw throwable;
-            }
-        }
-    }
-
-    public static int a() {
-        return ad.a - 70 - 4;
-    }
-
-    private static void a(int n2, int n3) {
-        try {
-            int n4;
-            d.a[n2] = d.a.a.a(n3);
-            n3 = d[n2].length();
-            d.e[n2] = a[n2].getHeight() / a[n2];
-            d.b[n2] = new int[n3];
-            d.c[n2] = new int[n3];
-            int n5 = 0;
-            int n6 = 0;
-            for (n4 = 0; n4 < n3; ++n4) {
-                if (n5 + a[n2][n4] > a[n2].getWidth()) {
-                    n5 = 0;
-                    n6 += e[n2];
-                }
-                d.b[n2][n4] = n5;
-                d.c[n2][n4] = n6;
-                n5 += a[n2][n4];
-            }
-            d.a[n2] = new boolean[n3];
-            for (n4 = 0; n4 < n3; ++n4) {
-                d.a[n2][n4] = e[n2].indexOf(d[n2].charAt(n4)) != -1;
-            }
-            return;
-        }
-        catch (Exception exception) {
-            return;
-        }
-    }
-
-    private static void a(Vector vector, byte[] byArray, int n2) {
-        if (n2 > 1 && byArray[n2 - 1] == -1) {
-            --n2;
-        }
-        byte[] byArray2 = new byte[n2];
-        System.arraycopy(byArray, 0, byArray2, 0, n2);
-        vector.addElement(byArray2);
-    }
-
-    public static byte[] a(byte[][] byArray) {
-        int n2 = 0;
-        for (int i2 = 0; i2 < byArray.length; ++i2) {
-            n2 += byArray[i2].length;
-        }
-        byte[] byArray2 = new byte[n2];
-        n2 = 0;
-        for (int i3 = 0; i3 < byArray.length; ++i3) {
-            System.arraycopy(byArray[i3], 0, byArray2, n2, byArray[i3].length);
-            n2 += byArray[i3].length;
-        }
-        return byArray2;
-    }
-
-    public static byte[][] a(int n2, byte[] byArray, int n3) {
-        int n4;
-        Vector vector = new Vector();
-        byte[] byArray2 = new byte[200];
-        byte[] byArray3 = new byte[50];
-        int n5 = 0;
-        int n6 = 0;
-        for (n4 = 0; n4 < byArray.length; ++n4) {
-            int n7;
-            if (byArray[n4] != -1 && byArray[n4] != -2 || n4 < byArray.length - 1 && (byArray[n4 + 1] == 42 || byArray[n4 + 1] == 43)) {
-                if (d.a(n2, byArray3, n6) + d.a(n2, byArray[n4]) > n3) {
-                    if (n5 > 0) {
-                        d.a(vector, byArray2, n5);
-                    }
-                    d.a(vector, byArray3, n6);
-                    n5 = 0;
-                    n6 = 1;
-                    byArray3[0] = byArray[n4];
-                    continue;
-                }
-                byArray3[n6++] = byArray[n4];
-                continue;
-            }
-            if (d.a(n2, byArray2, n5) + d.a(n2, byArray3, n6) > n3) {
-                d.a(vector, byArray2, n5);
-                n5 = 0;
-                byArray3[n6++] = -1;
-                for (n7 = 0; n7 < n6; ++n7) {
-                    byArray2[n5++] = byArray3[n7];
-                }
-                n6 = 0;
+         int var4;
+         while ((var4 = var1.read()) != -1 && var4 != 0) {
+            if (var4 == 124) {
+               var2.addElement(a(var3.toByteArray()));
+               var3.reset();
             } else {
-                if (n6 == 0 || byArray[n4] != -2) {
-                    byArray3[n6++] = -1;
-                }
-                for (n7 = 0; n7 < n6; ++n7) {
-                    byArray2[n5++] = byArray3[n7];
-                }
-                n6 = 0;
+               var3.write(var4);
+               var5 += var4;
             }
-            if (byArray[n4] != -2) continue;
-            d.a(vector, byArray2, n5);
-            n5 = 0;
-        }
-        if (d.a(n2, byArray2, n5) + d.a(n2, byArray3, n6) < n3) {
-            for (n4 = 0; n4 < n6; ++n4) {
-                byArray2[n5++] = byArray3[n4];
-            }
-            if (n5 > 0) {
-                d.a(vector, byArray2, n5);
-            }
-        } else {
-            if (n5 > 0) {
-                d.a(vector, byArray2, n5);
-            }
-            if (n6 > 0) {
-                d.a(vector, byArray3, n6);
-            }
-        }
-        byte[][] byArrayArray = new byte[vector.size()][];
-        vector.copyInto((Object[])byArrayArray);
-        vector.removeAllElements();
-        return byArrayArray;
-    }
+         }
 
-    private static String a(byte[] byArray) {
-        try {
-            return new String(byArray, "UTF-8");
-        }
-        catch (Exception exception) {
-            return null;
-        }
-    }
+         int var19 = new DataInputStream(var1).readInt();
+         if (var5 == var19) {
+            int var20 = var2.size();
+            this.b = new byte[var20][];
+            this.a = new byte[var20][][];
+            this.a = new byte[var20];
+            boolean[] var21 = a(var20);
 
-    static {
-        a = new short[]{73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134};
-        b = new short[]{139, 140, 141, 142, 143};
-        c = new short[]{73, 74, 75, 76, 78, 79, 80, 81, 82, 83, 85, 86, 87, 88, 89, 91, 92, 104, 105, 106, 108, 109, 110, 111, 113, 114, 115, 116, 118, 119, 120, 121, 122, 124, 125, 126, 127, 129, 130, 131, 132, 134};
-        d = new short[]{42, 63, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 188, 189};
-        e = new short[]{46, 72, 184, 185, 186, 187, 190, 191, 192, 193};
-        f = new short[]{47, 96, 194, 195, 196, 197, 198, 199, 200, 201};
-        g = new short[]{42, 63, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 188, 189, 46, 72, 184, 185, 186, 187, 190, 191, 192, 193, 47, 96, 194, 195, 196, 197, 198, 199, 200, 201, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 139, 140, 141, 142, 143, 93, -111, -222};
-        b = new String[]{"c0", "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9", "c10", "c11", "c12", "c13", "c14", "c15", "c16", "c17", "c18", "c19", "c20", "c21", "c22", "c23", "c24", "c25", "c26", "d0", "d1", "d2", "d3", "d4", "d5", "d6", "d7", "d8", "d9", "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10", "s11", "s12", "s13", "s14", "s15", "s16", "s17", "s18", "e0", "e1", "e2", "e3", "e4", "e5", "e6", "e7", "e8", "e9", "e10", "e11", "e12", "e13", "e14", "e15", "h0", "h1", "h2", "h3", "h4", "h5", "h6", "h7", "h8", "h9", "h10", "h11", "h12", "h13", "h14", "h15", "pl0", "pl1", "pl2", "pl3", "pl4", "i", "train2", "ai0"};
-        a = new char[][]{{'e', '\u02c7'}, {'s', '\u02c7'}, {'c', '\u02c7'}, {'r', '\u02c7'}, {'z', '\u02c7'}, {'y', '\u00b4'}, {'a', '\u00b4'}, {'i', '\u00b4'}, {'e', '\u00b4'}, {'u', '\u00b4'}, {'u', '\u00b0'}, {'d', '\u02c7'}, {'t', '\u02c7'}, {'n', '\u02c7'}, {'a', '\u00a8'}, {'a', '\u00b0'}, {'a', '\u00a7'}, {'o', '\u00a8'}, {'e', '`'}, {'a', '`'}, {'e', '\u00a7'}, {'u', '\u00a8'}, {'u', '\u00a7'}, {'u', '`'}, {'o', '\u00a7'}, {'o', '\u00b4'}, {'o', '`'}, {'i', '`'}, {'i', '\u00a7'}, {'n', '\u02dc'}, {'\''}, {'\''}, {'\''}};
-        d = new String[]{"abcdefghijklmnopqrstuvwxyz0123456789.,:;'\"!?/()#@*-_\u02c7\u00a7\u00a8\u00b0\u00b4`\u02dc\u00bf\u00a1\u00df\u00e7", "013", "abcdefghijklmnopqrstuvwxyz0123456789.,:;'\"!?/()#@*-_\u02c7\u00a7\u00a8\u00b0\u00b4`\u02dc\u00bf\u00a1\u00df\u00e7", "abcdefghijklmnopqrstuvwxyz0123456789.,:;'\"!?/()#@*-_\u02c7\u00a7\u00a8\u00b0\u00b4`\u02dc\u00bf\u00a1\u00df\u00e7", "abcdefghijklmnopqrstuvwxyz0123456789.,:;'\"!?/()#@*-_\u02c7\u00a7\u00a8\u00b0\u00b4`\u02dc\u00bf\u00a1\u00df\u00e7"};
-        e = new String[]{"\u02c7\u00b4`\u00a7\u00b0\u00a8\u02dc", "", "\u02c7\u00b4`\u00a7\u00b0\u00a8\u02dc", "\u02c7\u00b4`\u00a7\u00b0\u00a8\u02dc", "\u02c7\u00b4`\u00a7\u00b0\u00a8\u02dc"};
-        a = new int[]{5, 1, 5, 3};
-        b = new int[]{17, 17, 17, 17, 17, 17, 17, 17, 9, 17, 17, 17, 25, 17, 17, 17, 17, 17, 17, 21, 17, 17, 25, 19, 17, 17, 17, 11, 17, 17, 17, 17, 17, 17, 17, 17, 9, 9, 9, 9, 9, 18, 9, 17, 21, 13, 13, 25, 21, 15, 17, 17, 17, 17, 17, 9, 16, 16, 17, 17, 9, 19, 17};
-        a = new int[][]{b, {6, 3, 6}, b, {11, 11, 11, 11, 11, 11, 11, 11, 5, 11, 11, 11, 17, 11, 11, 11, 11, 11, 11, 13, 11, 11, 17, 11, 11, 11, 11, 7, 11, 11, 11, 11, 11, 11, 11, 11, 5, 5, 5, 5, 5, 11, 5, 11, 17, 9, 9, 15, 14, 11, 13, 11, 7, 7, 11, 7, 8, 7, 9, 11, 5, 13, 11}};
-        c = new int[]{17, 6, 17, 11};
-        d = new int[]{-1, 1, -1, 0};
-    }
+            for (int var22 = 0; var22 < var20; var22++) {
+               this.a[var22] = 0;
+            }
+
+            this.a(var21);
+            int var6 = a();
+            int var7 = ad.a - 10;
+
+            for (int var8 = 0; var8 < var20; var8++) {
+               String var23 = (String)var2.elementAt(var8);
+               if (var21[var8]) {
+                  this.a[var8] = a(
+                     this.a[var8],
+                     a(this.a[var8], var23),
+                     var8 != 207 && var8 != 208 && var8 != 209 && var8 != 210 && var8 != 211 && var8 != 212 && var8 != 213 ? var6 : var7
+                  );
+               } else {
+                  this.b[var8] = a(this.a[var8], var23);
+               }
+            }
+
+            var2.removeAllElements();
+            byte[][] var18;
+            byte[][] var24;
+            (var18 = new byte[(var24 = this.a[28]).length + 1][])[0] = var24[0];
+            var18[1] = a(this.a[28], "v" + a.getAppProperty("MIDlet-Version"));
+            System.arraycopy(var24, 1, var18, 2, var24.length - 1);
+            this.a[28] = var18;
+            return;
+         }
+      } catch (Exception var16) {
+         return;
+      } finally {
+         try {
+            var1.close();
+         } catch (IOException var15) {
+         }
+      }
+   }
+
+   public static int a() {
+      return ad.a - 70 - 4;
+   }
+
+   private static void a(int var0, int var1) {
+      try {
+         a[var0] = a.a.a(var1);
+         var1 = d[var0].length();
+         e[var0] = a[var0].getHeight() / a[var0];
+         b[var0] = new int[var1];
+         c[var0] = new int[var1];
+         int var2 = 0;
+         int var3 = 0;
+
+         for (int var4 = 0; var4 < var1; var4++) {
+            if (var2 + a[var0][var4] > a[var0].getWidth()) {
+               var2 = 0;
+               var3 += e[var0];
+            }
+
+            b[var0][var4] = var2;
+            c[var0][var4] = var3;
+            var2 += a[var0][var4];
+         }
+
+         a[var0] = new boolean[var1];
+
+         for (int var7 = 0; var7 < var1; var7++) {
+            a[var0][var7] = e[var0].indexOf(d[var0].charAt(var7)) != -1;
+         }
+      } catch (Exception var5) {
+      }
+   }
+
+   private static void a(Vector var0, byte[] var1, int var2) {
+      if (var2 > 1 && var1[var2 - 1] == -1) {
+         var2--;
+      }
+
+      byte[] var3 = new byte[var2];
+      System.arraycopy(var1, 0, var3, 0, var2);
+      var0.addElement(var3);
+   }
+
+   public static byte[] a(byte[][] var0) {
+      int var1 = 0;
+
+      for (int var2 = 0; var2 < var0.length; var2++) {
+         var1 += var0[var2].length;
+      }
+
+      byte[] var5 = new byte[var1];
+      var1 = 0;
+
+      for (int var3 = 0; var3 < var0.length; var3++) {
+         System.arraycopy(var0[var3], 0, var5, var1, var0[var3].length);
+         var1 += var0[var3].length;
+      }
+
+      return var5;
+   }
+
+   public static byte[][] a(int var0, byte[] var1, int var2) {
+      Vector var3 = new Vector();
+      byte[] var4 = new byte[200];
+      byte[] var5 = new byte[50];
+      int var6 = 0;
+      int var7 = 0;
+
+      for (int var8 = 0; var8 < var1.length; var8++) {
+         if ((var1[var8] == -1 || var1[var8] == -2) && (var8 >= var1.length - 1 || var1[var8 + 1] != 42 && var1[var8 + 1] != 43)) {
+            if (a(var0, var4, var6) + a(var0, var5, var7) > var2) {
+               a(var3, var4, var6);
+               var6 = 0;
+               var5[var7++] = -1;
+
+               for (int var9 = 0; var9 < var7; var9++) {
+                  var4[var6++] = var5[var9];
+               }
+
+               var7 = 0;
+            } else {
+               if (var7 == 0 || var1[var8] != -2) {
+                  var5[var7++] = -1;
+               }
+
+               for (int var13 = 0; var13 < var7; var13++) {
+                  var4[var6++] = var5[var13];
+               }
+
+               var7 = 0;
+            }
+
+            if (var1[var8] == -2) {
+               a(var3, var4, var6);
+               var6 = 0;
+            }
+         } else if (a(var0, var5, var7) + a(var0, var1[var8]) > var2) {
+            if (var6 > 0) {
+               a(var3, var4, var6);
+            }
+
+            a(var3, var5, var7);
+            var6 = 0;
+            var7 = 1;
+            var5[0] = var1[var8];
+         } else {
+            var5[var7++] = var1[var8];
+         }
+      }
+
+      if (a(var0, var4, var6) + a(var0, var5, var7) < var2) {
+         for (int var11 = 0; var11 < var7; var11++) {
+            var4[var6++] = var5[var11];
+         }
+
+         if (var6 > 0) {
+            a(var3, var4, var6);
+         }
+      } else {
+         if (var6 > 0) {
+            a(var3, var4, var6);
+         }
+
+         if (var7 > 0) {
+            a(var3, var5, var7);
+         }
+      }
+
+      byte[][] var12 = new byte[var3.size()][];
+      var3.copyInto(var12);
+      var3.removeAllElements();
+      return var12;
+   }
+
+   private static String a(byte[] var0) {
+      try {
+         return new String(var0, "UTF-8");
+      } catch (Exception var1) {
+         return null;
+      }
+   }
+
+   static {
+      a = new int[][]{
+         b,
+         {6, 3, 6},
+         b,
+         {
+               11,
+               11,
+               11,
+               11,
+               11,
+               11,
+               11,
+               11,
+               5,
+               11,
+               11,
+               11,
+               17,
+               11,
+               11,
+               11,
+               11,
+               11,
+               11,
+               13,
+               11,
+               11,
+               17,
+               11,
+               11,
+               11,
+               11,
+               7,
+               11,
+               11,
+               11,
+               11,
+               11,
+               11,
+               11,
+               11,
+               5,
+               5,
+               5,
+               5,
+               5,
+               11,
+               5,
+               11,
+               17,
+               9,
+               9,
+               15,
+               14,
+               11,
+               13,
+               11,
+               7,
+               7,
+               11,
+               7,
+               8,
+               7,
+               9,
+               11,
+               5,
+               13,
+               11
+         }
+      };
+   }
 }
-

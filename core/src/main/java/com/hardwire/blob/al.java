@@ -1,54 +1,49 @@
 package com.hardwire.blob;
 
-/*
- * Decompiled with CFR 0.152.
- */
 import java.io.InputStream;
 
-/*
- * Duplicate member names - consider using --renamedupmembers true
- */
-final class al
-extends InputStream {
-    private InputStream a;
-    private byte[] a;
-    private int a = 0;
-    private int b = 0;
+final class al extends InputStream {
+   private InputStream a;
+   private byte[] a;
+   private int a = 0;
+   private int b = 0;
 
-    al(InputStream inputStream) {
-        this(inputStream, 500);
-    }
+   al(InputStream var1) {
+      this(var1, 500);
+   }
 
-    private al(InputStream inputStream, int n2) {
-        if (inputStream == null) {
-            throw new NullPointerException();
-        }
-        this.a = inputStream;
-        this.a = new byte[500];
-    }
+   private al(InputStream var1, int var2) {
+      if (var1 == null) {
+         throw new NullPointerException();
+      }
 
-    public final int read() {
-        if (this.a >= this.b) {
-            int n2 = this.a.read(this.a);
-            if (n2 == -1) {
-                return -1;
-            }
-            this.a = 0;
-            this.b = n2;
-        }
-        return this.a[this.a++] & 0xFF;
-    }
+      this.a = var1;
+      this.a = new byte[500];
+   }
 
-    public final int available() {
-        return this.b - this.a + this.a.available();
-    }
+   public final int read() {
+      if (this.a >= this.b) {
+         int var1;
+         if ((var1 = this.a.read(this.a)) == -1) {
+            return -1;
+         }
 
-    public final long skip(long l2) {
-        return 0L;
-    }
+         this.a = 0;
+         this.b = var1;
+      }
 
-    public final void close() {
-        this.a.close();
-    }
+      return this.a[this.a++] & 0xFF;
+   }
+
+   public final int available() {
+      return this.b - this.a + this.a.available();
+   }
+
+   public final long skip(long var1) {
+      return 0L;
+   }
+
+   public final void close() {
+      this.a.close();
+   }
 }
-

@@ -1,93 +1,77 @@
 package com.hardwire.blob;
 
-/*
- * Decompiled with CFR 0.152.
- */
 import java.util.Vector;
 
-/*
- * Duplicate member names - consider using --renamedupmembers true
- */
-public final class ba
-implements av {
-    public Vector a;
-    private int a = 0;
-    private int b = 0;
-    private final int c;
+public final class ba implements av {
+   public Vector a = null;
+   private int a = 0;
+   private int b = 0;
+   private final int c = 60;
 
-    public ba() {
-        this(60);
-    }
+   public ba() {
+      this(60);
+   }
 
-    private ba(int n2) {
-        this.c = 60;
-    }
+   private ba(int var1) {
+   }
 
-    /*
-     * WARNING - Removed try catching itself - possible behaviour change.
-     */
-    private void a(v v2) {
-        ba ba2 = this;
-        synchronized (ba2) {
-            if (this.a == null) {
-                return;
+   private void a(v var1) {
+      synchronized (this) {
+         if (this.a != null) {
+            for (int var3 = 0; var3 < this.a.size(); var3++) {
+               ((ad)this.a.elementAt(var3)).a(var1);
             }
-            for (int i2 = 0; i2 < this.a.size(); ++i2) {
-                ((ad)this.a.elementAt(i2)).a(v2);
-            }
-            return;
-        }
-    }
+         }
+      }
+   }
 
-    /*
-     * WARNING - Removed try catching itself - possible behaviour change.
-     */
-    private void b(v v2) {
-        ba ba2 = this;
-        synchronized (ba2) {
-            if (this.a == null) {
-                return;
+   private void b(v var1) {
+      synchronized (this) {
+         if (this.a != null) {
+            for (int var3 = 0; var3 < this.a.size(); var3++) {
+               ((ad)this.a.elementAt(var3)).b(var1);
             }
-            for (int i2 = 0; i2 < this.a.size(); ++i2) {
-                ((ad)this.a.elementAt(i2)).b(v2);
-            }
-            return;
-        }
-    }
+         }
+      }
+   }
 
-    public final void a(o o2) {
-        int n2 = o2.a(-100, 100);
-        int n3 = 0;
-        if (n2 < -this.c) {
-            n3 = 3;
-        } else if (n2 > this.c) {
-            n3 = 4;
-        }
-        if (n3 != this.a) {
-            if (this.a != 0) {
-                this.b(new v(o2.a(), -1, this.a));
-            }
-            this.a = n3;
-            if (n3 != 0) {
-                this.a(new v(o2.a(), -1, this.a));
-            }
-        }
-        n2 = o2.b(-100, 100);
-        n3 = 0;
-        if (n2 < -this.c) {
-            n3 = 1;
-        } else if (n2 > this.c) {
-            n3 = 2;
-        }
-        if (n3 != this.b) {
-            if (this.b != 0) {
-                this.b(new v(o2.a(), -1, this.b));
-            }
-            this.b = n3;
-            if (n3 != 0) {
-                this.a(new v(o2.a(), -1, this.b));
-            }
-        }
-    }
+   public final void a(o var1) {
+      int var2 = var1.a(-100, 100);
+      byte var3 = 0;
+      if (var2 < -this.c) {
+         var3 = 3;
+      } else if (var2 > this.c) {
+         var3 = 4;
+      }
+
+      if (var3 != this.a) {
+         if (this.a != 0) {
+            this.b(new v(var1.a(), -1, this.a));
+         }
+
+         this.a = var3;
+         if (var3 != 0) {
+            this.a(new v(var1.a(), -1, this.a));
+         }
+      }
+
+      var2 = var1.b(-100, 100);
+      var3 = 0;
+      if (var2 < -this.c) {
+         var3 = 1;
+      } else if (var2 > this.c) {
+         var3 = 2;
+      }
+
+      if (var3 != this.b) {
+         if (this.b != 0) {
+            this.b(new v(var1.a(), -1, this.b));
+         }
+
+         this.b = var3;
+         if (var3 != 0) {
+            this.a(new v(var1.a(), -1, this.b));
+         }
+      }
+   }
 }
-

@@ -1,138 +1,144 @@
 package com.hardwire.blob;
 
-/*
- * Decompiled with CFR 0.152.
- */
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Vector;
 
-/*
- * Duplicate member names - consider using --renamedupmembers true
- */
 public abstract class b {
-    protected static Hashtable a = new Hashtable();
-    private Vector a;
-    private boolean a = null;
-    private Hashtable c;
-    protected Hashtable b;
+   protected static Hashtable a = new Hashtable();
+   private Vector a = null;
+   private boolean a;
+   private Hashtable c;
+   protected Hashtable b;
 
-    protected b() {
-    }
+   protected b() {
+   }
 
-    protected final void a() {
-        this.b();
-        b b2 = this;
-        this.c = null;
-        try {
-            b2.c = az.a(true);
-        }
-        catch (IOException iOException) {}
-        this.a = this.d();
-    }
+   protected final void a() {
+      this.b();
+      b var1 = this;
+      this.c = null;
 
-    protected final void b() {
-        this.b = null;
-        try {
-            this.b = az.a(false);
-            return;
-        }
-        catch (IOException iOException) {
-            return;
-        }
-    }
+      try {
+         var1.c = az.a(true);
+      } catch (IOException var2) {
+      }
 
-    protected final void c() {
-        try {
-            Hashtable hashtable = this.b;
-            az.a(hashtable, false);
-            return;
-        }
-        catch (IOException iOException) {
-            return;
-        }
-    }
+      this.a = this.d();
+   }
 
-    private void d() {
-        try {
-            Hashtable hashtable = this.c;
-            az.a(hashtable, true);
-            return;
-        }
-        catch (IOException iOException) {
-            return;
-        }
-    }
+   protected final void b() {
+      this.b = null;
 
-    public final ah a(int n2) {
-        Object object = null;
-        object = this.a ? this.b : this.c;
-        if ((object = n.a((Hashtable)object, n2)) == null && this.a) {
-            object = n.a(this.c, n2);
-        }
-        return object;
-    }
+      try {
+         this.b = az.a(false);
+      } catch (IOException var1) {
+      }
+   }
 
-    public final void a(int n2, ah ah2) {
-        n.a(this.c, n2, ah2);
-        this.d();
-        if (this.a) {
-            n.a(this.b, n2, ah2);
-            this.c();
-        }
-    }
+   protected final void c() {
+      try {
+         Hashtable var1 = this.b;
+         az.a(this.b, false);
+      } catch (IOException var2) {
+      }
+   }
 
-    public final boolean a() {
-        Hashtable hashtable = null;
-        hashtable = this.a ? this.b : this.c;
-        if (this.a && !this.b.containsKey("zp.ace") && this.c.containsKey("zp.ace")) {
-            this.a(n.a(this.c));
-        }
-        boolean bl = true;
-        if (!hashtable.containsKey("zp.ace")) {
-            if (this.b()) {
-                bl = this.c();
+   private void d() {
+      try {
+         Hashtable var1 = this.c;
+         az.a(this.c, true);
+      } catch (IOException var2) {
+      }
+   }
+
+   public final ah a(int var1) {
+      Hashtable var2 = null;
+      if (this.a) {
+         var2 = this.b;
+      } else {
+         var2 = this.c;
+      }
+
+      ah var4;
+      if ((var4 = n.a(var2, var1)) == null && this.a) {
+         var4 = n.a(this.c, var1);
+      }
+
+      return var4;
+   }
+
+   public final void a(int var1, ah var2) {
+      n.a(this.c, var1, var2);
+      this.d();
+      if (this.a) {
+         n.a(this.b, var1, var2);
+         this.c();
+      }
+   }
+
+   public final boolean a() {
+      Hashtable var1 = null;
+      if (this.a) {
+         var1 = this.b;
+      } else {
+         var1 = this.c;
+      }
+
+      if (this.a && !this.b.containsKey("zp.ace") && this.c.containsKey("zp.ace")) {
+         this.a(n.a(this.c));
+      }
+
+      boolean var2 = true;
+      if (!var1.containsKey("zp.ace")) {
+         if (this.b()) {
+            var2 = this.c();
+         }
+
+         this.a(var2);
+      } else {
+         var2 = n.a(var1);
+      }
+
+      return var2;
+   }
+
+   public final void a(boolean var1) {
+      n.a(this.c, var1);
+      this.d();
+      if (this.a) {
+         n.a(this.b, var1);
+         this.c();
+      }
+   }
+
+   public final Vector a() {
+      if (this.a == null) {
+         this.a = new Vector();
+         int var1 = 1;
+
+         String var2;
+         while ((var2 = this.a(var1)) != null) {
+            var1++;
+            int var3;
+            if ((var3 = var2.indexOf(58)) >= 0) {
+               String var4 = var2.substring(0, var3);
+               var2 = var2.substring(var3 + 1);
+               if (var4 != null && var2 != null) {
+                  this.a.addElement(w.a(var4, var2));
+               }
             }
-            this.a(bl);
-        } else {
-            bl = n.a(hashtable);
-        }
-        return bl;
-    }
+         }
+      }
 
-    public final void a(boolean bl) {
-        n.a(this.c, bl);
-        this.d();
-        if (this.a) {
-            n.a(this.b, bl);
-            this.c();
-        }
-    }
+      return this.a;
+   }
 
-    public final Vector a() {
-        if (this.a == null) {
-            String string;
-            this.a = new Vector();
-            int n2 = 1;
-            while ((string = this.a(n2)) != null) {
-                ++n2;
-                int n3 = string.indexOf(58);
-                if (n3 < 0) continue;
-                String string2 = string.substring(0, n3);
-                string = string.substring(n3 + 1);
-                if (string2 == null || string == null) continue;
-                this.a.addElement(w.a(string2, string));
-            }
-        }
-        return this.a;
-    }
+   protected abstract String a(int var1);
 
-    protected abstract String a(int var1);
+   protected abstract boolean b();
 
-    protected abstract boolean b();
+   protected abstract boolean c();
 
-    protected abstract boolean c();
-
-    protected abstract boolean d();
+   protected abstract boolean d();
 }
-

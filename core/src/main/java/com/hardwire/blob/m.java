@@ -1,44 +1,39 @@
 package com.hardwire.blob;
 
-/*
- * Decompiled with CFR 0.152.
- */
-public final class m
-extends x {
-    m(ag ag2) {
-        super(0, ag2);
-    }
+public final class m extends x {
+   m(ag var1) {
+      super(0, var1);
+   }
 
-    public final x a() {
-        m m2 = this;
-        m2.a.a(false);
-        x x2 = null;
-        m2 = this;
-        if (m2.a.a().a()) {
-            m2 = this;
-            x2 = m2.a.d();
-        } else {
-            m2 = this;
-            x2 = m2.a.c();
-        }
-        m2 = this;
-        return m2.a.a(this, x2);
-    }
+   public final x a() {
+      super.a.a(false);
+      x var1 = null;
+      if (super.a.a().a()) {
+         var1 = super.a.d();
+      } else {
+         var1 = super.a.c();
+      }
 
-    public final x b() {
-        m m2 = this;
-        m2.a.a(true);
-        Object object = null;
-        m2 = this;
-        object = m2.a;
-        if (((ag)object).a().a()) {
-            object = ((ag)object).d();
-        } else {
-            m2 = this;
-            object = !m2.a.c() ? ((ag)object).b() : (((ag)object).e() ? ((ag)object).e() : (((ag)object).d() ? ((ag)object).j() : ((ag)object).f()));
-        }
-        m2 = this;
-        return m2.a.a(this, (x)object);
-    }
+      return super.a.a(this, var1);
+   }
+
+   public final x b() {
+      super.a.a(true);
+      ag var1 = null;
+      var1 = super.a;
+      x var4;
+      if (super.a.a().a()) {
+         var4 = var1.d();
+      } else if (!super.a.c()) {
+         var4 = var1.b();
+      } else if (var1.e()) {
+         var4 = var1.e();
+      } else if (var1.d()) {
+         var4 = var1.j();
+      } else {
+         var4 = var1.f();
+      }
+
+      return super.a.a(this, var4);
+   }
 }
-

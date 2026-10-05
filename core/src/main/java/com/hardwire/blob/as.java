@@ -1,202 +1,197 @@
 package com.hardwire.blob;
 
-/*
- * Decompiled with CFR 0.152.
- */
-/*
- * Duplicate member names - consider using --renamedupmembers true
- */
 public final class as {
-    public int a;
-    public int b;
-    public static final as a = new as(0, 0);
+   public int a;
+   public int b;
+   public static final as a = new as(0, 0);
 
-    public as() {
-        this.b = 0;
-        this.a = 0;
-    }
+   public as() {
+      this.a = this.b = 0;
+   }
 
-    public as(int n2, int n3) {
-        this.a = n2;
-        this.b = n3;
-    }
+   public as(int var1, int var2) {
+      this.a = var1;
+      this.b = var2;
+   }
 
-    public as(as as2) {
-        this.a = as2.a;
-        this.b = as2.b;
-    }
+   public as(as var1) {
+      this.a = var1.a;
+      this.b = var1.b;
+   }
 
-    public as(int n2, long l2, boolean bl) {
-        n2 = y.a(n2);
-        bl = false;
-        boolean bl2 = false;
-        if (n2 > 3294198) {
-            bl2 = true;
-            n2 = 6588397 - n2;
-        }
-        if (n2 > 1647099) {
-            bl = true;
-            n2 = 3294198 - n2;
-        }
-        n2 = n2 * (y.a.length - 1) / 1647099;
-        this.a = y.a[y.a.length - 1 - n2];
-        this.b = y.a[n2];
-        if (bl) {
-            this.a = -this.a;
-        }
-        if (bl2) {
-            this.b = -this.b;
-        }
-        this.a = (int)((long)this.a * l2 >> 10);
-        this.b = (int)((long)this.b * l2 >> 10);
-    }
+   public as(int var1, long var2, boolean var4) {
+      var1 = y.a(var1);
+      var4 = false;
+      boolean var5 = false;
+      if (var1 > 3294198) {
+         var5 = true;
+         var1 = 6588397 - var1;
+      }
 
-    public final as a() {
-        return new as(-this.a, -this.b);
-    }
+      if (var1 > 1647099) {
+         var4 = true;
+         var1 = 3294198 - var1;
+      }
 
-    public final int a() {
-        if (this.a()) {
-            return 0;
-        }
-        int n2 = this.a < 0 ? -this.a : this.a;
-        int n3 = this.b < 0 ? -this.b : this.b;
-        boolean bl = false;
-        if (n2 < n3) {
-            bl = true;
-            n2 ^= n3;
-            n3 ^= n2;
-            n2 ^= n3;
-        }
-        n2 = n3 * (y.b.length - 1) / n2;
-        n2 = y.b[n2] << 10;
-        if (bl) {
-            n2 = 1647099 - n2;
-        }
-        if (this.a < 0 && this.b < 0) {
-            n2 += 3294198;
-        } else if (this.a < 0) {
-            n2 = 3294198 - n2;
-        } else if (this.b < 0) {
-            n2 = 6588397 - n2;
-        }
-        return n2;
-    }
+      var1 = var1 * (y.a.length - 1) / 1647099;
+      this.a = y.a[y.a.length - 1 - var1];
+      this.b = y.a[var1];
+      if (var4) {
+         this.a = -this.a;
+      }
 
-    public final as b() {
-        this.a <<= 10;
-        this.b <<= 10;
-        return this;
-    }
+      if (var5) {
+         this.b = -this.b;
+      }
 
-    public final void a(as as2) {
-        this.a += as2.a;
-        this.b += as2.b;
-    }
+      this.a = (int)(this.a * var2 >> 10);
+      this.b = (int)(this.b * var2 >> 10);
+   }
 
-    public final void a(int n2, int n3) {
-        this.a += n2;
-        this.b += n3;
-    }
+   public final as a() {
+      return new as(-this.a, -this.b);
+   }
 
-    public final void b(as as2) {
-        this.a -= as2.a;
-        this.b -= as2.b;
-    }
+   public final int a() {
+      if (this.a()) {
+         return 0;
+      }
 
-    public final void a(int n2) {
-        this.a = (int)((long)this.a * (long)n2 >> 10);
-        this.b = (int)((long)this.b * (long)n2 >> 10);
-    }
+      int var1 = this.a < 0 ? -this.a : this.a;
+      int var2 = this.b < 0 ? -this.b : this.b;
+      boolean var3 = false;
+      if (var1 < var2) {
+         var3 = true;
+         var1 ^= var2;
+         var2 ^= var1;
+         var1 ^= var2;
+      }
 
-    public final void b(int n2) {
-        this.a /= n2;
-        this.b /= n2;
-    }
+      var1 = var2 * (y.b.length - 1) / var1;
+      var1 = y.b[var1] << 10;
+      if (var3) {
+         var1 = 1647099 - var1;
+      }
 
-    public final void c(int n2) {
-        this.a = (int)(((long)this.a << 10) / (long)n2);
-        this.b = (int)(((long)this.b << 10) / (long)n2);
-    }
+      if (this.a < 0 && this.b < 0) {
+         var1 += 3294198;
+      } else if (this.a < 0) {
+         var1 = 3294198 - var1;
+      } else if (this.b < 0) {
+         var1 = 6588397 - var1;
+      }
 
-    public final as a(as as2) {
-        return new as(this.a + as2.a, this.b + as2.b);
-    }
+      return var1;
+   }
 
-    public final as b(as as2) {
-        return new as(this.a - as2.a, this.b - as2.b);
-    }
+   public final as b() {
+      this.a <<= 10;
+      this.b <<= 10;
+      return this;
+   }
 
-    public final int a(as as2) {
-        return this.a * as2.b - this.b * as2.a;
-    }
+   public final void a(as var1) {
+      this.a = this.a + var1.a;
+      this.b = this.b + var1.b;
+   }
 
-    public final boolean a() {
-        return this.a == 0 && this.b == 0;
-    }
+   public final void a(int var1, int var2) {
+      this.a += var1;
+      this.b += var2;
+   }
 
-    public final void c(as as2) {
-        this.a = as2.a;
-        this.b = as2.b;
-    }
+   public final void b(as var1) {
+      this.a = this.a - var1.a;
+      this.b = this.b - var1.b;
+   }
 
-    public final void b(int n2, int n3) {
-        this.a = n2;
-        this.b = n3;
-    }
+   public final void a(int var1) {
+      this.a = (int)((long)this.a * var1 >> 10);
+      this.b = (int)((long)this.b * var1 >> 10);
+   }
 
-    public final int b() {
-        int n2 = this.c();
-        if (n2 == 1024) {
-            return n2;
-        }
-        this.a = (int)(((long)this.a << 10) / (long)n2);
-        this.b = (int)(((long)this.b << 10) / (long)n2);
-        return n2;
-    }
+   public final void b(int var1) {
+      this.a /= var1;
+      this.b /= var1;
+   }
 
-    public final void a() {
-        if (this.a == 0) {
-            this.b = this.b < 0 ? -1024 : 1024;
-            return;
-        }
-        if (this.b == 0) {
-            this.a = this.a < 0 ? -1024 : 1024;
-            return;
-        }
-        if (this.a == this.b) {
-            if (this.a < 0) {
-                this.a = -724;
-                this.b = -724;
-                return;
-            }
+   public final void c(int var1) {
+      this.a = (int)(((long)this.a << 10) / var1);
+      this.b = (int)(((long)this.b << 10) / var1);
+   }
+
+   public final as a(as var1) {
+      return new as(this.a + var1.a, this.b + var1.b);
+   }
+
+   public final as b(as var1) {
+      return new as(this.a - var1.a, this.b - var1.b);
+   }
+
+   public final int a(as var1) {
+      return this.a * var1.b - this.b * var1.a;
+   }
+
+   public final boolean a() {
+      return this.a == 0 && this.b == 0;
+   }
+
+   public final void c(as var1) {
+      this.a = var1.a;
+      this.b = var1.b;
+   }
+
+   public final void b(int var1, int var2) {
+      this.a = var1;
+      this.b = var2;
+   }
+
+   public final int b() {
+      int var1;
+      if ((var1 = this.c()) == 1024) {
+         return var1;
+      }
+
+      this.a = (int)(((long)this.a << 10) / var1);
+      this.b = (int)(((long)this.b << 10) / var1);
+      return var1;
+   }
+
+   public final void a() {
+      if (this.a == 0) {
+         this.b = this.b < 0 ? -1024 : 1024;
+      } else if (this.b == 0) {
+         this.a = this.a < 0 ? -1024 : 1024;
+      } else if (this.a == this.b) {
+         if (this.a < 0) {
+            this.a = -724;
+            this.b = -724;
+         } else {
             this.a = 724;
             this.b = 724;
-            return;
-        }
-        if (this.a == -this.b) {
-            if (this.a < 0) {
-                this.a = -724;
-                this.b = 724;
-                return;
-            }
+         }
+      } else if (this.a == -this.b) {
+         if (this.a < 0) {
+            this.a = -724;
+            this.b = 724;
+         } else {
             this.a = 724;
             this.b = -724;
-            return;
-        }
-        this.b();
-    }
+         }
+      } else {
+         this.b();
+      }
+   }
 
-    public final int c() {
-        return y.a(this.a, this.b);
-    }
+   public final int c() {
+      return y.a(this.a, this.b);
+   }
 
-    public final int d() {
-        return (int)((long)this.a * (long)this.a + (long)this.b * (long)this.b >> 10);
-    }
+   public final int d() {
+      return (int)((long)this.a * this.a + (long)this.b * this.b >> 10);
+   }
 
-    public final long a() {
-        return (long)this.a * (long)this.a + (long)this.b * (long)this.b;
-    }
+   public final long a() {
+      return (long)this.a * this.a + (long)this.b * this.b;
+   }
 }
-

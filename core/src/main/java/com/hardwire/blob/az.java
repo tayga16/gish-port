@@ -1,231 +1,190 @@
 package com.hardwire.blob;
 
-/*
- * Decompiled with CFR 0.152.
- * 
- * Could not load the following classes:
- *  javax.microedition.rms.RecordEnumeration
- *  javax.microedition.rms.RecordStore
- *  javax.microedition.rms.RecordStoreException
- */
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.FilterInputStream;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import javax.microedition.rms.RecordEnumeration;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
 
 final class az {
-    private az() {
-    }
+   private az() {
+   }
 
-    static Hashtable a(boolean bl) {
-        Hashtable hashtable;
-        block7: {
-            RecordStore recordStore = null;
-            try {
-                recordStore = bl ? az.a("com.zeemote.zc.lzp", true) : az.a();
-                hashtable = az.a(recordStore);
-                if (null == recordStore) break block7;
-            }
-            catch (Throwable throwable) {
-                if (null != recordStore) {
-                    try {
-                        recordStore.closeRecordStore();
-                    }
-                    catch (RecordStoreException recordStoreException) {}
-                }
-                throw throwable;
-            }
-            try {
-                recordStore.closeRecordStore();
-            }
-            catch (RecordStoreException recordStoreException) {}
-        }
-        return hashtable;
-    }
+   static Hashtable a(boolean var0) {
+      RecordStore var1 = null;
 
-    /*
-     * Loose catch block
-     * Enabled aggressive block sorting
-     * Enabled unnecessary exception pruning
-     * Enabled aggressive exception aggregation
-     */
-    static void a(Hashtable hashtable, boolean bl) {
-        RecordStore recordStore = null;
-        try {
-            ByteArrayOutputStream byteArrayOutputStream;
-            block22: {
-                recordStore = bl ? az.a("com.zeemote.zc.lzp", true) : az.a();
-                RecordStore recordStore2 = recordStore;
-                RecordEnumeration recordEnumeration = null;
-                DataOutputStream dataOutputStream = null;
-                byteArrayOutputStream = null;
-                try {
-                    byteArrayOutputStream = new ByteArrayOutputStream();
-                    dataOutputStream = new DataOutputStream(byteArrayOutputStream);
-                    dataOutputStream.writeInt(1);
-                    Object object = hashtable.keys();
-                    while (object.hasMoreElements()) {
-                        String string = (String)object.nextElement();
-                        String string2 = (String)hashtable.get(string);
-                        dataOutputStream.writeUTF(string);
-                        dataOutputStream.writeUTF(string2);
-                    }
-                    dataOutputStream.flush();
-                    dataOutputStream.close();
-                    dataOutputStream = null;
-                    object = byteArrayOutputStream.toByteArray();
-                    recordEnumeration = recordStore2.enumerateRecords(null, null, false);
-                    while (recordEnumeration.hasNextElement()) {
-                        recordStore2.deleteRecord(recordEnumeration.nextRecordId());
-                    }
-                    recordStore2.addRecord((byte[])object, 0, ((Object)object).length);
-                    if (null == recordEnumeration) break block22;
-                }
-                catch (RecordStoreException recordStoreException) {
-                    try {
-                        throw new IOException(recordStoreException.getMessage());
-                        catch (SecurityException securityException) {
-                            throw new IOException(securityException.getMessage());
-                        }
-                    }
-                    catch (Throwable throwable) {
-                        if (null != recordEnumeration) {
-                            recordEnumeration.destroy();
-                        }
-                        if (null != byteArrayOutputStream) {
-                            try {
-                                byteArrayOutputStream.close();
-                            }
-                            catch (IOException iOException) {}
-                        }
-                        if (null == dataOutputStream) throw throwable;
-                        try {
-                            dataOutputStream.close();
-                            throw throwable;
-                        }
-                        catch (IOException iOException) {}
-                        throw throwable;
-                    }
-                }
-                recordEnumeration.destroy();
-            }
-            if (null != byteArrayOutputStream) {
-                try {
-                    byteArrayOutputStream.close();
-                }
-                catch (IOException iOException) {}
-            }
-            if (null == recordStore) return;
-        }
-        catch (Throwable throwable) {
-            if (null == recordStore) throw throwable;
-            try {
-                recordStore.closeRecordStore();
-                throw throwable;
-            }
-            catch (RecordStoreException recordStoreException) {}
-            throw throwable;
-        }
-        try {
-            recordStore.closeRecordStore();
-            return;
-        }
-        catch (RecordStoreException recordStoreException) {
-            return;
-        }
-    }
+      try {
+         if (var0) {
+            var1 = a("com.zeemote.zc.lzp", true);
+         } else {
+            var1 = a();
+         }
 
-    private static RecordStore a() {
-        try {
-            return RecordStore.openRecordStore((String)"gzp", (String)"Zeemote, Inc.", (String)"Zeemote Manager");
-        }
-        catch (RecordStoreException recordStoreException) {
-            throw new IOException(recordStoreException.getMessage());
-        }
-        catch (SecurityException securityException) {
-            throw new IOException(securityException.getMessage());
-        }
-    }
-
-    /*
-     * Enabled aggressive block sorting
-     * Enabled unnecessary exception pruning
-     * Enabled aggressive exception aggregation
-     */
-    private static Hashtable a(RecordStore object) {
-        Object object2;
-        RecordEnumeration recordEnumeration;
-        block15: {
-            recordEnumeration = null;
-            FilterInputStream filterInputStream = null;
+         return a(var1);
+      } finally {
+         if (null != var1) {
             try {
-                recordEnumeration = object.enumerateRecords(null, null, false);
-                object = new Hashtable();
-                if (recordEnumeration.hasNextElement()) {
-                    byte[] byArray = recordEnumeration.nextRecord();
-                    object2 = byArray;
-                    if (byArray != null && (filterInputStream = new DataInputStream(new ByteArrayInputStream((byte[])object2))).available() > 0) {
-                        boolean bl = false;
-                        if (((DataInputStream)filterInputStream).readInt() != 1) {
-                            throw new IOException();
-                        }
-                        while (filterInputStream.available() > 0) {
-                            String string = ((DataInputStream)filterInputStream).readUTF();
-                            String string2 = ((DataInputStream)filterInputStream).readUTF();
-                            ((Hashtable)object).put(string, string2);
-                        }
-                    }
-                }
-                object2 = object;
-                if (null == filterInputStream) break block15;
+               var1.closeRecordStore();
+            } catch (RecordStoreException var5) {
             }
-            catch (RecordStoreException recordStoreException) {
-                try {
-                    throw new IOException(recordStoreException.getMessage());
-                }
-                catch (Throwable throwable) {
-                    if (null != filterInputStream) {
-                        try {
-                            filterInputStream.close();
-                        }
-                        catch (IOException iOException) {}
-                    }
-                    if (null != recordEnumeration) {
-                        recordEnumeration.destroy();
-                    }
-                    throw throwable;
-                }
-            }
-            try {
-                filterInputStream.close();
-            }
-            catch (IOException iOException) {}
-        }
-        if (null != recordEnumeration) {
-            recordEnumeration.destroy();
-        }
-        return object2;
-    }
+         }
+      }
+   }
 
-    private static RecordStore a(String string, boolean bl) {
-        RecordStore recordStore = null;
-        try {
-            recordStore = RecordStore.openRecordStore((String)string, (boolean)true);
-            recordStore.setMode(0, true);
-            return recordStore;
-        }
-        catch (RecordStoreException recordStoreException) {
-            throw new IOException(recordStoreException.getMessage());
-        }
-        catch (SecurityException securityException) {
-            throw new IOException(securityException.getMessage());
-        }
-    }
+   // $VF: Could not verify finally blocks. A semaphore variable has been added to preserve control flow.
+   // Please report this to the Vineflower issue tracker, at https://github.com/Vineflower/vineflower/issues with a copy of the class file (if you have the rights to distribute it!)
+   static void a(Hashtable var0, boolean var1) {
+      RecordStore var2 = null;
+
+      try {
+         if (var1) {
+            var2 = a("com.zeemote.zc.lzp", true);
+         } else {
+            var2 = a();
+         }
+
+         RecordStore var36 = var2;
+         var0 = var0;
+         RecordEnumeration var3 = null;
+         DataOutputStream var4 = null;
+         ByteArrayOutputStream var5 = null;
+         boolean var26 = false /* VF: Semaphore variable */;
+
+         try {
+            var26 = true;
+            var5 = new ByteArrayOutputStream();
+            (var4 = new DataOutputStream(var5)).writeInt(1);
+            Enumeration var6 = var0.keys();
+
+            while (var6.hasMoreElements()) {
+               String var7 = (String)var6.nextElement();
+               String var8 = (String)var0.get(var7);
+               var4.writeUTF(var7);
+               var4.writeUTF(var8);
+            }
+
+            var4.flush();
+            var4.close();
+            var4 = null;
+            byte[] var37 = var5.toByteArray();
+            var3 = var36.enumerateRecords(null, null, false);
+
+            while (var3.hasNextElement()) {
+               var36.deleteRecord(var3.nextRecordId());
+            }
+
+            var36.addRecord(var37, 0, var37.length);
+            var26 = false;
+         } catch (RecordStoreException var31) {
+            throw new IOException(var31.getMessage());
+         } catch (SecurityException var32) {
+            throw new IOException(var32.getMessage());
+         } finally {
+            if (var26) {
+               if (null != var3) {
+                  var3.destroy();
+               }
+
+               if (null != var5) {
+                  try {
+                     var5.close();
+                  } catch (IOException var29) {
+                  }
+               }
+
+               if (null != var4) {
+                  try {
+                     var4.close();
+                  } catch (IOException var28) {
+                  }
+               }
+            }
+         }
+
+         if (null != var3) {
+            var3.destroy();
+         }
+
+         if (null != var5) {
+            try {
+               var5.close();
+            } catch (IOException var30) {
+            }
+         }
+      } finally {
+         if (null != var2) {
+            try {
+               var2.closeRecordStore();
+            } catch (RecordStoreException var27) {
+            }
+         }
+      }
+   }
+
+   private static RecordStore a() {
+      try {
+         return RecordStore.openRecordStore("gzp", "Zeemote, Inc.", "Zeemote Manager");
+      } catch (RecordStoreException var1) {
+         throw new IOException(var1.getMessage());
+      } catch (SecurityException var2) {
+         throw new IOException(var2.getMessage());
+      }
+   }
+
+   private static Hashtable a(RecordStore var0) {
+      RecordEnumeration var1 = null;
+      DataInputStream var2 = null;
+
+      try {
+         var1 = var0.enumerateRecords(null, null, false);
+         Hashtable var12 = new Hashtable();
+         byte[] var3;
+         if (var1.hasNextElement() && (var3 = var1.nextRecord()) != null && (var2 = new DataInputStream(new ByteArrayInputStream(var3))).available() > 0) {
+            int var10000 = var2.readInt();
+            boolean var13 = false;
+            if (var10000 != 1) {
+               throw new IOException();
+            }
+
+            while (var2.available() > 0) {
+               String var14 = var2.readUTF();
+               String var4 = var2.readUTF();
+               var12.put(var14, var4);
+            }
+         }
+
+         return var12;
+      } catch (RecordStoreException var10) {
+         throw new IOException(var10.getMessage());
+      } finally {
+         if (null != var2) {
+            try {
+               var2.close();
+            } catch (IOException var9) {
+            }
+         }
+
+         if (null != var1) {
+            var1.destroy();
+         }
+      }
+   }
+
+   private static RecordStore a(String var0, boolean var1) {
+      RecordStore var4 = null;
+
+      try {
+         (var4 = RecordStore.openRecordStore(var0, true)).setMode(0, true);
+         return var4;
+      } catch (RecordStoreException var2) {
+         throw new IOException(var2.getMessage());
+      } catch (SecurityException var3) {
+         throw new IOException(var3.getMessage());
+      }
+   }
 }
-

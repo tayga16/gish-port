@@ -1,16 +1,5 @@
 package com.hardwire.blob;
 
-/*
- * Decompiled with CFR 0.152.
- * 
- * Could not load the following classes:
- *  javax.bluetooth.DeviceClass
- *  javax.bluetooth.DiscoveryListener
- *  javax.bluetooth.LocalDevice
- *  javax.bluetooth.RemoteDevice
- *  javax.bluetooth.ServiceRecord
- *  javax.bluetooth.UUID
- */
 import java.io.IOException;
 import java.util.Vector;
 import javax.bluetooth.DeviceClass;
@@ -20,174 +9,179 @@ import javax.bluetooth.RemoteDevice;
 import javax.bluetooth.ServiceRecord;
 import javax.bluetooth.UUID;
 
-/*
- * Duplicate member names - consider using --renamedupmembers true
- */
-final class ao
-implements ah,
-DiscoveryListener {
-    private static final UUID[] a = new UUID[]{new UUID("8e1f0cf7508f4875b62cfbb67fd34812", false)};
-    private static final UUID[] b = new UUID[]{new UUID(4353L)};
-    private String a;
-    private RemoteDevice a;
-    private ah a;
-    private volatile boolean a;
-    private volatile int a;
-    private int b;
-    private Vector a = -1;
+final class ao implements ah, DiscoveryListener {
+   private static final UUID[] a = new UUID[]{new UUID("8e1f0cf7508f4875b62cfbb67fd34812", false)};
+   private static final UUID[] b = new UUID[]{new UUID(4353L)};
+   private String a = null;
+   private RemoteDevice a = null;
+   private ah a = null;
+   private volatile boolean a = false;
+   private volatile int a = -1;
+   private int b;
+   private Vector a;
 
-    ao(String string, RemoteDevice remoteDevice) {
-        this.a = string;
-        this.a = remoteDevice;
-    }
+   ao(String var1, RemoteDevice var2) {
+      this.a = var1;
+      this.a = var2;
+   }
 
-    public final String b() {
-        return this.a().b();
-    }
+   public final String b() {
+      return this.a().b();
+   }
 
-    private ah a() {
-        if (this.a == null) {
-            String string = this.c();
-            if (string == null) {
-                throw new IOException();
-            }
-            this.a = w.a(this.a, string);
-        }
-        return this.a;
-    }
+   private ah a() {
+      if (this.a == null) {
+         String var1;
+         if ((var1 = this.c()) == null) {
+            throw new IOException();
+         }
 
-    private String c() {
-        Object object = null;
-        for (int i2 = 0; object == null && i2 < 3; ++i2) {
-            if (i2 > 0) {
-                try {
-                    Thread.sleep(i2 * 1000);
-                }
-                catch (InterruptedException interruptedException) {}
-            }
-            ao ao2 = object = this;
-            ((ao)object).a = new Vector();
-            ao2.b = -1;
-            ao2.a = false;
-            ao2.a = -1;
-            UUID[] uUIDArray = a;
-            if (ao2.a != null && ao2.a.startsWith("ZeemoteLink")) {
-                uUIDArray = b;
-            }
-            ao2.b = aw.a().searchServices(null, uUIDArray, ao2.a, (DiscoveryListener)ao2);
-            if (ao2.b < 0) {
-                throw new IOException();
-            }
-            ao2.c();
-            object = ((ao)object).a.size() > 0 ? ((ServiceRecord)((ao)object).a.elementAt(0)).getConnectionURL(0, false) : null;
-            if (object == null && this.a != 6) break;
-        }
-        return object;
-    }
+         this.a = w.a(this.a, var1);
+      }
 
-    public final void deviceDiscovered(RemoteDevice remoteDevice, DeviceClass deviceClass) {
-        throw new IllegalStateException();
-    }
+      return this.a;
+   }
 
-    public final void inquiryCompleted(int n2) {
-        throw new IllegalStateException();
-    }
+   private String c() {
+      String var1 = null;
 
-    public final void servicesDiscovered(int n2, ServiceRecord[] serviceRecordArray) {
-        for (n2 = 0; n2 < serviceRecordArray.length; ++n2) {
-            this.a.addElement(serviceRecordArray[n2]);
-        }
-    }
-
-    public final synchronized void serviceSearchCompleted(int n2, int n3) {
-        this.a = n3;
-        this.a = true;
-        this.notify();
-    }
-
-    private synchronized void c() {
-        if (!this.a) {
+      for (int var2 = 0; var1 == null && var2 < 3; var2++) {
+         if (var2 > 0) {
             try {
-                this.wait(60000L);
+               Thread.sleep(var2 * 1000);
+            } catch (InterruptedException var5) {
             }
-            catch (InterruptedException interruptedException) {}
-            if (!this.a) {
-                try {
-                    ao ao2 = this;
-                    if (aw.a().cancelServiceSearch(ao2.b)) {
-                        try {
-                            this.wait(5000L);
-                        }
-                        catch (InterruptedException interruptedException) {}
-                    }
-                }
-                catch (IOException iOException) {}
+         }
+
+         ao var6 = this;
+         ao var3 = this;
+         this.a = new Vector();
+         var3.b = -1;
+         var3.a = false;
+         var3.a = -1;
+         UUID[] var4 = a;
+         if (var3.a != null && var3.a.startsWith("ZeemoteLink")) {
+            var4 = b;
+         }
+
+         var3.b = aw.a().searchServices(null, var4, var3.a, var3);
+         if (var3.b < 0) {
+            throw new IOException();
+         }
+
+         var3.c();
+         if ((var1 = var6.a.size() > 0 ? ((ServiceRecord)var6.a.elementAt(0)).getConnectionURL(0, false) : null) == null && this.a != 6) {
+            break;
+         }
+      }
+
+      return var1;
+   }
+
+   public final void deviceDiscovered(RemoteDevice var1, DeviceClass var2) {
+      throw new IllegalStateException();
+   }
+
+   public final void inquiryCompleted(int var1) {
+      throw new IllegalStateException();
+   }
+
+   public final void servicesDiscovered(int var1, ServiceRecord[] var2) {
+      for (int var3 = 0; var3 < var2.length; var3++) {
+         this.a.addElement(var2[var3]);
+      }
+   }
+
+   public final synchronized void serviceSearchCompleted(int var1, int var2) {
+      this.a = var2;
+      this.a = true;
+      this.notify();
+   }
+
+   private synchronized void c() {
+      if (!this.a) {
+         try {
+            this.wait(60000L);
+         } catch (InterruptedException var4) {
+         }
+
+         if (!this.a) {
+            try {
+               ao var1 = this;
+               if (aw.a().cancelServiceSearch(var1.b)) {
+                  try {
+                     this.wait(5000L);
+                  } catch (InterruptedException var2) {
+                  }
+               }
+            } catch (IOException var3) {
             }
-        }
-        if (!this.a) {
-            this.a = true;
-        }
-    }
+         }
+      }
 
-    static boolean a(String string) {
-        return string != null && string.length() >= "btspp:".length() && string.substring(0, "btspp:".length()).equalsIgnoreCase("btspp:");
-    }
+      if (!this.a) {
+         this.a = true;
+      }
+   }
 
-    static LocalDevice a() {
-        LocalDevice localDevice = null;
-        try {
-            localDevice = LocalDevice.getLocalDevice();
-        }
-        catch (NullPointerException nullPointerException) {}
-        return localDevice;
-    }
+   static boolean a(String var0) {
+      return var0 != null && var0.length() >= "btspp:".length() && var0.substring(0, "btspp:".length()).equalsIgnoreCase("btspp:");
+   }
 
-    public final void a() {
-        this.a().a();
-    }
+   static LocalDevice a() {
+      LocalDevice var0 = null;
 
-    public final void b() {
-        if (this.a != null) {
-            this.a.b();
-        }
-    }
+      try {
+         var0 = LocalDevice.getLocalDevice();
+      } catch (NullPointerException var1) {
+      }
 
-    public final String a() {
-        return this.a;
-    }
+      return var0;
+   }
 
-    public final boolean a() {
-        if (this.a != null) {
-            return this.a.a();
-        }
-        return false;
-    }
+   public final void a() {
+      this.a().a();
+   }
 
-    public final byte[] a(byte[] byArray) {
-        if (this.a != null) {
-            return this.a.a(byArray);
-        }
-        throw new IOException();
-    }
+   public final void b() {
+      if (this.a != null) {
+         this.a.b();
+      }
+   }
 
-    public final void a(r r2) {
-        if (this.a != null) {
-            this.a.a(r2);
-            return;
-        }
-        throw new IllegalStateException();
-    }
+   public final String a() {
+      return this.a;
+   }
 
-    public final boolean b() {
-        return this.a().b();
-    }
+   public final boolean a() {
+      return this.a != null ? this.a.a() : false;
+   }
 
-    public final void a(byte[] byArray) {
-        if (this.a != null) {
-            this.a.a(byArray);
-            return;
-        }
-        throw new IOException();
-    }
+   public final byte[] a(byte[] var1) {
+      if (this.a != null) {
+         return this.a.a(var1);
+      } else {
+         throw new IOException();
+      }
+   }
+
+   public final void a(r var1) {
+      if (this.a != null) {
+         this.a.a(var1);
+      } else {
+         throw new IllegalStateException();
+      }
+   }
+
+   public final boolean b() {
+      return this.a().b();
+   }
+
+   public final void a(byte[] var1) {
+      if (this.a != null) {
+         this.a.a(var1);
+      } else {
+         throw new IOException();
+      }
+   }
 }
-

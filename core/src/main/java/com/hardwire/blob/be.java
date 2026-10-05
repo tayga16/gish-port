@@ -1,14 +1,5 @@
 package com.hardwire.blob;
 
-/*
- * Decompiled with CFR 0.152.
- * 
- * Could not load the following classes:
- *  javax.bluetooth.BluetoothConnectionException
- *  javax.microedition.io.Connection
- *  javax.microedition.io.Connector
- *  javax.microedition.io.StreamConnection
- */
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -17,136 +8,139 @@ import javax.microedition.io.Connection;
 import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
 
-/*
- * Duplicate member names - consider using --renamedupmembers true
- */
-final class be
-implements ah {
-    private String a;
-    private String b = null;
-    private Connection a;
-    private StreamConnection a;
-    private InputStream a;
-    private OutputStream a;
-    boolean a = true;
+final class be implements ah {
+   private String a = null;
+   private String b = null;
+   private Connection a = null;
+   private StreamConnection a;
+   private InputStream a;
+   private OutputStream a;
+   boolean a = true;
 
-    public be(String string, String string2) {
-        this.a = string;
-        this.b = string2;
-    }
+   public be(String var1, String var2) {
+      this.a = var1;
+      this.b = var2;
+   }
 
-    public final String b() {
-        return this.b;
-    }
+   public final String b() {
+      return this.b;
+   }
 
-    public final void a() {
-        Object object = this;
-        object = ((be)object).b;
-        if (object == null) {
+   public final void a() {
+      String var1 = this.b;
+      if (this.b == null) {
+         throw new IOException();
+      }
+
+      try {
+         if (ao.a(var1)) {
+            ao.a();
+         }
+
+         for (int var2 = 0; this.a == null && var2 < 1; var2++) {
+            try {
+               this.a = Connector.open(var1);
+            } catch (BluetoothConnectionException var4) {
+               if (var4.getStatus() != 5) {
+                  throw var4;
+               }
+            }
+         }
+
+         if (this.a == null) {
             throw new IOException();
-        }
-        try {
-            if (ao.a((String)object)) {
-                ao.a();
+         }
+
+         if (this.a instanceof StreamConnection) {
+            this.a = (StreamConnection)this.a;
+            if (this.a) {
+               this.a = new al(this.a.openInputStream());
+            } else {
+               this.a = this.a.openInputStream();
             }
-            for (int i2 = 0; this.a == null && i2 < 1; ++i2) {
-                try {
-                    this.a = Connector.open((String)object);
-                    continue;
-                }
-                catch (BluetoothConnectionException bluetoothConnectionException) {
-                    BluetoothConnectionException bluetoothConnectionException2 = bluetoothConnectionException;
-                    if (bluetoothConnectionException.getStatus() == 5) continue;
-                    throw bluetoothConnectionException2;
-                }
-            }
-            if (this.a == null) {
-                throw new IOException();
-            }
-            if (this.a instanceof StreamConnection) {
-                this.a = (StreamConnection)this.a;
-                this.a = this.a ? new al(this.a.openInputStream()) : this.a.openInputStream();
-                this.a = this.a.openOutputStream();
-                return;
-            }
+
+            this.a = this.a.openOutputStream();
+         } else {
             throw new IOException();
-        }
-        catch (IllegalArgumentException illegalArgumentException) {
-            throw new IOException();
-        }
-        catch (SecurityException securityException) {
-            throw securityException;
-        }
-        catch (RuntimeException runtimeException) {
-            throw new IOException();
-        }
-    }
+         }
+      } catch (IllegalArgumentException var5) {
+         throw new IOException();
+      } catch (SecurityException var6) {
+         throw var6;
+      } catch (RuntimeException var7) {
+         throw new IOException();
+      }
+   }
 
-    public final void b() {
-        try {
-            if (this.a != null) {
-                this.a.close();
-                this.a = null;
-            }
-            if (this.a != null) {
-                this.a.close();
-                this.a = null;
-            }
-            if (this.a != null) {
-                this.a.close();
-                this.a = null;
-            }
-            return;
-        }
-        finally {
+   public final void b() {
+      try {
+         if (this.a != null) {
+            this.a.close();
             this.a = null;
+         }
+
+         if (this.a != null) {
+            this.a.close();
             this.a = null;
+         }
+
+         if (this.a != null) {
+            this.a.close();
             this.a = null;
-            this.a = null;
-        }
-    }
+         }
+      } finally {
+         this.a = null;
+         this.a = null;
+         this.a = null;
+         this.a = null;
+      }
+   }
 
-    public final boolean a() {
-        return this.a != null;
-    }
+   public final boolean a() {
+      return this.a != null;
+   }
 
-    public final String a() {
-        return this.a;
-    }
+   public final String a() {
+      return this.a;
+   }
 
-    public final boolean b() {
-        return false;
-    }
+   public final boolean b() {
+      return false;
+   }
 
-    public final void a(r r2) {
-        throw new RuntimeException();
-    }
+   public final void a(r var1) {
+      throw new RuntimeException();
+   }
 
-    public final byte[] a(byte[] byArray) {
-        int n2 = 0;
-        Object var4_3 = null;
-        n2 = this.a.read();
-        if (n2 < 0) {
+   public final byte[] a(byte[] var1) {
+      this = this;
+      int var2 = 0;
+      int var4 = null;
+      if ((var2 = this.a.read()) < 0) {
+         return null;
+      }
+
+      if (var1 == null || var1.length < var2 + 1) {
+         var1 = new byte[var2 + 1];
+      }
+
+      var1[0] = (byte)var2;
+
+      for (int var3 = 1; var3 <= var2; var3++) {
+         var4 = null;
+         if ((var4 = this.a.read()) < 0) {
             return null;
-        }
-        if (byArray == null || byArray.length < n2 + 1) {
-            byArray = new byte[n2 + 1];
-        }
-        byArray[0] = (byte)n2;
-        for (int i2 = 1; i2 <= n2; ++i2) {
-            var4_3 = null;
-            int n3 = this.a.read();
-            if (n3 < 0) {
-                return null;
-            }
-            byArray[i2] = (byte)n3;
-        }
-        return byArray;
-    }
+         }
 
-    public final void a(byte[] byArray) {
-        this.a.write(byArray);
-        this.a.flush();
-    }
+         var1[var3] = (byte)var4;
+      }
+
+      return var1;
+   }
+
+   public final void a(byte[] var1) {
+      be var2;
+      (var2 = this).a.write(var1);
+      var2.a.flush();
+   }
 }
-

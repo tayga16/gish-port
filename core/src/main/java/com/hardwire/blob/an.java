@@ -1,134 +1,108 @@
 package com.hardwire.blob;
 
-/*
- * Decompiled with CFR 0.152.
- */
 import com.hardwire.blob.Main;
 import java.util.Vector;
 
-/*
- * Duplicate member names - consider using --renamedupmembers true
- */
 public final class an {
-    public final Object a;
-    public final Object b;
-    public Vector a;
-    public Vector b;
-    private Vector c = null;
-    volatile boolean a;
-    public int a;
-    public c a;
-    public r a = 1;
-    public boolean b = true;
+   public final Object a = new Object();
+   public final Object b = new Object();
+   public Vector a = null;
+   public Vector b = null;
+   private Vector c = null;
+   volatile boolean a = true;
+   public int a;
+   public c a;
+   public r a = null;
+   public boolean b = true;
 
-    public an(int n2) {
-    }
+   public an(int var1) {
+      this.a = 1;
+   }
 
-    /*
-     * WARNING - Removed try catching itself - possible behaviour change.
-     */
-    public final void a(av av2) {
-        if (av2 == null) {
-            throw new NullPointerException();
-        }
-        Object object = this.a;
-        synchronized (object) {
-            if (this.c == null) {
-                this.c = new Vector(1);
+   public final void a(av var1) {
+      if (var1 == null) {
+         throw new NullPointerException();
+      }
+
+      synchronized (this.a) {
+         if (this.c == null) {
+            this.c = new Vector(1);
+         }
+
+         this.c.addElement(var1);
+      }
+   }
+
+   protected final void a(int var1) {
+      synchronized (this.a) {
+         if (this.a && this.b != null) {
+            v var5 = new v(this, var1);
+
+            for (int var3 = 0; var3 < this.b.size(); var3++) {
+               ((ad)this.b.elementAt(var3)).a(var5);
             }
-            this.c.addElement(av2);
-            return;
-        }
-    }
+         }
+      }
+   }
 
-    /*
-     * WARNING - Removed try catching itself - possible behaviour change.
-     */
-    protected final void a(int n2) {
-        Object object = this.a;
-        synchronized (object) {
-            if (this.a && this.b != null) {
-                v v2 = new v(this, n2);
-                for (int i2 = 0; i2 < this.b.size(); ++i2) {
-                    ((ad)this.b.elementAt(i2)).a(v2);
-                }
-            }
-            return;
-        }
-    }
+   protected final void b(int var1) {
+      synchronized (this.a) {
+         if (this.a && this.b != null) {
+            v var5 = new v(this, var1);
 
-    /*
-     * WARNING - Removed try catching itself - possible behaviour change.
-     */
-    protected final void b(int n2) {
-        Object object = this.a;
-        synchronized (object) {
-            if (this.a && this.b != null) {
-                v v2 = new v(this, n2);
-                for (int i2 = 0; i2 < this.b.size(); ++i2) {
-                    ((ad)this.b.elementAt(i2)).b(v2);
-                }
+            for (int var3 = 0; var3 < this.b.size(); var3++) {
+               ((ad)this.b.elementAt(var3)).b(var5);
             }
-            return;
-        }
-    }
+         }
+      }
+   }
 
-    /*
-     * WARNING - Removed try catching itself - possible behaviour change.
-     */
-    protected final void a(int n2, int n3, int n4, int n5, int n6, int n7, int n8) {
-        Object object = this.a;
-        synchronized (object) {
-            if (this.a && this.c != null) {
-                o o2 = new o(this, n2, n3, n4, n5, n6, n7, n8);
-                for (n3 = 0; n3 < this.c.size(); ++n3) {
-                    ((av)this.c.elementAt(n3)).a(o2);
-                }
-            }
-            return;
-        }
-    }
+   protected final void a(int var1, int var2, int var3, int var4, int var5, int var6, int var7) {
+      synchronized (this.a) {
+         if (this.a && this.c != null) {
+            o var10 = new o(this, var1, var2, var3, var4, var5, var6, var7);
 
-    /*
-     * WARNING - Removed try catching itself - possible behaviour change.
-     */
-    protected final void a(int n2, int n3, int n4, int n5) {
-        Object object = this.a;
-        synchronized (object) {
-            if (this.a && this.a != null) {
-                new a(this, n2, n3, n4, n5);
-                for (n3 = 0; n3 < this.a.size(); ++n3) {
-                    this.a.elementAt(n3);
-                }
+            for (int var11 = 0; var11 < this.c.size(); var11++) {
+               ((av)this.c.elementAt(var11)).a(var10);
             }
-            return;
-        }
-    }
+         }
+      }
+   }
 
-    /*
-     * WARNING - Removed try catching itself - possible behaviour change.
-     */
-    protected final void a() {
-        Object object = this.a;
-        synchronized (object) {
-            if (this.a && this.a != null) {
-                new g(this, this.b);
-                for (int i2 = 0; i2 < this.a.size(); ++i2) {
-                    ((Main)this.a.elementAt(i2)).f();
-                }
-            }
-        }
-        this.b = true;
-    }
+   protected final void a(int var1, int var2, int var3, int var4) {
+      synchronized (this.a) {
+         if (this.a && this.a != null) {
+            new a(this, var1, var2, var3, var4);
 
-    public final boolean a() {
-        if (this.a != null) {
-            r r2 = this.a;
-            if (r2.a != null && r2.a.a() && r2.a) {
-                return true;
+            for (int var7 = 0; var7 < this.a.size(); var7++) {
+               this.a.elementAt(var7);
             }
-        }
-        return false;
-    }
+         }
+      }
+   }
+
+   protected final void a() {
+      synchronized (this.a) {
+         if (this.a && this.a != null) {
+            new g(this, this.b);
+
+            for (int var2 = 0; var2 < this.a.size(); var2++) {
+               ((Main)this.a.elementAt(var2)).f();
+            }
+         }
+      }
+
+      this.b = true;
+   }
+
+   public final boolean a() {
+      if (this.a != null) {
+         r var1 = this.a;
+         if (this.a.a != null && var1.a.a() && var1.a) {
+            return true;
+         }
+      }
+
+      return false;
+   }
 }
-

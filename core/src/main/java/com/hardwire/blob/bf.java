@@ -1,33 +1,29 @@
 package com.hardwire.blob;
 
-/*
- * Decompiled with CFR 0.152.
- */
 public class bf {
-    private an a;
+   private an a;
 
-    public bf(an an2) {
-        this.a = an2;
-    }
+   public bf(an var1) {
+      this.a = var1;
+   }
 
-    public final an a() {
-        return this.a;
-    }
+   public final an a() {
+      return this.a;
+   }
 
-    protected static int a(int n2, int n3, int n4, int n5, int n6) {
-        if (n2 < n3) {
-            n2 = n3;
-        } else if (n2 > n4) {
-            n2 = n4;
-        }
-        float f2 = (float)(n2 - n3) / (float)(n4 - n3) * (float)(n6 - n5);
-        int n7 = (int)Math.floor((double)f2 + 0.5) + n5;
-        if (n7 < n5) {
-            n7 = n5;
-        } else if (n7 > n6) {
-            n7 = n6;
-        }
-        return n7;
-    }
+   protected static int a(int var0, int var1, int var2, int var3, int var4) {
+      if (var0 < var1) {
+         var0 = var1;
+      } else if (var0 > var2) {
+         var0 = var2;
+      }
+
+      if ((var0 = (int)Math.floor((float)(var0 - var1) / (var2 - var1) * (var4 - var3) + 0.5) + var3) < var3) {
+         var0 = var3;
+      } else if (var0 > var4) {
+         var0 = var4;
+      }
+
+      return var0;
+   }
 }
-

@@ -1,240 +1,270 @@
 package com.hardwire.blob;
 
-/*
- * Decompiled with CFR 0.152.
- */
-/*
- * Duplicate member names - consider using --renamedupmembers true
- */
 public final class ak {
-    private int a;
-    private int b;
-    private int c;
-    private int d;
-    private long[] a;
-    private long[] b;
-    private int[] a;
-    private int[] b;
-    private int[][] a;
+   private int a;
+   private int b;
+   private int c;
+   private int d;
+   private long[] a;
+   private long[] b;
+   private int[] a;
+   private int[] b;
+   private int[][] a;
 
-    public ak(int n2, int n3, int n4) {
-        this.a = n2 >> 15;
-        this.b = n3 >> 15;
-        if (n2 % 32768 != 0) {
-            ++this.a;
-        }
-        if (n3 % 32768 != 0) {
-            ++this.b;
-        }
-        this.c = (n4 >> 6) + 1;
-        this.d = this.c << 6;
-        this.a = new long[this.a * this.c];
-        this.b = new long[this.b * this.c];
-        this.a = new int[this.d + 1];
-        this.b = new int[this.d + 1];
-    }
+   public ak(int var1, int var2, int var3) {
+      this.a = var1 >> 15;
+      this.b = var2 >> 15;
+      if (var1 % 32768 != 0) {
+         this.a++;
+      }
 
-    public final int[] a(int n2, int n3, int[] nArray, boolean bl) {
-        int n4;
-        int[] nArray2 = this.a;
-        if (n3 == 0 || this.c == 0) {
-            nArray2[0] = 0;
-            return nArray2;
-        }
-        n3 = nArray[0] >> 15;
-        int n5 = nArray[1] >> 15;
-        int n6 = nArray[2] >> 15;
-        int n7 = nArray[3] >> 15;
-        n3 = n3 < 0 ? 0 : n3;
-        n5 = n5 < 0 ? 0 : n5;
-        n6 = n6 >= this.a ? this.a - 1 : n6;
-        n7 = n7 >= this.b ? this.b - 1 : n7;
-        n3 *= this.c;
-        n5 *= this.c;
-        n6 *= this.c;
-        n7 *= this.c;
-        int n8 = 0;
-        int n9 = n2 >> 6;
-        int n10 = n4 = n2 == -1 ? -1 : n2 - (n9 << 6);
-        long l2 = n2 == -1 ? 0L : (n4 == 63 ? -1L : (1L << n4 + 1) - 1L);
-        int n11 = n2 = n2 == -1 ? 0 : n9;
-        while (n2 != this.c) {
-            int n12;
-            long l3 = 0L;
-            long l4 = 0L;
-            for (n12 = n3; n12 <= n6; n12 += this.c) {
-                l3 |= this.a[n12 + n2];
-            }
-            for (n12 = n5; n12 <= n7; n12 += this.c) {
-                l4 |= this.b[n12 + n2];
-            }
-            l4 &= l3;
-            while (l4 != 0L) {
-                long l5 = l4 & -l4;
-                if ((l5 & l2) == 0L || n2 != n9) {
-                    n4 = 0;
-                    if ((l5 & 0xFFFFFFFFL) == 0L) {
-                        n4 += 32;
-                    }
-                    if ((l5 & 65535L << n4) == 0L) {
-                        n4 += 16;
-                    }
-                    if ((l5 & 255L << n4) == 0L) {
-                        n4 += 8;
-                    }
-                    if ((l5 & 15L << n4) == 0L) {
-                        n4 += 4;
-                    }
-                    if ((l5 & 3L << n4) == 0L) {
-                        n4 += 2;
-                    }
-                    if ((l5 & 1L << n4) == 0L) {
-                        ++n4;
-                    }
-                    nArray2[++n8] = n4 + (n2 << 6);
-                }
-                l4 ^= l5;
-            }
-            ++n2;
-        }
-        nArray2[0] = n8;
-        return nArray2;
-    }
+      if (var2 % 32768 != 0) {
+         this.b++;
+      }
 
-    public final int[] a(int n2, int n3, int[][] nArray) {
-        if (n3 == 0 || this.c == 0) {
-            this.b[0] = 0;
-            return this.b;
-        }
-        n2 = nArray.length;
-        if (this.a == null || n2 != this.a.length) {
+      this.c = (var3 >> 6) + 1;
+      this.d = this.c << 6;
+      this.a = new long[this.a * this.c];
+      this.b = new long[this.b * this.c];
+      this.a = new int[this.d + 1];
+      this.b = new int[this.d + 1];
+   }
+
+   public final int[] a(int var1, int var2, int[] var3, boolean var4) {
+      int[] var29 = this.a;
+      if (var2 != 0 && this.c != 0) {
+         var2 = var3[0] >> 15;
+         int var5 = var3[1] >> 15;
+         int var6 = var3[2] >> 15;
+         int var26 = var3[3] >> 15;
+         var2 = var2 < 0 ? 0 : var2;
+         var5 = var5 < 0 ? 0 : var5;
+         var6 = var6 >= this.a ? this.a - 1 : var6;
+         int var27 = var26 >= this.b ? this.b - 1 : var26;
+         var2 *= this.c;
+         var5 *= this.c;
+         var6 *= this.c;
+         int var28 = var27 * this.c;
+         int var7 = 0;
+         int var8 = var1 >> 6;
+         int var9 = var1 == -1 ? -1 : var1 - (var8 << 6);
+         long var17 = var1 == -1 ? 0L : (var9 == 63 ? -1L : (1L << var9 + 1) - 1L);
+
+         for (int var22 = var1 == -1 ? 0 : var8; var22 != this.c; var22++) {
+            long var13 = 0L;
+            long var11 = 0L;
+
+            for (int var20 = var2; var20 <= var6; var20 += this.c) {
+               var13 |= this.a[var20 + var22];
+            }
+
+            for (int var36 = var5; var36 <= var28; var36 += this.c) {
+               var11 |= this.b[var36 + var22];
+            }
+
+            var11 &= var13;
+
+            while (var11 != 0L) {
+               long var37;
+               if (((var37 = var11 & -var11) & var17) == 0L || var22 != var8) {
+                  var9 = 0;
+                  if ((var37 & 4294967295L) == 0L) {
+                     var9 += 32;
+                  }
+
+                  if ((var37 & 65535L << var9) == 0L) {
+                     var9 += 16;
+                  }
+
+                  if ((var37 & 255L << var9) == 0L) {
+                     var9 += 8;
+                  }
+
+                  if ((var37 & 15L << var9) == 0L) {
+                     var9 += 4;
+                  }
+
+                  if ((var37 & 3L << var9) == 0L) {
+                     var9 += 2;
+                  }
+
+                  if ((var37 & 1L << var9) == 0L) {
+                     var9++;
+                  }
+
+                  var29[++var7] = var9 + (var22 << 6);
+               }
+
+               var11 ^= var37;
+            }
+         }
+
+         var29[0] = var7;
+         return var29;
+      } else {
+         var29[0] = 0;
+         return var29;
+      }
+   }
+
+   public final int[] a(int var1, int var2, int[][] var3) {
+      if (var2 != 0 && this.c != 0) {
+         var1 = var3.length;
+         if (this.a == null || var1 != this.a.length) {
             this.a = null;
-            this.a = new int[n2][4];
-        }
-        for (n3 = 0; n3 < n2; ++n3) {
-            int[] nArray2 = this.a[n3];
-            int[] nArray3 = nArray2;
-            nArray2[0] = nArray[n3][0] >> 15;
-            nArray3[1] = nArray[n3][1] >> 15;
-            nArray3[2] = nArray[n3][2] >> 15;
-            nArray3[3] = nArray[n3][3] >> 15;
-            nArray3[0] = nArray3[0] < 0 ? 0 : nArray3[0];
-            nArray3[1] = nArray3[1] < 0 ? 0 : nArray3[1];
-            nArray3[2] = nArray3[2] >= this.a ? this.a - 1 : nArray3[2];
-            nArray3[3] = nArray3[3] >= this.b ? this.b - 1 : nArray3[3];
-            nArray3[0] = nArray3[0] * this.c;
-            nArray3[1] = nArray3[1] * this.c;
-            nArray3[2] = nArray3[2] * this.c;
-            nArray3[3] = nArray3[3] * this.c;
-        }
-        n3 = 0;
-        for (int i2 = 0; i2 != this.c; ++i2) {
-            int n4;
-            long l2 = 0L;
-            for (int i3 = 0; i3 < n2; ++i3) {
-                long l3 = 0L;
-                long l4 = 0L;
-                int n5 = this.a[i3][2];
-                for (n4 = this.a[i3][0]; n4 <= n5; n4 += this.c) {
-                    l3 |= this.a[n4 + i2];
-                }
-                n5 = this.a[i3][3];
-                for (n4 = this.a[i3][1]; n4 <= n5; n4 += this.c) {
-                    l4 |= this.b[n4 + i2];
-                }
-                l2 |= l4 & l3;
+            this.a = new int[var1][4];
+         }
+
+         for (int var16 = 0; var16 < var1; var16++) {
+            int[] var6;
+            (var6 = this.a[var16])[0] = var3[var16][0] >> 15;
+            var6[1] = var3[var16][1] >> 15;
+            var6[2] = var3[var16][2] >> 15;
+            var6[3] = var3[var16][3] >> 15;
+            var6[0] = var6[0] < 0 ? 0 : var6[0];
+            var6[1] = var6[1] < 0 ? 0 : var6[1];
+            var6[2] = var6[2] >= this.a ? this.a - 1 : var6[2];
+            var6[3] = var6[3] >= this.b ? this.b - 1 : var6[3];
+            var6[0] *= this.c;
+            var6[1] *= this.c;
+            var6[2] *= this.c;
+            var6[3] *= this.c;
+         }
+
+         var2 = 0;
+
+         for (int var18 = 0; var18 != this.c; var18++) {
+            long var8 = 0L;
+
+            for (int var13 = 0; var13 < var1; var13++) {
+               long var10 = 0L;
+               long var21 = 0L;
+               int var14 = this.a[var13][2];
+
+               for (int var4 = this.a[var13][0]; var4 <= var14; var4 += this.c) {
+                  var10 |= this.a[var4 + var18];
+               }
+
+               var14 = this.a[var13][3];
+
+               for (int var19 = this.a[var13][1]; var19 <= var14; var19 += this.c) {
+                  var21 |= this.b[var19 + var18];
+               }
+
+               var8 |= var21 & var10;
             }
-            while (l2 != 0L) {
-                long l5;
-                long cfr_ignored_0 = l2 & -l2;
-                if (0L == 0L || i2 != -1) {
-                    n4 = 0;
-                    if ((l5 & 0xFFFFFFFFL) == 0L) {
-                        n4 += 32;
-                    }
-                    if ((l5 & 65535L << n4) == 0L) {
-                        n4 += 16;
-                    }
-                    if ((l5 & 255L << n4) == 0L) {
-                        n4 += 8;
-                    }
-                    if ((l5 & 15L << n4) == 0L) {
-                        n4 += 4;
-                    }
-                    if ((l5 & 3L << n4) == 0L) {
-                        n4 += 2;
-                    }
-                    if ((l5 & 1L << n4) == 0L) {
-                        ++n4;
-                    }
-                    this.b[++n3] = n4 + (i2 << 6);
-                }
-                l2 ^= l5;
+
+            while (var8 != 0L) {
+               long var22 = var8 & -var8;
+               if (0L == 0L || var18 != -1) {
+                  int var20 = 0;
+                  if ((var22 & 4294967295L) == 0L) {
+                     var20 += 32;
+                  }
+
+                  if ((var22 & 65535L << var20) == 0L) {
+                     var20 += 16;
+                  }
+
+                  if ((var22 & 255L << var20) == 0L) {
+                     var20 += 8;
+                  }
+
+                  if ((var22 & 15L << var20) == 0L) {
+                     var20 += 4;
+                  }
+
+                  if ((var22 & 3L << var20) == 0L) {
+                     var20 += 2;
+                  }
+
+                  if ((var22 & 1L << var20) == 0L) {
+                     var20++;
+                  }
+
+                  this.b[++var2] = var20 + (var18 << 6);
+               }
+
+               var8 ^= var22;
             }
-        }
-        this.b[0] = n3;
-        return this.b;
-    }
+         }
 
-    public final void a(int n2, int n3, int n4, int n5, int n6, int n7, int n8, int n9, int n10) {
-        if ((n3 >>= 15) != (n7 >>= 15) || (n4 >>= 15) != (n8 >>= 15) || (n5 >>= 15) != (n9 >>= 15) || (n6 >>= 15) != (n10 >>= 15)) {
-            this.b(n2, n3, n4, n5, n6);
-            this.a(n2, n7, n8, n9, n10);
-        }
-    }
+         this.b[0] = var2;
+         return this.b;
+      } else {
+         this.b[0] = 0;
+         return this.b;
+      }
+   }
 
-    public final void a(int n2, int[] nArray) {
-        this.a(n2, nArray[0] >> 15, nArray[1] >> 15, nArray[2] >> 15, nArray[3] >> 15);
-    }
+   public final void a(int var1, int var2, int var3, int var4, int var5, int var6, int var7, int var8, int var9) {
+      var2 >>= 15;
+      var3 >>= 15;
+      var4 >>= 15;
+      var5 >>= 15;
+      var6 >>= 15;
+      var7 >>= 15;
+      var8 >>= 15;
+      var9 >>= 15;
+      if (var2 != var6 || var3 != var7 || var4 != var8 || var5 != var9) {
+         this.b(var1, var2, var3, var4, var5);
+         this.a(var1, var6, var7, var8, var9);
+      }
+   }
 
-    public final void b(int n2, int[] nArray) {
-        this.b(n2, nArray[0] >> 15, nArray[1] >> 15, nArray[2] >> 15, nArray[3] >> 15);
-    }
+   public final void a(int var1, int[] var2) {
+      this.a(var1, var2[0] >> 15, var2[1] >> 15, var2[2] >> 15, var2[3] >> 15);
+   }
 
-    private void a(int n2, int n3, int n4, int n5, int n6) {
-        n3 = n3 < 0 ? 0 : n3;
-        n4 = n4 < 0 ? 0 : n4;
-        n5 = n5 >= this.a ? this.a - 1 : n5;
-        n6 = n6 >= this.b ? this.b - 1 : n6;
-        int n7 = n3 * this.c;
-        int n8 = n4 * this.c;
-        int n9 = n2 >> 6;
-        long l2 = 1L << (n2 -= n9 << 6);
-        while (n3 <= n5) {
-            int n10 = n7 + n9;
-            this.a[n10] = this.a[n10] | l2;
-            ++n3;
-            n7 += this.c;
-        }
-        while (n4 <= n6) {
-            int n11 = n8 + n9;
-            this.b[n11] = this.b[n11] | l2;
-            ++n4;
-            n8 += this.c;
-        }
-    }
+   public final void b(int var1, int[] var2) {
+      this.b(var1, var2[0] >> 15, var2[1] >> 15, var2[2] >> 15, var2[3] >> 15);
+   }
 
-    private void b(int n2, int n3, int n4, int n5, int n6) {
-        n3 = n3 < 0 ? 0 : n3;
-        n4 = n4 < 0 ? 0 : n4;
-        n5 = n5 >= this.a ? this.a - 1 : n5;
-        n6 = n6 >= this.b ? this.b - 1 : n6;
-        int n7 = n3 * this.c;
-        int n8 = n4 * this.c;
-        int n9 = n2 >> 6;
-        long l2 = 1L << (n2 -= n9 << 6) ^ 0xFFFFFFFFFFFFFFFFL;
-        while (n3 <= n5) {
-            int n10 = n7 + n9;
-            this.a[n10] = this.a[n10] & l2;
-            ++n3;
-            n7 += this.c;
-        }
-        while (n4 <= n6) {
-            int n11 = n8 + n9;
-            this.b[n11] = this.b[n11] & l2;
-            ++n4;
-            n8 += this.c;
-        }
-    }
+   private void a(int var1, int var2, int var3, int var4, int var5) {
+      var2 = var2 < 0 ? 0 : var2;
+      var3 = var3 < 0 ? 0 : var3;
+      var4 = var4 >= this.a ? this.a - 1 : var4;
+      var5 = var5 >= this.b ? this.b - 1 : var5;
+      int var6 = var2 * this.c;
+      int var7 = var3 * this.c;
+      int var8 = var1 >> 6;
+      var1 -= var8 << 6;
+      long var9 = 1L << var1;
+
+      while (var2 <= var4) {
+         this.a[var6 + var8] = this.a[var6 + var8] | var9;
+         var2++;
+         var6 += this.c;
+      }
+
+      while (var3 <= var5) {
+         this.b[var7 + var8] = this.b[var7 + var8] | var9;
+         var3++;
+         var7 += this.c;
+      }
+   }
+
+   private void b(int var1, int var2, int var3, int var4, int var5) {
+      var2 = var2 < 0 ? 0 : var2;
+      var3 = var3 < 0 ? 0 : var3;
+      var4 = var4 >= this.a ? this.a - 1 : var4;
+      var5 = var5 >= this.b ? this.b - 1 : var5;
+      int var6 = var2 * this.c;
+      int var7 = var3 * this.c;
+      int var8 = var1 >> 6;
+      var1 -= var8 << 6;
+      long var9 = ~(1L << var1);
+
+      while (var2 <= var4) {
+         this.a[var6 + var8] = this.a[var6 + var8] & var9;
+         var2++;
+         var6 += this.c;
+      }
+
+      while (var3 <= var5) {
+         this.b[var7 + var8] = this.b[var7 + var8] & var9;
+         var3++;
+         var7 += this.c;
+      }
+   }
 }
-

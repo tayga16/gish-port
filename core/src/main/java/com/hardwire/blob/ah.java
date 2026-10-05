@@ -1,28 +1,21 @@
 package com.hardwire.blob;
 
-/*
- * Decompiled with CFR 0.152.
- */
-/*
- * Duplicate member names - consider using --renamedupmembers true
- */
 public interface ah {
-    public String a();
+   String a();
 
-    public String b();
+   String b();
 
-    public void a();
+   void a();
 
-    public byte[] a(byte[] var1);
+   byte[] a(byte[] var1);
 
-    public void a(byte[] var1);
+   void a(byte[] var1);
 
-    public boolean a();
+   boolean a();
 
-    public void b();
+   void b();
 
-    public boolean b();
+   boolean b();
 
-    public void a(r var1);
+   void a(r var1);
 }
-

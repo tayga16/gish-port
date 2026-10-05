@@ -1,25 +1,16 @@
 package com.hardwire.blob;
 
-/*
- * Decompiled with CFR 0.152.
- */
-/*
- * Duplicate member names - consider using --renamedupmembers true
- */
-public abstract class h
-extends x {
-    public String[] a;
-    x a;
+public abstract class h extends x {
+   public String[] a;
+   x a;
 
-    h(ag ag2) {
-        super(1, ag2);
-    }
+   h(ag var1) {
+      super(1, var1);
+   }
 
-    public abstract x a(int var1);
+   public abstract x a(int var1);
 
-    public final x a() {
-        h h2 = this;
-        return ((x)h2).a.a(this, this.a);
-    }
+   public final x a() {
+      return super.a.a(this, this.a);
+   }
 }
-

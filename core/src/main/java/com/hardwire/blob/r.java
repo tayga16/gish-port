@@ -1,489 +1,498 @@
 package com.hardwire.blob;
 
-/*
- * Decompiled with CFR 0.152.
- */
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Timer;
-import java.util.TimerTask;
 
-/*
- * Duplicate member names - consider using --renamedupmembers true
- */
-public final class r
-implements Runnable {
-    private an a;
-    private c a;
-    public Thread a;
-    ah a;
-    private Object a;
-    private volatile boolean c;
-    public volatile boolean a;
-    volatile boolean b;
-    private Object b;
-    private Timer a;
-    private byte[] a;
-    private byte[] b;
-    private int a;
-    private short[] a;
-    private short[] b;
-    private int b;
-    private int c = true;
-    public Throwable a = null;
+public final class r implements Runnable {
+   private an a;
+   private c a;
+   public Thread a;
+   ah a;
+   private Object a = new Object();
+   private volatile boolean c = true;
+   public volatile boolean a;
+   volatile boolean b;
+   private Object b = new Object();
+   private Timer a;
+   private byte[] a;
+   private byte[] b;
+   private int a;
+   private short[] a;
+   private short[] b;
+   private int b;
+   private int c;
+   public Throwable a = null;
 
-    public r(an an2, ah ah2) {
-        this.b = new Object();
-        this.a = an2;
-        this.a = new Thread(this);
-        this.a = ah2;
-        this.a = new short[6];
-        this.b = new short[6];
-        for (int i2 = 0; i2 < this.a.length; ++i2) {
-            this.a[i2] = 254;
-            this.b[i2] = 254;
-        }
-        this.a = new c();
-        this.a = new Timer();
-    }
+   public r(an var1, ah var2) {
+      this.a = var1;
+      this.a = new Thread(this);
+      this.a = var2;
+      this.a = new short[6];
+      this.b = new short[6];
 
-    /*
-     * WARNING - Removed try catching itself - possible behaviour change.
-     */
-    public final void a() {
-        Object object = this.a;
-        synchronized (object) {
-            this.c = false;
-            this.a.notify();
-        }
-        this.a.b();
-    }
+      for (int var3 = 0; var3 < this.a.length; var3++) {
+         this.a[var3] = 254;
+         this.b[var3] = 254;
+      }
 
-    void b() {
-        try {
-            this.a();
+      this.a = new c();
+      this.a = new Timer();
+   }
+
+   public final void a() {
+      synchronized (this.a) {
+         this.c = false;
+         this.a.notify();
+      }
+
+      this.a.b();
+   }
+
+   void b() {
+      try {
+         this.a();
+      } catch (IOException var1) {
+      }
+   }
+
+   public final void run() {
+      this.a = null;
+      boolean var1 = false;
+
+      try {
+         if (var1 = this.a.b()) {
+            this.a.a(this);
+         }
+
+         this.a.a();
+      } catch (SecurityException var10) {
+         this.a = var10;
+         this.b();
+      } catch (IOException var11) {
+         if (this.c) {
+            this.a = var11;
+            this.b();
+         }
+      }
+
+      if (this.c) {
+         e var2 = new e(this);
+         this.a.schedule(var2, 15000L);
+      }
+
+      int var15 = 0;
+      if (var1) {
+         synchronized (this.a) {
+            while (this.c) {
+               try {
+                  this.a.wait();
+               } catch (InterruptedException var8) {
+               }
+            }
+         }
+      } else {
+         label233:
+         while (true) {
+            label176:
+            while (true) {
+               if (!this.c) {
+                  break label233;
+               }
+
+               switch (var15 = this.a()) {
+                  case 0:
+                     var13 = this;
+                     if (this.a != 0 && var13.b[0] == -95) {
+                        if (!var13.b) {
+                           switch (var13.b[1]) {
+                              case 3:
+                              case 4:
+                              case 5:
+                                 break label176;
+                           }
+                        } else if (var13.a) {
+                           break label176;
+                        }
+                     }
+                     break;
+                  default:
+                     var15 = var15;
+                     r var12 = this;
+                     switch (var15) {
+                        case -2:
+                           if (var12.c) {
+                              var12.b();
+                           }
+                           break;
+                        case -1:
+                           if (var12.c) {
+                              var12.b();
+                           }
+                           break;
+                        default:
+                           if (var12.c) {
+                              var12.b();
+                           }
+
+                           throw new IllegalStateException();
+                     }
+               }
+            }
+
+            switch (var13.b[1]) {
+               case -3:
+               case 8:
+                  if (var13.a >= 5) {
+                     byte var35 = (byte)(var13.b[2] & 127);
+                     boolean var61 = false;
+                     int var58 = null;
+                     byte var53 = var13.b[3];
+                     var58 = var13.b[4];
+                     if (var13.b[1] == -3) {
+                        if (var53 == var13.b && var59 == var13.c) {
+                           continue;
+                        }
+
+                        var13.b = var53;
+                        var13.c = var59;
+                     }
+
+                     c var36 = var13.a;
+                     c var37 = var13.a;
+                     c var38 = var13.a;
+                     c var39 = var13.a;
+                     var13.a.a(var35, var53, var59, var13.a.g, var13.a.h, var13.a.g, var13.a.h);
+                  }
+               case -2:
+               case -1:
+               case 0:
+               case 1:
+               case 2:
+               case 6:
+               case 11:
+               case 12:
+               case 13:
+               case 14:
+               case 15:
+               case 16:
+               default:
+                  continue;
+               case 3:
+                  if (var13.a >= 45) {
+                     var15 = a(var13.b, 2);
+                     int var52 = a(var13.b, 4);
+                     int var57 = a(var13.b, 10);
+                     int var84 = var15;
+                     c var74 = var13.a;
+                     var13.a.a = var84;
+                     var84 = var52;
+                     var74 = var13.a;
+                     var13.a.b = var84;
+                     var84 = var57;
+                     var74 = var13.a;
+                     var13.a.c = var84;
+                  }
+                  continue;
+               case 4:
+                  if (var13.a >= 37) {
+                     short var33 = a(var13.b, 2);
+                     short var49 = a(var13.b, 3);
+                     short var56 = a(var13.b, 4);
+                     String var60 = a(var13.b, 5, var56);
+                     c var71 = var13.a;
+                     if (var33 < var13.a.d) {
+                        var49 = var49;
+                        short var82 = var33;
+                        var71 = var13.a;
+                        var13.a.a[var82] = var49;
+                        String var51 = var60;
+                        var82 = var33;
+                        var71 = var13.a;
+                        var13.a.a[var82] = var51;
+                     }
+                  }
+                  continue;
+               case 5:
+                  if (var13.a < 7) {
+                     continue;
+                  }
+
+                  byte var31 = var13.b[2];
+                  int var46 = b(var13.b, 3);
+                  switch (var31) {
+                     case -1:
+                        if (!var13.b) {
+                           r var32 = var13;
+                           if (var13.c && w.a()) {
+                              var32.d();
+                           }
+
+                           c var70 = var13.a;
+                           var13.a(var13.a.e <= 0 || var70.f > 0);
+                        }
+                     case 0:
+                     case 4:
+                     case 5:
+                     case 6:
+                     case 7:
+                     case 8:
+                     case 9:
+                     case 10:
+                     case 11:
+                     case 12:
+                     case 13:
+                     default:
+                        continue;
+                     case 1:
+                        int var81 = var46;
+                        c var69 = var13.a;
+                        var13.a.d = var81;
+                        if (var81 > 0) {
+                           var69.a = new String[var81];
+                           var69.a = new int[var81];
+                        }
+                        continue;
+                     case 2:
+                        int var80 = var46;
+                        c var68 = var13.a;
+                        var13.a.e = var80;
+                        continue;
+                     case 3:
+                        int var79 = var46;
+                        c var67 = var13.a;
+                        var13.a.f = var79;
+                        var46 = var79;
+                        var67.g = -c.a(2, var46 - 1);
+                        var46 = var79;
+                        var67.h = c.a(2, var46 - 1) - 1;
+                        continue;
+                     case 14:
+                        int var78 = var46;
+                        c var66 = var13.a;
+                        var13.a.i = var78;
+                        continue;
+                     case 15:
+                        int var77 = var46;
+                        c var65 = var13.a;
+                        var13.a.k = var77;
+                        continue;
+                     case 16:
+                        int var7 = var46;
+                        c var64 = var13.a;
+                        var13.a.j = var7;
+                        continue;
+                  }
+               case 7:
+                  if (var13.a < 8) {
+                     continue;
+                  }
+
+                  var15 = 0;
+
+                  for (int var42 = 2; var42 < 8; var42++) {
+                     var13.b[var15] = a(var13.b, var42);
+                     var15++;
+                  }
+
+                  var15 = 0;
+
+                  for (int var43 = 0; var43 < var13.b.length && var13.b[var43] != 254 && var13.b[var43] != 255; var43++) {
+                     if (var13.b[var43] == var13.a[var15]) {
+                        var15++;
+                     } else if (var13.b[var43] < var13.a[var15]) {
+                        var13.a.a(var13.b[var43]);
+                     } else {
+                        var13.a.b(var13.a[var15]);
+                        var43--;
+                        var15++;
+                     }
+                  }
+
+                  for (int var44 = var15; var44 < var13.a.length && var13.a[var44] != 254; var44++) {
+                     var13.a.b(var13.a[var44]);
+                  }
+
+                  int var45 = 0;
+
+                  while (true) {
+                     if (var45 >= var13.a.length) {
+                        continue label233;
+                     }
+
+                     var13.a[var45] = var13.b[var45];
+                     var45++;
+                  }
+               case 9:
+                  if (var13.a >= 7) {
+                     byte var24 = (byte)(var13.b[2] & 127);
+                     short var41 = b(var13.b, 3);
+                     short var55 = b(var13.b, 5);
+                     c var25 = var13.a;
+                     c var26 = var13.a;
+                     c var27 = var13.a;
+                     c var28 = var13.a;
+                     var13.a.a(var24, var41, var55, var13.a.g, var13.a.h, var13.a.g, var13.a.h);
+                  }
+                  continue;
+               case 10:
+                  if (var13.a >= 11) {
+                     byte var19 = (byte)(var13.b[2] & 127);
+                     int var40 = b(var13.b, 3);
+                     int var54 = b(var13.b, 7);
+                     c var20 = var13.a;
+                     c var21 = var13.a;
+                     c var22 = var13.a;
+                     c var23 = var13.a;
+                     var13.a.a(var19, var40, var54, var13.a.g, var13.a.h, var13.a.g, var13.a.h);
+                  }
+                  continue;
+               case 17:
+            }
+
+            if (var13.a >= 4) {
+               var15 = a(var13.b, 2);
+               c var6 = var13.a;
+               int var3 = var13.a.i;
+               var6 = var13.a;
+               int var4 = var13.a.j;
+               var6 = var13.a;
+               int var5 = var13.a.k;
+               if (var15 < var5) {
+                  var15 = var5;
+               } else if (var15 > var3) {
+                  var15 = var3;
+               }
+
+               var13.a.a(var15, var3, var4, var5);
+            }
+         }
+      }
+
+      if (this.b) {
+         if (this.a) {
+            this.a.a();
             return;
-        }
-        catch (IOException iOException) {
-            return;
-        }
-    }
+         }
+      } else {
+         this.a(false);
+      }
+   }
 
-    /*
-     * WARNING - Removed try catching itself - possible behaviour change.
-     * Unable to fully structure code
-     */
-    public final void run() {
-        block62: {
-            this.a = null;
-            var1_2 = false;
-            try {
-                var1_2 = this.a.b();
-                if (var1_2) {
-                    this.a.a(this);
-                }
-                this.a.a();
-            }
-            catch (SecurityException var2_6) {
-                this.a = var2_6;
-                this.b();
-            }
-            catch (IOException var2_7) {
-                if (!this.c) break block62;
-                this.a = var2_7;
-                this.b();
-            }
-        }
-        if (this.c) {
-            var2_8 = new e(this);
-            this.a.schedule((TimerTask)var2_8, 15000L);
-        }
-        var2_9 = false;
-        if (var1_2) {
-            var1_3 = this.a;
-            synchronized (var1_3) {
-                while (this.c) {
-                    try {
-                        this.a.wait();
-                    }
-                    catch (InterruptedException v0) {}
-                }
-            }
-        }
-        block38: while (this.c) {
-            var2_10 = this.a();
-            switch (var2_10) {
-                case 0: {
-                    var1_4 = this;
-                    if (var1_4.a == 0 || var1_4.b[0] != -95) ** GOTO lbl219
-                    if (var1_4.b) ** GOTO lbl46
-                    switch (var1_4.b[1]) {
-                        case 3: 
-                        case 4: 
-                        case 5: {
-                            ** GOTO lbl47
-                        }
-                    }
-                    continue block38;
-lbl46:
-                    // 1 sources
+   private int a() {
+      try {
+         this.a = this.a.a(this.a);
+      } catch (IOException var1) {
+         return -2;
+      }
 
-                    if (!var1_4.a) ** GOTO lbl219
-lbl47:
-                    // 2 sources
+      if (this.a == null) {
+         return -1;
+      }
 
-                    block10 : switch (var1_4.b[1]) {
-                        case 7: {
-                            if (var1_4.a < 8) break;
-                            var2_10 = 0;
-                            for (var3_15 = 2; var3_15 < 8; ++var3_15) {
-                                var1_4.b[var2_10] = r.a(var1_4.b, var3_15);
-                                ++var2_10;
-                            }
-                            var2_10 = 0;
-                            for (var3_15 = 0; var3_15 < var1_4.b.length && var1_4.b[var3_15] != 254 && var1_4.b[var3_15] != 255; ++var3_15) {
-                                if (var1_4.b[var3_15] == var1_4.a[var2_10]) {
-                                    ++var2_10;
-                                    continue;
-                                }
-                                if (var1_4.b[var3_15] < var1_4.a[var2_10]) {
-                                    var1_4.a.a(var1_4.b[var3_15]);
-                                    continue;
-                                }
-                                var1_4.a.b(var1_4.a[var2_10]);
-                                --var3_15;
-                                ++var2_10;
-                            }
-                            for (var3_15 = var2_10; var3_15 < var1_4.a.length && var1_4.a[var3_15] != 254; ++var3_15) {
-                                var1_4.a.b(var1_4.a[var3_15]);
-                            }
-                            for (var3_15 = 0; var3_15 < var1_4.a.length; ++var3_15) {
-                                var1_4.a[var3_15] = var1_4.b[var3_15];
-                            }
-                            break;
-                        }
-                        case -3: 
-                        case 8: {
-                            if (var1_4.a < 5) break;
-                            var2_10 = (byte)(var1_4.b[2] & 127);
-                            var5_26 = false;
-                            var4_25 = null;
-                            var3_16 = var1_4.b[3];
-                            var4_24 = var1_4.b[4];
-                            if (var1_4.b[1] == -3) {
-                                if (var3_16 == var1_4.b && var4_24 == var1_4.c) break;
-                                var1_4.b = var3_16;
-                                var1_4.c = var4_24;
-                            }
-                            v1 = var1_4.a;
-                            var2_11 = v1;
-                            v2 = var1_4.a;
-                            var2_11 = v2;
-                            v3 = var1_4.a;
-                            var2_11 = v3;
-                            var2_11 = var1_4.a;
-                            var1_4.a.a(var2_10, var3_16, var4_24, v1.g, v2.h, v3.g, var2_11.h);
-                            break;
-                        }
-                        case 9: {
-                            if (var1_4.a < 7) break;
-                            var2_10 = (byte)(var1_4.b[2] & 127);
-                            var3_17 = r.b(var1_4.b, 3);
-                            var4_24 = r.b(var1_4.b, 5);
-                            v4 = var1_4.a;
-                            var2_12 = v4;
-                            v5 = var1_4.a;
-                            var2_12 = v5;
-                            v6 = var1_4.a;
-                            var2_12 = v6;
-                            var2_12 = var1_4.a;
-                            var1_4.a.a(var2_10, var3_17, var4_24, v4.g, v5.h, v6.g, var2_12.h);
-                            break;
-                        }
-                        case 10: {
-                            if (var1_4.a < 11) break;
-                            var2_10 = (byte)(var1_4.b[2] & 127);
-                            var3_18 = r.b(var1_4.b, 3);
-                            var4_24 = r.b(var1_4.b, 7);
-                            v7 = var1_4.a;
-                            var2_13 = v7;
-                            v8 = var1_4.a;
-                            var2_13 = v8;
-                            v9 = var1_4.a;
-                            var2_13 = v9;
-                            var2_13 = var1_4.a;
-                            var1_4.a.a(var2_10, var3_18, var4_24, v7.g, v8.h, v9.g, var2_13.h);
-                            break;
-                        }
-                        case 17: {
-                            if (var1_4.a < 4) break;
-                            var2_10 = r.a(var1_4.b, 2);
-                            var6_29 = var1_4.a;
-                            var3_19 = var6_29.i;
-                            var6_29 = var1_4.a;
-                            var4_24 = var6_29.j;
-                            var6_29 = var1_4.a;
-                            var5_27 = var6_29.k;
-                            if (var2_10 < var5_27) {
-                                var2_10 = var5_27;
-                            } else if (var2_10 > var3_19) {
-                                var2_10 = var3_19;
-                            }
-                            var1_4.a.a(var2_10, var3_19, var4_24, var5_27);
-                            break;
-                        }
-                        case 5: {
-                            if (var1_4.a < 7) break;
-                            var2_10 = var1_4.b[2];
-                            var3_20 = r.b(var1_4.b, 3);
-                            switch (var2_10) {
-                                case 1: {
-                                    var7_30 = var3_20;
-                                    var6_29 = var1_4.a;
-                                    var1_4.a.d = var7_30;
-                                    if (var7_30 <= 0) break block10;
-                                    var6_29.a = new String[var7_30];
-                                    var6_29.a = new int[var7_30];
-                                    break;
-                                }
-                                case 2: {
-                                    var7_30 = var3_20;
-                                    var6_29 = var1_4.a;
-                                    var1_4.a.e = var7_30;
-                                    break;
-                                }
-                                case 3: {
-                                    var7_30 = var3_20;
-                                    var6_29 = var1_4.a;
-                                    var1_4.a.f = var7_30;
-                                    var3_20 = var7_30;
-                                    var6_29.g = -c.a(2, var3_20 - 1);
-                                    var3_20 = var7_30;
-                                    var6_29.h = c.a(2, var3_20 - 1) - 1;
-                                    break;
-                                }
-                                case 14: {
-                                    var7_30 = var3_20;
-                                    var6_29 = var1_4.a;
-                                    var1_4.a.i = var7_30;
-                                    break;
-                                }
-                                case 16: {
-                                    var7_30 = var3_20;
-                                    var6_29 = var1_4.a;
-                                    var1_4.a.j = var7_30;
-                                    break;
-                                }
-                                case 15: {
-                                    var7_30 = var3_20;
-                                    var6_29 = var1_4.a;
-                                    var1_4.a.k = var7_30;
-                                    break;
-                                }
-                                case -1: {
-                                    if (var1_4.b) break;
-                                    var2_14 = var1_4;
-                                    if (var2_14.c && w.a()) {
-                                        var2_14.d();
-                                    }
-                                    var6_29 = var1_4.a;
-                                    var1_4.a(var6_29.e <= 0 || var6_29.f > 0);
-                                    break;
-                                }
-                            }
-                            break;
-                        }
-                        case 4: {
-                            if (var1_4.a < 37) break;
-                            var2_10 = r.a(var1_4.b, 2);
-                            var3_21 = r.a(var1_4.b, 3);
-                            var4_24 = r.a(var1_4.b, 4);
-                            var5_28 = r.a(var1_4.b, 5, var4_24);
-                            var6_29 = var1_4.a;
-                            if (var2_10 >= var6_29.d) break;
-                            var7_30 = var2_10;
-                            var6_29 = var1_4.a;
-                            var6_29.a[var7_30] = var3_21;
-                            var3_22 = var5_28;
-                            var7_30 = var2_10;
-                            var6_29 = var1_4.a;
-                            var6_29.a[var7_30] = var3_22;
-                            break;
-                        }
-                        case 3: {
-                            if (var1_4.a < 45) break;
-                            var2_10 = r.a(var1_4.b, 2);
-                            var3_23 = r.a(var1_4.b, 4);
-                            var4_24 = r.a(var1_4.b, 10);
-                            var7_30 = var2_10;
-                            var6_29 = var1_4.a;
-                            var1_4.a.a = var7_30;
-                            var7_30 = var3_23;
-                            var6_29 = var1_4.a;
-                            var1_4.a.b = var7_30;
-                            var7_30 = var4_24;
-                            var6_29 = var1_4.a;
-                            var1_4.a.c = var7_30;
-                        }
-                    }
-lbl219:
-                    // 22 sources
+      this.a = this.a[0];
+      if (this.a < 0) {
+         return -1;
+      }
 
-                    continue block38;
-                }
-            }
-            var1_5 = this;
-            switch (var2_10) {
-                case -1: {
-                    if (!var1_5.c) continue block38;
-                    var1_5.b();
-                    continue block38;
-                }
-                case -2: {
-                    if (!var1_5.c) continue block38;
-                    var1_5.b();
-                    continue block38;
-                }
-            }
-            if (var1_5.c) {
-                var1_5.b();
-            }
-            throw new IllegalStateException();
-        }
-        if (this.b) {
-            if (this.a) {
-                this.a.a();
-                return;
-            }
-        } else {
-            this.a(false);
-        }
-    }
+      if (this.b == null || this.b.length < this.a) {
+         this.b = new byte[this.a];
+      }
 
-    private int a() {
-        try {
-            this.a = this.a.a(this.a);
-        }
-        catch (IOException iOException) {
-            return -2;
-        }
-        if (this.a == null) {
-            return -1;
-        }
-        this.a = this.a[0];
-        if (this.a < 0) {
-            return -1;
-        }
-        if (this.b == null || this.b.length < this.a) {
-            this.b = new byte[this.a];
-        }
-        System.arraycopy(this.a, 1, this.b, 0, this.a);
-        return 0;
-    }
+      System.arraycopy(this.a, 1, this.b, 0, this.a);
+      return 0;
+   }
 
-    private void d() {
-        Object object = this.a;
-        if (((c)object).c == 3) {
-            object = this.a;
-            if (((c)object).a <= 1) {
-                object = this.a;
-                if (((c)object).b < 1) {
-                    try {
-                        object = new byte[]{4, -94, 6, 8, 0};
-                        this.a.a((byte[])object);
-                        object = new byte[]{4, -94, 6, -3, 1};
-                        this.a.a((byte[])object);
-                        return;
-                    }
-                    catch (IOException iOException) {
-                        if (this.c) {
-                            this.b();
-                        }
-                        return;
-                    }
-                }
-            }
-        }
-        try {
-            object = new byte[]{4, -94, 25, 1, -12};
-            this.a.a((byte[])object);
-            return;
-        }
-        catch (IOException iOException) {
-            if (this.c) {
-                this.b();
-            }
-            return;
-        }
-    }
+   private void d() {
+      c var1 = this.a;
+      if (this.a.c == 3) {
+         var1 = this.a;
+         if (this.a.a <= 1) {
+            var1 = this.a;
+            if (this.a.b < 1) {
+               try {
+                  byte[] var7 = new byte[]{4, -94, 6, 8, 0};
+                  this.a.a(var7);
+                  byte[] var8 = new byte[]{4, -94, 6, -3, 1};
+                  this.a.a(var8);
+                  return;
+               } catch (IOException var3) {
+                  if (this.c) {
+                     this.b();
+                  }
 
-    /*
-     * WARNING - Removed try catching itself - possible behaviour change.
-     */
-    private void a(boolean bl) {
-        Object object = this.b;
-        synchronized (object) {
-            if (this.b) {
-                return;
+                  return;
+               }
             }
+         }
+      }
+
+      try {
+         byte[] var6 = new byte[]{4, -94, 25, 1, -12};
+         this.a.a(var6);
+      } catch (IOException var2) {
+         if (this.c) {
+            this.b();
+         }
+      }
+   }
+
+   private void a(boolean var1) {
+      synchronized (this.b) {
+         if (!this.b) {
             this.b = true;
-            this.a = bl;
-            if (bl) {
-                Object object2 = this.a;
-                an an2 = this.a;
-                this.a.a = object2;
-                object2 = this.a;
-                an2 = this.a;
-                object2 = an2.a;
-                synchronized (object2) {
-                    if (an2.a && an2.a != null) {
-                        new bf(an2);
-                        for (int i2 = 0; i2 < an2.a.size(); ++i2) {
-                            an2.a.elementAt(i2);
-                        }
-                    }
-                }
+            this.a = var1;
+            if (var1) {
+               c var3 = this.a;
+               an var7 = this.a;
+               this.a.a = var3;
+               var3 = this.a;
+               an var8 = this.a;
+               synchronized (this.a.a) {
+                  if (var8.a && var8.a != null) {
+                     new bf(var8);
+
+                     for (int var4 = 0; var4 < var8.a.size(); var4++) {
+                        var8.a.elementAt(var4);
+                     }
+                  }
+               }
             }
+
             this.b.notify();
-            return;
-        }
-    }
+         }
+      }
+   }
 
-    /*
-     * WARNING - Removed try catching itself - possible behaviour change.
-     */
-    public final void c() {
-        while (!this.b) {
-            Object object = this.b;
-            synchronized (object) {
-                this.b.wait();
-            }
-        }
-    }
+   public final void c() {
+      while (!this.b) {
+         synchronized (this.b) {
+            this.b.wait();
+         }
+      }
+   }
 
-    private static short a(byte[] byArray, int n2) {
-        return (short)(byArray[n2] & 0xFF);
-    }
+   private static short a(byte[] var0, int var1) {
+      return (short)(var0[var1] & 0xFF);
+   }
 
-    private static short b(byte[] byArray, int n2) {
-        return (short)((byArray[n2 + 1] & 0xFF) + ((byArray[n2] & 0xFF) << 8));
-    }
+   private static short b(byte[] var0, int var1) {
+      return (short)((var0[var1 + 1] & 255) + ((var0[var1] & 255) << 8));
+   }
 
-    private static int a(byte[] byArray, int n2) {
-        return (byArray[n2 + 1] & 0xFF) + ((byArray[n2] & 0xFF) << 8);
-    }
+   private static int a(byte[] var0, int var1) {
+      return (var0[var1 + 1] & 0xFF) + ((var0[var1] & 0xFF) << 8);
+   }
 
-    private static int b(byte[] byArray, int n2) {
-        return (byArray[n2 + 3] & 0xFF) + ((byArray[n2 + 2] & 0xFF) << 8) + ((byArray[n2 + 1] & 0xFF) << 16) + ((byArray[n2] & 0xFF) << 24);
-    }
+   private static int b(byte[] var0, int var1) {
+      return (var0[var1 + 3] & 0xFF) + ((var0[var1 + 2] & 0xFF) << 8) + ((var0[var1 + 1] & 0xFF) << 16) + ((var0[var1] & 0xFF) << 24);
+   }
 
-    private static String a(byte[] byArray, int n2, int n3) {
-        try {
-            return new String(byArray, n2, n3, "UTF-8");
-        }
-        catch (UnsupportedEncodingException unsupportedEncodingException) {
-            return null;
-        }
-    }
+   private static String a(byte[] var0, int var1, int var2) {
+      try {
+         return new String(var0, var1, var2, "UTF-8");
+      } catch (UnsupportedEncodingException var3) {
+         return null;
+      }
+   }
 }
-

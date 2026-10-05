@@ -1,21 +1,16 @@
 package com.hardwire.blob;
 
-/*
- * Decompiled with CFR 0.152.
- */
-public final class v
-extends bf {
-    public final int a;
+public final class v extends bf {
+   public final int a;
 
-    public v(an object, int n2) {
-        super((an)object);
-        object = ((an)object).a;
-        this.a = ((c)object).a[n2];
-    }
+   public v(an var1, int var2) {
+      super(var1);
+      var2 = var2;
+      this.a = var1.a.a[var2];
+   }
 
-    public v(an an2, int n2, int n3) {
-        super(an2);
-        this.a = n3;
-    }
+   public v(an var1, int var2, int var3) {
+      super(var1);
+      this.a = var3;
+   }
 }
-

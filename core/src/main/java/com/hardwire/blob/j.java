@@ -1,177 +1,185 @@
 package com.hardwire.blob;
 
-/*
- * Decompiled with CFR 0.152.
- */
 import java.io.IOException;
 import java.io.InputStream;
 
-/*
- * Duplicate member names - consider using --renamedupmembers true
- */
 public final class j {
-    private static String a = null;
-    private static String b = null;
-    private static j a;
-    private String[] a;
-    private static Class a;
+   private static String a = null;
+   private static String b = null;
+   private static j a;
+   private String[] a;
+   private static Class a;
 
-    private j(String[] stringArray) {
-        this.a = stringArray;
-    }
+   private j(String[] var1) {
+      this.a = var1;
+   }
 
-    public final void a() {
-        j j2 = j.b();
-        this.a = j2.a;
-    }
+   public final void a() {
+      j var1 = b();
+      this.a = var1.a;
+   }
 
-    public final String a(int n2, Object[] objectArray) {
-        if (n2 < 0 || n2 >= ((j)((Object)string)).a.length) {
+   public final String a(int var1, Object[] var2) {
+      if (var1 >= 0 && var1 < this.a.length) {
+         String var7;
+         if ((var7 = this.a[var1]) == null) {
             return null;
-        }
-        String string = ((j)((Object)string)).a[n2];
-        if (string == null) {
-            return null;
-        }
-        StringBuffer stringBuffer = new StringBuffer();
-        for (int i2 = 0; i2 < string.length(); ++i2) {
-            char c2 = string.charAt(i2);
-            if (c2 == '\\') {
-                c2 = string.charAt(++i2);
-                stringBuffer.append(c2);
-                continue;
+         }
+
+         StringBuffer var8 = new StringBuffer();
+
+         for (int var3 = 0; var3 < var7.length(); var3++) {
+            char var4;
+            if ((var4 = var7.charAt(var3)) == '\\') {
+               var4 = var7.charAt(++var3);
+               var8.append(var4);
+            } else if (var4 != '%') {
+               var8.append(var4);
+            } else {
+               StringBuffer var9 = new StringBuffer();
+
+               char var6;
+               for (int var5 = var3 + 1; var5 < var7.length() && Character.isDigit(var6 = var7.charAt(var5)); var5++) {
+                  var9.append(var6);
+                  var3++;
+               }
+
+               int var11 = Integer.parseInt(var9.toString());
+               if (var2 == null) {
+                  throw new ArrayIndexOutOfBoundsException();
+               }
+
+               var8.append(var2[var11]);
             }
-            if (c2 == '%') {
-                char c3;
-                int n3;
-                StringBuffer stringBuffer2 = new StringBuffer();
-                for (n3 = i2 + 1; n3 < string.length() && Character.isDigit(c3 = string.charAt(n3)); ++n3) {
-                    stringBuffer2.append(c3);
-                    ++i2;
-                }
-                n3 = Integer.parseInt(stringBuffer2.toString());
-                if (objectArray == null) {
-                    throw new ArrayIndexOutOfBoundsException();
-                }
-                stringBuffer.append(objectArray[n3]);
-                continue;
-            }
-            stringBuffer.append(c2);
-        }
-        return stringBuffer.toString();
-    }
+         }
 
-    public final String a(int n2) {
-        return this.a(n2, (Object[])null);
-    }
+         return var8.toString();
+      } else {
+         return null;
+      }
+   }
 
-    public final String a(int n2, int[] nArray) {
-        Object[] objectArray = null;
-        objectArray = new Object[nArray.length];
-        for (int i2 = 0; i2 < nArray.length; ++i2) {
-            objectArray[i2] = new Integer(nArray[i2]);
-        }
-        return this.a(n2, objectArray);
-    }
+   public final String a(int var1) {
+      return this.a(var1, (Object[])null);
+   }
 
-    public static j a() {
-        if (a == null) {
-            a = j.b();
-        }
-        return a;
-    }
+   public final String a(int var1, int[] var2) {
+      Object[] var3 = null;
+      var3 = new Object[var2.length];
 
-    private static j b() {
-        Object object = a;
-        try {
-            if (object == null) {
-                object = "en-US";
-                object = ("/zc-" + (String)object + ".txt").replace('_', '-');
-            }
-            object = j.a((String)object, b);
-            object = j.a((String)object, 0, 0);
-            return new j((String[])object);
-        }
-        catch (IOException iOException) {
-            throw new RuntimeException();
-        }
-    }
+      for (int var4 = 0; var4 < var2.length; var4++) {
+         var3[var4] = new Integer(var2[var4]);
+      }
 
-    public static void a(String string) {
-        a = string;
-    }
+      return this.a(var1, var3);
+   }
 
-    public static void b(String string) {
-        b = string;
-    }
+   public static j a() {
+      if (a == null) {
+         a = b();
+      }
 
-    private static final String[] a(String string, int n2, int n3) {
-        char c2;
-        int n4;
-        if (n2 >= string.length()) {
-            return new String[n3];
-        }
-        int n5 = 0;
-        int n6 = 0;
-        for (n4 = n2; n4 < string.length() && (c2 = string.charAt(n4)) != '\n'; ++n4) {
-            n6 = c2;
-            ++n5;
-        }
-        n4 = n5;
-        if (n6 == 13) {
-            --n4;
-        }
-        if (n4 > 0) {
-            ++n3;
-        }
-        String[] stringArray = j.a(string, n2 + n5 + 1, n3);
-        if (n4 > 0) {
-            stringArray[n3 - 1] = string.substring(n2, n2 + n4).intern();
-        }
-        return stringArray;
-    }
+      return a;
+   }
 
-    private static String a(String string, String string2) {
-        InputStream inputStream = null;
-        inputStream = (a == null ? (a = j.a("j")) : a).getResourceAsStream(string);
-        if (null == inputStream) {
-            throw new IOException();
-        }
-        string = j.a(inputStream, string2);
-        try {
-            inputStream.close();
-        }
-        catch (IOException iOException) {}
-        return string;
-    }
+   private static j b() {
+      String var0 = a;
 
-    private static String a(InputStream inputStream, String string) {
-        byte[] byArray = new byte[1024];
-        int n2 = 0;
-        int n3 = 0;
-        while ((n3 = inputStream.read()) > 0) {
-            if (n2 >= byArray.length) {
-                int n4 = byArray.length;
-                byte[] byArray2 = new byte[n4 += 512];
-                System.arraycopy(byArray, 0, byArray2, 0, byArray.length);
-                byArray = byArray2;
-            }
-            byArray[n2++] = (byte)n3;
-        }
-        inputStream.close();
-        if (string == null) {
-            return new String(byArray, 0, n2);
-        }
-        return new String(byArray, 0, n2, string);
-    }
+      try {
+         if (var0 == null) {
+            var0 = "en-US";
+            var0 = ("/zc-" + var0 + ".txt").replace('_', '-');
+         }
 
-    private static Class a(String string) {
-        try {
-            return Class.forName(string);
-        }
-        catch (ClassNotFoundException classNotFoundException) {
-            throw new NoClassDefFoundError(classNotFoundException.getMessage());
-        }
-    }
+         String[] var3 = a(a(var0, b), 0, 0);
+         return new j(var3);
+      } catch (IOException var1) {
+         throw new RuntimeException();
+      }
+   }
+
+   public static void a(String var0) {
+      a = var0;
+   }
+
+   public static void b(String var0) {
+      b = var0;
+   }
+
+   private static final String[] a(String var0, int var1, int var2) {
+      if (var1 >= var0.length()) {
+         return new String[var2];
+      }
+
+      int var3 = 0;
+      char var4 = 0;
+
+      char var6;
+      for (int var5 = var1; var5 < var0.length() && (var6 = var0.charAt(var5)) != '\n'; var5++) {
+         var4 = var6;
+         var3++;
+      }
+
+      int var7 = var3;
+      if (var4 == '\r') {
+         var7--;
+      }
+
+      if (var7 > 0) {
+         var2++;
+      }
+
+      String[] var8 = a(var0, var1 + var3 + 1, var2);
+      if (var7 > 0) {
+         var8[var2 - 1] = var0.substring(var1, var1 + var7).intern();
+      }
+
+      return var8;
+   }
+
+   private static String a(String var0, String var1) {
+      InputStream var2 = null;
+      var2 = (a == null ? (a = a("j")) : a).getResourceAsStream(var0);
+      if (null == var2) {
+         throw new IOException();
+      }
+
+      var0 = a(var2, var1);
+
+      try {
+         var2.close();
+      } catch (IOException var3) {
+      }
+
+      return var0;
+   }
+
+   private static String a(InputStream var0, String var1) {
+      byte[] var2 = new byte[1024];
+      int var3 = 0;
+      int var4 = 0;
+
+      while ((var4 = var0.read()) > 0) {
+         if (var3 >= var2.length) {
+            int var5 = var2.length;
+            var5 += 512;
+            byte[] var8 = new byte[var5];
+            System.arraycopy(var2, 0, var8, 0, var2.length);
+            var2 = var8;
+         }
+
+         var2[var3++] = (byte)var4;
+      }
+
+      var0.close();
+      return var1 == null ? new String(var2, 0, var3) : new String(var2, 0, var3, var1);
+   }
+
+   private static Class a(String var0) {
+      try {
+         return Class.forName(var0);
+      } catch (ClassNotFoundException var1) {
+         throw new NoClassDefFoundError(var1.getMessage());
+      }
+   }
 }
-

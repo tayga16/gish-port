@@ -1,0 +1,67 @@
+name: Build Gish (Android & PC)
+
+on:
+  push:
+    branches: [ "main", "master" ]
+    tags: [ "v*" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build Game Packages
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Grant Execute Permission for Gradlew
+        run: chmod +x gradlew
+
+      - name: Build Android APK
+        run: ./gradlew :android:assembleDebug --stacktrace
+
+      - name: Build Desktop PC Distribution
+        run: ./gradlew :desktop:distZip :desktop:jar --stacktrace
+
+      - name: Upload Android APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Gish-Android-Debug-APK
+          path: android/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+      - name: Upload Desktop PC Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Gish-Desktop-PC-Build
+          path: |
+            desktop/build/distributions/*.zip
+            desktop/build/libs/*.jar
+          if-no-files-found: warn
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            android/build/outputs/apk/debug/*.apk
+            desktop/build/distributions/*.zip
+            desktop/build/libs/*.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

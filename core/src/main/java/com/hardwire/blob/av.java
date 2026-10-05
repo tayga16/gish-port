@@ -1,9 +1,5 @@
 package com.hardwire.blob;
 
-/*
- * Decompiled with CFR 0.152.
- */
 public interface av {
-    public void a(o var1);
+   void a(o var1);
 }
-

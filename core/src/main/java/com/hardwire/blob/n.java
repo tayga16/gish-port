@@ -1,117 +1,126 @@
 package com.hardwire.blob;
 
-/*
- * Decompiled with CFR 0.152.
- */
 import java.io.IOException;
 import java.util.Hashtable;
 
 final class n {
-    private n() {
-    }
+   private n() {
+   }
 
-    static String a(String string, String string2) {
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append("ap.ug.");
-        stringBuffer.append(n.a(string));
-        stringBuffer.append('|');
-        stringBuffer.append(n.a(string2));
-        return stringBuffer.toString();
-    }
+   static String a(String var0, String var1) {
+      StringBuffer var2;
+      (var2 = new StringBuffer()).append("ap.ug.");
+      var2.append(a(var0));
+      var2.append('|');
+      var2.append(a(var1));
+      return var2.toString();
+   }
 
-    private static String a(int n2) {
-        return "zp.lc." + n2;
-    }
+   private static String a(int var0) {
+      return "zp.lc." + var0;
+   }
 
-    static ah a(Hashtable object, int n2) {
-        int n3;
-        int n4;
-        block5: {
-            Object object2 = n.a(n2);
-            if ((object = (String)((Hashtable)object).get(object2)) == null) {
-                return null;
+   static ah a(Hashtable var0, int var1) {
+      String var7 = a(var1);
+      String var5;
+      if ((var5 = (String)var0.get(var7)) == null) {
+         return null;
+      }
+
+      String var8 = var5;
+      boolean var2 = false;
+      int var3 = 0;
+
+      int var10000;
+      while (true) {
+         if (var3 >= var8.length()) {
+            var10000 = -1;
+            break;
+         }
+
+         char var4 = var8.charAt(var3);
+         if (!var2 && var4 == '\\') {
+            var2 = true;
+         } else {
+            if (!var2 && var4 == '|') {
+               var10000 = var3;
+               break;
             }
-            object2 = object;
-            boolean bl = false;
-            for (int i2 = 0; i2 < ((String)object2).length(); ++i2) {
-                char c2 = ((String)object2).charAt(i2);
-                if (!bl && c2 == '\\') {
-                    bl = true;
-                    continue;
-                }
-                if (!bl && c2 == '|') {
-                    n4 = i2;
-                    break block5;
-                }
-                bl = false;
-            }
-            n4 = n3 = -1;
-        }
-        if (n4 >= 0) {
-            String string = n.b(((String)object).substring(0, n3));
-            object = n.b(((String)object).substring(n3 + 1));
-            return w.a(string, (String)object);
-        }
-        return null;
-    }
 
-    static void a(Hashtable hashtable, int n2, ah ah2) {
-        String string = n.a(n2);
-        CharSequence charSequence = null;
-        if (ah2 != null) {
-            try {
-                charSequence = new StringBuffer();
-                charSequence.append(n.a(ah2.a()));
-                charSequence.append('|');
-                charSequence.append(n.a(ah2.b()));
-                charSequence = charSequence.toString();
-                hashtable.put(string, charSequence);
-                return;
-            }
-            catch (IOException iOException) {
-                return;
-            }
-        }
-        hashtable.remove(string);
-    }
+            var2 = false;
+         }
 
-    static boolean a(Hashtable hashtable) {
-        return hashtable.get("zp.ace").equals("true");
-    }
+         var3++;
+      }
 
-    static void a(Hashtable hashtable, boolean bl) {
-        if (bl) {
-            hashtable.put("zp.ace", "true");
-            return;
-        }
-        hashtable.put("zp.ace", "false");
-    }
+      var1 = var10000;
+      if (var10000 >= 0) {
+         String var10 = b(var5.substring(0, var1));
+         String var6 = b(var5.substring(var1 + 1));
+         return w.a(var10, var6);
+      } else {
+         return null;
+      }
+   }
 
-    private static String a(String string) {
-        StringBuffer stringBuffer = new StringBuffer();
-        for (int i2 = 0; i2 < string.length(); ++i2) {
-            char c2 = string.charAt(i2);
-            if (c2 == '\\' || c2 == '|') {
-                stringBuffer.append('\\');
-            }
-            stringBuffer.append(c2);
-        }
-        return stringBuffer.toString();
-    }
+   static void a(Hashtable var0, int var1, ah var2) {
+      String var5 = a(var1);
+      StringBuffer var3 = null;
+      if (var2 != null) {
+         try {
+            (var3 = new StringBuffer()).append(a(var2.a()));
+            var3.append('|');
+            var3.append(a(var2.b()));
+            String var7 = var3.toString();
+            var0.put(var5, var7);
+         } catch (IOException var4) {
+         }
+      } else {
+         var0.remove(var5);
+      }
+   }
 
-    private static String b(String string) {
-        StringBuffer stringBuffer = new StringBuffer();
-        boolean bl = false;
-        for (int i2 = 0; i2 < string.length(); ++i2) {
-            char c2 = string.charAt(i2);
-            if (!bl && c2 == '\\') {
-                bl = true;
-                continue;
-            }
-            stringBuffer.append(c2);
-            bl = false;
-        }
-        return stringBuffer.toString();
-    }
+   static boolean a(Hashtable var0) {
+      return var0.get("zp.ace").equals("true");
+   }
+
+   static void a(Hashtable var0, boolean var1) {
+      if (var1) {
+         var0.put("zp.ace", "true");
+      } else {
+         var0.put("zp.ace", "false");
+      }
+   }
+
+   private static String a(String var0) {
+      StringBuffer var1 = new StringBuffer();
+
+      for (int var2 = 0; var2 < var0.length(); var2++) {
+         char var3;
+         if ((var3 = var0.charAt(var2)) == '\\' || var3 == '|') {
+            var1.append('\\');
+         }
+
+         var1.append(var3);
+      }
+
+      return var1.toString();
+   }
+
+   private static String b(String var0) {
+      StringBuffer var1 = new StringBuffer();
+      boolean var2 = false;
+
+      for (int var3 = 0; var3 < var0.length(); var3++) {
+         char var4 = var0.charAt(var3);
+         if (!var2 && var4 == '\\') {
+            var2 = true;
+         } else {
+            var1.append(var4);
+            var2 = false;
+         }
+      }
+
+      return var1.toString();
+   }
 }
-
