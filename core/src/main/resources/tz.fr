@@ -1,0 +1,32 @@
+Manette
+Reconnecter
+Connexion rapide
+Chercher et connecter
+Déconnecter
+Recherche de périphériques. Ceci peut prendre quelques instants.
+Recherche de périphériques. Ceci peut prendre quelques instants. - %0 trouvé(s)
+Recherche des noms de périphériques. Ceci peut prendre quelques instants. - %0 sur %1
+Annulation de la recherche de périphériques. Ceci peut prendre quelques instants.
+Aucun périphérique trouvé. Vérifiez que la manette est allumée et relancez la recherche.
+Connexion ŕ %0. Ceci peut prendre quelques instants.
+Connecté ŕ %0.
+Échec de la connexion. Vérifiez que la manette est allumée et que le mode Bluetooth du téléphone est activé.
+Déconnexion de %0
+Déconnecté de %0
+Échec de la déconnexion. Veuillez réessayer dans quelques instants.
+OK
+Annuler
+Retour
+Connexion auto: sans
+Connexion auto: avec
+Connexion auto activée. La prochaine fois que vous lancerez l'application, elle se connectera automatiquement ŕ votre manette.
+Connexion auto désactivée. La prochaine fois que vous lancerez l'application, vous devrez utiliser le menu pour connecter votre manette.
+Sélectionner
+Retenter connexion
+Échec de la recherche de périphériques. Vérifiez que le mode Bluetooth du téléphone est activé.
+Échec de la recherche de périphériques. Relancez l'application et autorisez l'utilisation du mode Bluetooth.
+Échec de la connexion. Relancez l'application et autorisez l'utilisation du mode Bluetooth.
+Échec de la recherche de périphériques. Vérifiez que le mode Bluetooth du téléphone est activé.
+Échec de la connexion. Vérifiez que le mode Bluetooth du téléphone est activé.
+Connexion ŕ la manette interrompue
+Connexion auto activée. Vous pouvez désactiver cette option dans le menu Manette.

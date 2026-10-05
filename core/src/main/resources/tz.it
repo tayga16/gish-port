@@ -1,0 +1,32 @@
+Controller
+Riconnetti
+Connessione rapida
+Ricerca
+Disconnetti
+Ricerca dei dispositivi in corso. Potrebbero volerci alcuni secondi.
+Ricerca dei dispositivi in corso. Potrebbero volerci alcuni secondi. (%0 rilevati)
+Verifica nomi dei dispositivi in corso. Potrebbero volerci alcuni secondi. (%0 di %1)
+Annullamento della ricerca dei dispositivi in corso. Potrebbero volerci alcuni secondi.
+Nessun dispositivo trovato. Verifica che il controller sia acceso e avvia di nuovo la ricerca.
+Connessione a %0 in corso. Potrebbero volerci alcuni secondi.
+Connesso a %0.
+Impossibile connettersi. Assicurati che il controller sia acceso e che il Bluetooth del tuo telefono sia attivo.
+Disconnessione da %0 in corso.
+Disconnesso da %0.
+Impossibile disconnettersi. Riprova tra qualche secondo.
+OK
+Annulla
+Indietro
+Connessione automatica: no
+Connessione automatica: sě
+La connessione automatica č stata attivata. La prossima volta che avvierai l'applicazione, si collegherŕ automaticamente al controller.
+La connessione automatica č stata disattivata. La prossima volta che avvierai l'applicazione, dovrai usare il menu per collegare il controller.
+Seleziona
+Riprova a connetterti
+Ricerca dispositivo fallita. Assicurati che il Bluetooth del telefono sia attivo.
+Impossibile ricercare i dispositivi. Riavvia l'applicazione e abilita l'utilizzo del Bluetooth.
+Impossibile connettersi. Riavvia l'applicazione e abilita l'utilizzo del Bluetooth.
+Impossibile ricercare i dispositivi. Assicurati che il Bluetooth del telefono sia attivo.
+Impossibile connettersi. Assicurati che il Bluetooth del telefono sia attivo.
+Connessione al controller interrotta.
+La connessione automatica č stata attivata. Vai al menu Controller per disattivarla.
