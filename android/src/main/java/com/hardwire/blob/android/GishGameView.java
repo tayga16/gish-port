@@ -15,6 +15,7 @@ import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -158,11 +159,17 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
                 if (cachedPaintMethod != null) {
                     try {
                         cachedPaintMethod.invoke(canvas, gameGraphics);
+                        lastErrorMessage = null;
                     } catch (Throwable t) {
                         Throwable cause = (t instanceof InvocationTargetException && t.getCause() != null)
                             ? t.getCause() : t;
                         Log.e(TAG, "Paint invocation error", cause);
-                        lastErrorMessage = cause.getClass().getSimpleName() + ": " + cause.getMessage();
+                        // Reset ad.c so Main thread loop in ad.m() does not deadlock waiting for repaint to finish
+                        try {
+                            Field fieldC = canvas.getClass().getDeclaredField("c");
+                            fieldC.setAccessible(true);
+                            fieldC.setBoolean(canvas, false);
+                        } catch (Throwable ignored) {}
                     }
                 }
             }

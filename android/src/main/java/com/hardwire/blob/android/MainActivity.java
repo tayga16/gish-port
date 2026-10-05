@@ -392,15 +392,15 @@ public class MainActivity extends Activity {
     private void invokeMidlet(String methodName, Class<?>[] types, Object[] args) {
         if (midlet == null) return;
         try {
-            Method m = midlet.getClass().getMethod(methodName, types);
-            m.invoke(midlet, args);
-        } catch (NoSuchMethodException e) {
+            Method m = null;
             try {
-                Method m = midlet.getClass().getDeclaredMethod(methodName, types);
+                m = midlet.getClass().getDeclaredMethod(methodName, types);
+            } catch (NoSuchMethodException e) {
+                m = midlet.getClass().getMethod(methodName, types);
+            }
+            if (m != null) {
                 m.setAccessible(true);
                 m.invoke(midlet, args);
-            } catch (Throwable ex) {
-                handleFatalError(ex);
             }
         } catch (Throwable e) {
             handleFatalError(e);
