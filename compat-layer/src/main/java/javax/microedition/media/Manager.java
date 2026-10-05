@@ -14,16 +14,19 @@ public class Manager {
 
     private static class DummyPlayer implements Player, VolumeControl {
         private int vol = 100;
-        public void start() {}
-        public void stop() {}
-        public void close() {}
-        public void prefetch() {}
-        public void realize() {}
+        private int state = Player.PREFETCHED;
+
+        public void start() { state = Player.STARTED; }
+        public void stop() { state = Player.PREFETCHED; }
+        public void close() { state = Player.CLOSED; }
+        public void prefetch() { state = Player.PREFETCHED; }
+        public void realize() { state = Player.REALIZED; }
         public void setLoopCount(int count) {}
-        public Object getControl(String controlType) {
+        public Control getControl(String controlType) {
             if (controlType != null && controlType.contains("VolumeControl")) return this;
             return null;
         }
+        public int getState() { return state; }
         public void addPlayerListener(PlayerListener playerListener) {}
         public int setLevel(int level) { this.vol = level; return level; }
         public int getLevel() { return vol; }

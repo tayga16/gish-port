@@ -1,6 +1,8 @@
 package javax.microedition.media.control;
 
-public interface VolumeControl {
+import javax.microedition.media.Control;
+
+public interface VolumeControl extends Control {
     int setLevel(int level);
     int getLevel();
 }

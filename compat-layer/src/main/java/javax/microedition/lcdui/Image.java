@@ -25,8 +25,7 @@ public class Image {
     }
 
     public static Image createImage(String name) throws java.io.IOException {
-        if (!name.startsWith("/")) name = "/" + name;
-        InputStream is = Image.class.getResourceAsStream(name);
+        InputStream is = javax.microedition.midlet.MIDlet.getResourceAsStream(name);
         if (is == null) {
             throw new java.io.IOException("Resource not found: " + name);
         }

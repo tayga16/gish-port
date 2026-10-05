@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -14,8 +15,12 @@ import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class GishGameView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
+    private static final String TAG = "GISH_VIEW";
+
     private final Main midlet;
     private SurfaceHolder holder;
     private Thread renderThread;
@@ -33,9 +38,19 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
     private Rect srcRect;
     private Rect dstRect;
     private Paint paint;
+    private Paint debugPaint;
     private float scale = 1.0f;
     private int offsetX = 0;
     private int offsetY = 0;
+
+    // Cached reflection methods
+    private Class<?> cachedCanvasClass = null;
+    private Method cachedPaintMethod = null;
+    private Method cachedPointerPressed = null;
+    private Method cachedPointerDragged = null;
+    private Method cachedPointerReleased = null;
+
+    private volatile String lastErrorMessage = null;
 
     public GishGameView(Context context, Main midlet) {
         super(context);
@@ -52,6 +67,11 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
         this.dstRect = new Rect(0, 0, GAME_WIDTH, GAME_HEIGHT);
         this.paint = new Paint();
         this.paint.setFilterBitmap(false); // Sharp pixel-art scaling
+
+        this.debugPaint = new Paint();
+        this.debugPaint.setColor(Color.RED);
+        this.debugPaint.setTextSize(24);
+        this.debugPaint.setAntiAlias(true);
     }
 
     @Override
@@ -79,41 +99,71 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
         pause();
     }
 
-    public void resume() {
+    public synchronized void resume() {
+        if (running) return;
         running = true;
         renderThread = new Thread(this, "GishRenderLoop");
         renderThread.start();
     }
 
-    public void pause() {
+    public synchronized void pause() {
         running = false;
         try {
             if (renderThread != null) {
-                renderThread.join();
+                renderThread.join(500);
+                renderThread = null;
             }
         } catch (InterruptedException ignored) {}
     }
 
+    private void updateCachedMethods(Class<?> canvasClass) {
+        if (cachedCanvasClass == canvasClass) return;
+        cachedCanvasClass = canvasClass;
+        try {
+            cachedPaintMethod = canvasClass.getDeclaredMethod("paint", Graphics.class);
+            cachedPaintMethod.setAccessible(true);
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to resolve paint(Graphics)", e);
+        }
+        try {
+            cachedPointerPressed = canvasClass.getDeclaredMethod("pointerPressed", int.class, int.class);
+            cachedPointerPressed.setAccessible(true);
+        } catch (Exception ignored) {}
+        try {
+            cachedPointerDragged = canvasClass.getDeclaredMethod("pointerDragged", int.class, int.class);
+            cachedPointerDragged.setAccessible(true);
+        } catch (Exception ignored) {}
+        try {
+            cachedPointerReleased = canvasClass.getDeclaredMethod("pointerReleased", int.class, int.class);
+            cachedPointerReleased.setAccessible(true);
+        } catch (Exception ignored) {}
+    }
+
     @Override
     public void run() {
-        long lastTime = System.currentTimeMillis();
         final long frameDuration = 1000 / 30; // ~30-33ms per frame
 
         while (running) {
             long now = System.currentTimeMillis();
-            long delta = now - lastTime;
-            lastTime = now;
 
-            Displayable current = Display.getDisplay(midlet).getCurrent();
+            Displayable current = null;
+            try {
+                current = Display.getDisplay(midlet).getCurrent();
+            } catch (Exception ignored) {}
+
             if (current instanceof javax.microedition.lcdui.Canvas) {
                 javax.microedition.lcdui.Canvas canvas = (javax.microedition.lcdui.Canvas) current;
-                // Render frame
-                try {
-                    java.lang.reflect.Method paintMethod = canvas.getClass().getDeclaredMethod("paint", Graphics.class);
-                    paintMethod.setAccessible(true);
-                    paintMethod.invoke(canvas, gameGraphics);
-                } catch (Exception e) {
-                    // Fallback direct paint if accessible
+                updateCachedMethods(canvas.getClass());
+
+                if (cachedPaintMethod != null) {
+                    try {
+                        cachedPaintMethod.invoke(canvas, gameGraphics);
+                    } catch (Throwable t) {
+                        Throwable cause = (t instanceof InvocationTargetException && t.getCause() != null)
+                            ? t.getCause() : t;
+                        Log.e(TAG, "Paint invocation error", cause);
+                        lastErrorMessage = cause.getClass().getSimpleName() + ": " + cause.getMessage();
+                    }
                 }
             }
 
@@ -129,10 +179,19 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
                     androidBitmap.setPixels(pixelBuffer, 0, GAME_WIDTH, 0, 0, GAME_WIDTH, GAME_HEIGHT);
 
                     c.drawBitmap(androidBitmap, srcRect, dstRect, paint);
+
+                    // Show error on screen if any critical failure occurred
+                    if (lastErrorMessage != null) {
+                        c.drawText("⚠️ " + lastErrorMessage, 20, 60, debugPaint);
+                    }
                 }
+            } catch (Throwable t) {
+                Log.e(TAG, "Surface render error", t);
             } finally {
                 if (c != null) {
-                    holder.unlockCanvasAndPost(c);
+                    try {
+                        holder.unlockCanvasAndPost(c);
+                    } catch (Exception ignored) {}
                 }
             }
 
@@ -154,6 +213,7 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
         }
 
         javax.microedition.lcdui.Canvas canvas = (javax.microedition.lcdui.Canvas) current;
+        updateCachedMethods(canvas.getClass());
 
         // Map touch from screen coordinates to virtual 240x320 game coordinates
         float touchX = event.getX() - offsetX;
@@ -168,27 +228,27 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
         try {
             switch (event.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN: {
-                    java.lang.reflect.Method m = canvas.getClass().getDeclaredMethod("pointerPressed", int.class, int.class);
-                    m.setAccessible(true);
-                    m.invoke(canvas, gx, gy);
+                    if (cachedPointerPressed != null) {
+                        cachedPointerPressed.invoke(canvas, gx, gy);
+                    }
                     break;
                 }
                 case MotionEvent.ACTION_MOVE: {
-                    java.lang.reflect.Method m = canvas.getClass().getDeclaredMethod("pointerDragged", int.class, int.class);
-                    m.setAccessible(true);
-                    m.invoke(canvas, gx, gy);
+                    if (cachedPointerDragged != null) {
+                        cachedPointerDragged.invoke(canvas, gx, gy);
+                    }
                     break;
                 }
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL: {
-                    java.lang.reflect.Method m = canvas.getClass().getDeclaredMethod("pointerReleased", int.class, int.class);
-                    m.setAccessible(true);
-                    m.invoke(canvas, gx, gy);
+                    if (cachedPointerReleased != null) {
+                        cachedPointerReleased.invoke(canvas, gx, gy);
+                    }
                     break;
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Throwable e) {
+            Log.e(TAG, "Touch event handler failed", e);
         }
 
         return true;

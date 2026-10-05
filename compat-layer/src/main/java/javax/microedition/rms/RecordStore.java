@@ -2,6 +2,7 @@ package javax.microedition.rms;
 
 import java.io.*;
 import java.util.*;
+import javax.microedition.midlet.MIDlet;
 
 public class RecordStore {
     private static final Map<String, RecordStore> stores = new HashMap<String, RecordStore>();
@@ -23,13 +24,23 @@ public class RecordStore {
         return rs;
     }
 
+    public static synchronized RecordStore openRecordStore(String recordStoreName, String vendorName, String suiteName)
+            throws RecordStoreException {
+        return openRecordStore(recordStoreName, true);
+    }
+
+    public void setMode(int authmode, boolean writable) throws RecordStoreException {
+        // Mode setting not needed for standalone emulator
+    }
+
     public void closeRecordStore() throws RecordStoreException {
         save();
     }
 
     public static void deleteRecordStore(String name) {
         stores.remove(name);
-        new File(name + ".rms").delete();
+        File file = new File(getSaveDir(), name + ".rms");
+        if (file.exists()) file.delete();
     }
 
     public static String[] listRecordStores() {
@@ -87,10 +98,20 @@ public class RecordStore {
         }
     }
 
+    private static File getSaveDir() {
+        if (MIDlet.filesDir != null) {
+            File dir = new File(MIDlet.filesDir, "rms");
+            dir.mkdirs();
+            return dir;
+        }
+        File dir = new File(System.getProperty("user.home", "."), ".gish_save");
+        dir.mkdirs();
+        return dir;
+    }
+
     private void save() {
         try {
-            File dir = new File(System.getProperty("user.home", "."), ".gish_save");
-            dir.mkdirs();
+            File dir = getSaveDir();
             File file = new File(dir, name + ".rms");
             DataOutputStream dos = new DataOutputStream(new FileOutputStream(file));
             dos.writeInt(records.size());
@@ -108,7 +129,7 @@ public class RecordStore {
 
     private void load() {
         try {
-            File dir = new File(System.getProperty("user.home", "."), ".gish_save");
+            File dir = getSaveDir();
             File file = new File(dir, name + ".rms");
             if (!file.exists()) return;
             DataInputStream dis = new DataInputStream(new FileInputStream(file));

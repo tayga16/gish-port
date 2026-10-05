@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +21,15 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.hardwire.blob.Main;
+import javax.microedition.midlet.MIDlet;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends Activity {
+    private static final String TAG = "GISH_PORT";
     private Main midlet;
     private GishGameView gameView;
     private boolean godmode = false;
@@ -35,11 +39,29 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Global crash catcher to prevent silent black screen / crash
+        Thread.setDefaultUncaughtExceptionHandler((t, e) -> handleFatalError(e));
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        midlet = new Main();
+        // Bridge Android AssetManager & Storage to MIDlet compat layer
+        try {
+            MIDlet.setAssetManager(getAssets());
+            MIDlet.setFilesDir(getFilesDir());
+            Log.i(TAG, "AssetManager & FilesDir initialized successfully");
+        } catch (Throwable t) {
+            Log.e(TAG, "Failed to initialize MIDlet environment", t);
+        }
+
+        try {
+            midlet = new Main();
+        } catch (Throwable t) {
+            Log.e(TAG, "Failed to instantiate Main MIDlet", t);
+            handleFatalError(t);
+            return;
+        }
 
         FrameLayout root = new FrameLayout(this);
         gameView = new GishGameView(this, midlet);
@@ -64,7 +86,7 @@ public class MainActivity extends Activity {
 
         setContentView(root);
 
-        // Start MIDlet via reflection
+        // Start MIDlet
         invokeMidlet("startApp", new Class<?>[0], new Object[0]);
 
         // Godmode watcher thread
@@ -94,9 +116,28 @@ public class MainActivity extends Activity {
         godmodeThread.start();
     }
 
+    private void handleFatalError(final Throwable t) {
+        Throwable realCause = t;
+        while (realCause instanceof InvocationTargetException && realCause.getCause() != null) {
+            realCause = realCause.getCause();
+        }
+        Log.e(TAG, "FATAL ERROR", realCause);
+        final String errorText = Log.getStackTraceString(realCause);
+        runOnUiThread(() -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("⚠️ Gish Runtime Error");
+            builder.setMessage(errorText);
+            builder.setPositiveButton("OK", null);
+            builder.setCancelable(false);
+            try {
+                builder.show();
+            } catch (Exception ignored) {}
+        });
+    }
+
     private void showMainCheatDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("⚡ GISH CHAT & LEVEL MENU");
+        builder.setTitle("⚡ GISH CHEAT & LEVEL MENU");
 
         String[] options = {
             "🗺 Быстрый переход по уровням (Выбор из 106 карт)",
@@ -204,7 +245,7 @@ public class MainActivity extends Activity {
                 return;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "Jump to level failed", e);
         }
         Toast.makeText(this, "Сначала начните новую игру или войдите на уровень!", Toast.LENGTH_LONG).show();
     }
@@ -219,7 +260,7 @@ public class MainActivity extends Activity {
                 return;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "Restart level failed", e);
         }
         Toast.makeText(this, "Не удалось перезапустить уровень", Toast.LENGTH_SHORT).show();
     }
@@ -314,7 +355,7 @@ public class MainActivity extends Activity {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "Set collectibles failed", e);
         }
         Toast.makeText(this, "Войдите на игровой уровень для применения!", Toast.LENGTH_LONG).show();
     }
@@ -325,7 +366,7 @@ public class MainActivity extends Activity {
             fField.setInt(null, 106);
             Toast.makeText(this, "Все 106 уровней разблокированы!", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "Unlock all levels failed", e);
             Toast.makeText(this, "Ошибка разблокировки: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -358,11 +399,11 @@ public class MainActivity extends Activity {
                 Method m = midlet.getClass().getDeclaredMethod(methodName, types);
                 m.setAccessible(true);
                 m.invoke(midlet, args);
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            } catch (Throwable ex) {
+                handleFatalError(ex);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Throwable e) {
+            handleFatalError(e);
         }
     }
 

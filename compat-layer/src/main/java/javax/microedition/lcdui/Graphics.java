@@ -9,6 +9,9 @@ public class Graphics {
     public static final int BOTTOM = 32;
     public static final int BASELINE = 64;
 
+    public static final int SOLID = 0;
+    public static final int DOTTED = 1;
+
     private final Image targetImage;
     private final int[] targetPixels;
     private final int targetWidth;
@@ -21,6 +24,8 @@ public class Graphics {
     private int clipY = 0;
     private int clipW;
     private int clipH;
+    private Font font;
+    private int strokeStyle = SOLID;
 
     public Graphics(Image target) {
         this.targetImage = target;
@@ -29,6 +34,7 @@ public class Graphics {
         this.targetPixels = target.getRgbData();
         this.clipW = this.targetWidth;
         this.clipH = this.targetHeight;
+        this.font = Font.getDefaultFont();
     }
 
     public void setColor(int RGB) {
@@ -40,6 +46,22 @@ public class Graphics {
     }
 
     public int getColor() { return this.color & 0x00FFFFFF; }
+
+    public void setFont(Font f) {
+        this.font = (f != null) ? f : Font.getDefaultFont();
+    }
+
+    public Font getFont() {
+        return this.font != null ? this.font : Font.getDefaultFont();
+    }
+
+    public void setStrokeStyle(int style) {
+        this.strokeStyle = style;
+    }
+
+    public int getStrokeStyle() {
+        return strokeStyle;
+    }
 
     public void translate(int x, int y) {
         this.transX += x;
@@ -117,6 +139,106 @@ public class Graphics {
             if (e2 > -dy) { err -= dy; x1 += sx; }
             if (e2 < dx) { err += dx; y1 += sy; }
         }
+    }
+
+    public void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3) {
+        x1 += transX; y1 += transY;
+        x2 += transX; y2 += transY;
+        x3 += transX; y3 += transY;
+
+        // Sort vertices by Y ascending: p1, p2, p3
+        if (y1 > y2) { int tx = x1; x1 = x2; x2 = tx; int ty = y1; y1 = y2; y2 = ty; }
+        if (y1 > y3) { int tx = x1; x1 = x3; x3 = tx; int ty = y1; y1 = y3; y3 = ty; }
+        if (y2 > y3) { int tx = x2; x2 = x3; x3 = tx; int ty = y2; y2 = y3; y3 = ty; }
+
+        if (y1 == y3) return; // Degenerate
+
+        int minY = Math.max(clipY, y1);
+        int maxY = Math.min(clipY + clipH - 1, y3);
+
+        for (int y = minY; y <= maxY; y++) {
+            // Find edge intersections
+            int xa = x1 + (int)((long)(y - y1) * (x3 - x1) / (y3 - y1));
+            int xb;
+            if (y < y2) {
+                xb = (y2 == y1) ? x1 : x1 + (int)((long)(y - y1) * (x2 - x1) / (y2 - y1));
+            } else {
+                xb = (y3 == y2) ? x2 : x2 + (int)((long)(y - y2) * (x3 - x2) / (y3 - y2));
+            }
+
+            int left = Math.min(xa, xb);
+            int right = Math.max(xa, xb);
+
+            int startX = Math.max(clipX, left);
+            int endX = Math.min(clipX + clipW - 1, right);
+
+            int row = y * targetWidth;
+            for (int x = startX; x <= endX; x++) {
+                targetPixels[row + x] = color;
+            }
+        }
+    }
+
+    public void fillArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
+        if (width <= 0 || height <= 0) return;
+        x += transX;
+        y += transY;
+
+        int rx = width / 2;
+        int ry = height / 2;
+        int cx = x + rx;
+        int cy = y + ry;
+
+        int startY = Math.max(clipY, y);
+        int endY = Math.min(clipY + clipH - 1, y + height);
+
+        for (int py = startY; py <= endY; py++) {
+            int dy = py - cy;
+            double dyNorm = (double) dy / (ry > 0 ? ry : 1);
+            if (Math.abs(dyNorm) > 1.0) continue;
+            double dxNorm = Math.sqrt(Math.max(0.0, 1.0 - dyNorm * dyNorm));
+            int spanX = (int)(dxNorm * rx);
+
+            int startX = Math.max(clipX, cx - spanX);
+            int endX = Math.min(clipX + clipW - 1, cx + spanX);
+
+            int row = py * targetWidth;
+            for (int px = startX; px <= endX; px++) {
+                targetPixels[row + px] = color;
+            }
+        }
+    }
+
+    public void drawArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
+        if (width <= 0 || height <= 0) return;
+        x += transX;
+        y += transY;
+        int rx = width / 2;
+        int ry = height / 2;
+        int cx = x + rx;
+        int cy = y + ry;
+
+        // Draw approximate ellipse outline
+        int steps = Math.max(16, (rx + ry) / 2);
+        int prevX = -1, prevY = -1;
+        for (int i = 0; i <= steps; i++) {
+            double rad = 2 * Math.PI * i / steps;
+            int px = cx + (int)(rx * Math.cos(rad));
+            int py = cy + (int)(ry * Math.sin(rad));
+            if (prevX != -1) {
+                drawLine(prevX - transX, prevY - transY, px - transX, py - transY);
+            }
+            prevX = px;
+            prevY = py;
+        }
+    }
+
+    public void fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) {
+        fillRect(x, y, width, height);
+    }
+
+    public void drawRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) {
+        drawRect(x, y, width, height);
     }
 
     public void drawImage(Image img, int x, int y, int anchor) {
@@ -202,6 +324,18 @@ public class Graphics {
     }
 
     public void drawString(String str, int x, int y, int anchor) {
-        // Fallback simple string renderer or bitmap font (Gish mobile has its own custom bitmap fonts)
+        // Gish uses custom bitmap fonts from images.img
+    }
+
+    public void drawSubstring(String str, int offset, int len, int x, int y, int anchor) {
+        if (str != null) drawString(str.substring(offset, offset + len), x, y, anchor);
+    }
+
+    public void drawChar(char character, int x, int y, int anchor) {
+        drawString(String.valueOf(character), x, y, anchor);
+    }
+
+    public void drawChars(char[] data, int offset, int length, int x, int y, int anchor) {
+        if (data != null) drawString(new String(data, offset, length), x, y, anchor);
     }
 }
