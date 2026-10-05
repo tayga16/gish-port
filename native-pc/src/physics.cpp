@@ -60,19 +60,33 @@ void GishBlob::applyInput(float move_x, bool jump, bool duck, bool sticky, bool 
     state_flags = STATE_NORMAL;
     if (sticky) state_flags |= STATE_STICKY;
     if (slick)  state_flags |= STATE_SLICK;
-    if (heavy)  state_flags |= STATE_HEAVY;
+    if (heavy || cheats.heavy_slam) state_flags |= STATE_HEAVY;
+
+    // Noclip flight
+    if (cheats.noclip) {
+        Vec2 fly(0, 0);
+        if (move_x != 0.0f) fly.x = move_x * 550.0f;
+        if (jump) fly.y = -550.0f;
+        if (duck) fly.y = 550.0f;
+        for (auto& p : particles) {
+            p.vel = fly;
+        }
+        return;
+    }
 
     // Rolling torque
-    roll_torque = move_x * 480.0f;
+    float speed_mult = cheats.super_speed ? 2.5f : 1.0f;
+    roll_torque = move_x * 480.0f * speed_mult;
     if (move_x != 0.0f) {
         look_dir.x = move_x > 0 ? 1.0f : -1.0f;
     }
 
     // Jump / Expand impulse
-    if (jump && on_ground) {
+    bool can_jump = on_ground || cheats.infinite_jump;
+    if (jump && can_jump) {
         for (auto& p : particles) {
             p.vel.y = (state_flags & STATE_HEAVY) ? -280.0f : -420.0f;
-            p.vel.x += move_x * 80.0f;
+            p.vel.x += move_x * 80.0f * speed_mult;
         }
         for (auto& s : springs) {
             if (s.p1 == 0 || s.p2 == 0) {
@@ -161,6 +175,8 @@ void GishBlob::updatePressure(float dt) {
 
 void GishBlob::integrate(float dt) {
     float gravity_y = (state_flags & STATE_HEAVY) ? 1400.0f : 850.0f;
+    if (cheats.low_gravity) gravity_y = 220.0f;
+    if (cheats.noclip) gravity_y = 0.0f;
     float mass_mult = (state_flags & STATE_HEAVY) ? 3.5f : 1.0f;
 
     for (int i = 0; i < TOTAL_PARTICLES; ++i) {
@@ -192,6 +208,10 @@ void GishBlob::integrate(float dt) {
 }
 
 void GishBlob::resolveCollisions(const Tilemap& map) {
+    if (cheats.noclip) {
+        on_ground = true;
+        return;
+    }
     on_ground = false;
 
     float friction = 0.85f;

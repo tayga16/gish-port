@@ -8,13 +8,17 @@ java {
 }
 
 dependencies {
-    implementation project(':compat-layer')
+    api files('libs/Gish_V.1.3.3.jar')
+    api project(':compat-layer')
 }
 
 sourceSets {
     main {
+        java {
+            srcDirs = []
+        }
         resources {
-            srcDirs = ['src/main/resources']
+            srcDirs = []
         }
     }
 }

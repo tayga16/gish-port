@@ -56,19 +56,43 @@ bool Tilemap::loadLevel(const std::string& filepath) {
     width = w_byte > 0 ? (int)w_byte : 40;
     height = h_byte > 0 ? (int)h_byte : 25;
     tileset = ts_byte;
+    int size = width * height;
 
-    tiles.assign(width * height, 0);
-    bg_tiles.assign(width * height, 0);
+    tiles.assign(size, 0);
+    bg_tiles.assign(size, 0);
 
-    // Read tile layers
-    std::vector<char> buffer(width * height);
-    if (file.read(buffer.data(), buffer.size())) {
-        for (size_t i = 0; i < buffer.size(); ++i) {
-            tiles[i] = (unsigned char)buffer[i];
-        }
+    // Read Layer 0 (Background)
+    std::vector<char> buf0(size);
+    if (file.read(buf0.data(), size)) {
+        for (int i = 0; i < size; ++i) bg_tiles[i] = (unsigned char)buf0[i];
     }
 
-    spawn_point = Vec2(100.0f, (height - 4) * (float)TILE_SIZE);
+    // Read Layer 1 (Foreground / Collision terrain)
+    std::vector<char> buf1(size);
+    if (file.read(buf1.data(), size)) {
+        for (int i = 0; i < size; ++i) tiles[i] = (unsigned char)buf1[i];
+    } else {
+        // Fallback if only 1 layer exists
+        tiles = bg_tiles;
+    }
+
+    // Find spawn position: search from bottom-left for safe empty spot on top of floor
+    bool found_spawn = false;
+    for (int y = height - 2; y >= 2; --y) {
+        for (int x = 2; x < width - 2; ++x) {
+            if (getTile(x, y) == 0 && getTile(x, y - 1) == 0 && isSolid(x, y + 1)) {
+                spawn_point = Vec2((float)x * TILE_SIZE + 16.0f, (float)y * TILE_SIZE + 16.0f);
+                found_spawn = true;
+                break;
+            }
+        }
+        if (found_spawn) break;
+    }
+
+    if (!found_spawn) {
+        spawn_point = Vec2(100.0f, (float)(height - 4) * TILE_SIZE);
+    }
+
     return true;
 }
 

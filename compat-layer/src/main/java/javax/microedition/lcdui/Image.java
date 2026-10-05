@@ -2,8 +2,6 @@ package javax.microedition.lcdui;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 
 public class Image {
     private final int width;
@@ -36,13 +34,46 @@ public class Image {
     }
 
     public static Image createImage(InputStream is) throws java.io.IOException {
-        BufferedImage bi = ImageIO.read(is);
-        if (bi == null) throw new java.io.IOException("Failed to decode image from stream");
-        int w = bi.getWidth();
-        int h = bi.getHeight();
-        int[] rgb = new int[w * h];
-        bi.getRGB(0, 0, w, h, rgb, 0, w);
-        return new Image(w, h, rgb, false);
+        // Try Android BitmapFactory first
+        try {
+            Class<?> bfClass = Class.forName("android.graphics.BitmapFactory");
+            java.lang.reflect.Method decodeStreamMethod = bfClass.getMethod("decodeStream", InputStream.class);
+            Object bitmap = decodeStreamMethod.invoke(null, is);
+            if (bitmap != null) {
+                Class<?> bClass = bitmap.getClass();
+                int w = ((Integer) bClass.getMethod("getWidth").invoke(bitmap)).intValue();
+                int h = ((Integer) bClass.getMethod("getHeight").invoke(bitmap)).intValue();
+                int[] rgb = new int[w * h];
+                java.lang.reflect.Method getPixels = bClass.getMethod("getPixels", int[].class, int.class, int.class, int.class, int.class, int.class, int.class);
+                getPixels.invoke(bitmap, rgb, 0, w, 0, 0, w, h);
+                bClass.getMethod("recycle").invoke(bitmap);
+                return new Image(w, h, rgb, false);
+            }
+        } catch (ClassNotFoundException ignored) {
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Try Desktop ImageIO
+        try {
+            Class<?> ioClass = Class.forName("javax.imageio.ImageIO");
+            java.lang.reflect.Method readMethod = ioClass.getMethod("read", InputStream.class);
+            Object bi = readMethod.invoke(null, is);
+            if (bi != null) {
+                Class<?> biClass = bi.getClass();
+                int w = ((Integer) biClass.getMethod("getWidth").invoke(bi)).intValue();
+                int h = ((Integer) biClass.getMethod("getHeight").invoke(bi)).intValue();
+                int[] rgb = new int[w * h];
+                java.lang.reflect.Method getRGB = biClass.getMethod("getRGB", int.class, int.class, int.class, int.class, int[].class, int.class, int.class);
+                getRGB.invoke(bi, 0, 0, w, h, rgb, 0, w);
+                return new Image(w, h, rgb, false);
+            }
+        } catch (ClassNotFoundException ignored) {
+        } catch (Exception e) {
+            throw new java.io.IOException("Image decoding failed: " + e.getMessage(), e);
+        }
+
+        throw new java.io.IOException("Failed to decode image from stream");
     }
 
     public static Image createImage(byte[] data, int offset, int length) {

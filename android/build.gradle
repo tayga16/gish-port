@@ -26,6 +26,12 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    packagingOptions {
+        resources {
+            pickFirst '**/*'
+        }
+    }
+
     sourceSets {
         main {
             assets {

@@ -137,7 +137,9 @@ public class DesktopLauncher extends JFrame {
 
         // Start MIDlet
         try {
-            midlet.startApp();
+            java.lang.reflect.Method m = Main.class.getDeclaredMethod("startApp");
+            m.setAccessible(true);
+            m.invoke(midlet);
         } catch (Exception e) {
             e.printStackTrace();
         }

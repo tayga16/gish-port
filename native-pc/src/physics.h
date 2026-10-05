@@ -37,6 +37,15 @@ struct Spring {
         : p1(a), p2(b), rest_length(len), base_length(len), stiffness(k), damping(d) {}
 };
 
+struct CheatSettings {
+    bool godmode = false;
+    bool infinite_jump = false;
+    bool super_speed = false;
+    bool low_gravity = false;
+    bool noclip = false;
+    bool heavy_slam = false;
+};
+
 class Tilemap;
 
 class GishBlob {
@@ -48,6 +57,7 @@ public:
     std::vector<Spring> springs;
 
     int state_flags;
+    CheatSettings cheats;
     float base_radius;
     float target_area;
     Vec2 center;
