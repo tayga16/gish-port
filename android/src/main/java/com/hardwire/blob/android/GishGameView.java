@@ -78,6 +78,40 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
     private Method cachedKeyPressed = null;
     private Method cachedKeyReleased = null;
     private Field cachedFieldC = null;
+    // Engine tick rate fields (reflection cached to avoid obfuscated field collision)
+    private static Field mainFieldA = null;
+    private static Field mainFieldB = null;
+    private static Field mainFieldC = null;
+    private static Field midletFieldD = null;
+    private static boolean engineFieldsResolved = false;
+
+    public static synchronized void setEngineSpeed(Main midlet, int targetFps) {
+        if (!engineFieldsResolved) {
+            engineFieldsResolved = true;
+            try {
+                for (Field f : Main.class.getDeclaredFields()) {
+                    if (f.getType() == int.class) {
+                        f.setAccessible(true);
+                        if (java.lang.reflect.Modifier.isStatic(f.getModifiers())) {
+                            if ("a".equals(f.getName())) mainFieldA = f;
+                            else if ("b".equals(f.getName())) mainFieldB = f;
+                            else if ("c".equals(f.getName())) mainFieldC = f;
+                        } else {
+                            if ("d".equals(f.getName())) midletFieldD = f;
+                        }
+                    }
+                }
+            } catch (Throwable ignored) {}
+        }
+
+        int tickMs = Math.max(1, 1000 / Math.max(15, targetFps));
+        try {
+            if (mainFieldA != null) mainFieldA.setInt(null, tickMs);
+            if (mainFieldB != null) mainFieldB.setInt(null, tickMs);
+            if (mainFieldC != null) mainFieldC.setInt(null, 1);
+            if (midlet != null && midletFieldD != null) midletFieldD.setInt(midlet, 3);
+        } catch (Throwable ignored) {}
+    }
 
     private volatile String lastErrorMessage = null;
 
@@ -291,9 +325,7 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
             long frameDuration = 1000 / fps;
 
             // Unlock and sync Gish physics tick rate with target FPS
-            Main.b = (int) frameDuration;
-            Main.a = (int) frameDuration;
-            Main.c = 1;
+            setEngineSpeed(midlet, fps);
 
             Displayable current = null;
             try {

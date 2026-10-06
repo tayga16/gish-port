@@ -61,10 +61,7 @@ public class MainActivity extends Activity {
 
         try {
             midlet = new Main();
-            midlet.d = 3; // Fast physics mode for 60/120 FPS
-            Main.b = 1000 / GishGameView.targetFps;
-            Main.a = 1000 / GishGameView.targetFps;
-            Main.c = 1;
+            GishGameView.setEngineSpeed(midlet, GishGameView.targetFps);
         } catch (Throwable t) {
             Log.e(TAG, "Failed to instantiate Main MIDlet", t);
             handleFatalError(t);
@@ -229,10 +226,7 @@ public class MainActivity extends Activity {
         builder.setItems(fpsOptions, (dialog, which) -> {
             int fps = fpsValues[which];
             GishGameView.targetFps = fps;
-            Main.b = 1000 / fps;
-            Main.a = 1000 / fps;
-            Main.c = 1;
-            if (midlet != null) midlet.d = 3;
+            GishGameView.setEngineSpeed(midlet, fps);
             Toast.makeText(this, "Установлено " + fps + " FPS!", Toast.LENGTH_SHORT).show();
         });
         builder.setNegativeButton("Отмена", null);
