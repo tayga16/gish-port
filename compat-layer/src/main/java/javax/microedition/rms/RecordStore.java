@@ -28,7 +28,7 @@ public class RecordStore {
                 dos.writeByte(5);       // volume: 5
                 dos.writeBoolean(true); // sound: true
                 dos.writeByte(1);       // vibration: 1
-                dos.writeByte(3);       // game speed: 3 (high speed physics for smooth 60/120 FPS)
+                dos.writeByte(1);       // backlight: 1
                 dos.writeBoolean(true); // controls
                 dos.writeByte(0);       // lang: 0 (English)
                 dos.writeBoolean(true); // hint

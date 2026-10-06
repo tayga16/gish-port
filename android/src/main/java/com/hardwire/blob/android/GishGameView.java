@@ -78,40 +78,6 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
     private Method cachedKeyPressed = null;
     private Method cachedKeyReleased = null;
     private Field cachedFieldC = null;
-    // Engine tick rate fields (reflection cached to avoid obfuscated field collision)
-    private static Field mainFieldA = null;
-    private static Field mainFieldB = null;
-    private static Field mainFieldC = null;
-    private static Field midletFieldD = null;
-    private static boolean engineFieldsResolved = false;
-
-    public static synchronized void setEngineSpeed(Main midlet, int targetFps) {
-        if (!engineFieldsResolved) {
-            engineFieldsResolved = true;
-            try {
-                for (Field f : Main.class.getDeclaredFields()) {
-                    if (f.getType() == int.class) {
-                        f.setAccessible(true);
-                        if (java.lang.reflect.Modifier.isStatic(f.getModifiers())) {
-                            if ("a".equals(f.getName())) mainFieldA = f;
-                            else if ("b".equals(f.getName())) mainFieldB = f;
-                            else if ("c".equals(f.getName())) mainFieldC = f;
-                        } else {
-                            if ("d".equals(f.getName())) midletFieldD = f;
-                        }
-                    }
-                }
-            } catch (Throwable ignored) {}
-        }
-
-        int tickMs = Math.max(1, 1000 / Math.max(15, targetFps));
-        try {
-            if (mainFieldA != null) mainFieldA.setInt(null, tickMs);
-            if (mainFieldB != null) mainFieldB.setInt(null, tickMs);
-            if (mainFieldC != null) mainFieldC.setInt(null, 1);
-            if (midlet != null && midletFieldD != null) midletFieldD.setInt(midlet, 3);
-        } catch (Throwable ignored) {}
-    }
 
     private volatile String lastErrorMessage = null;
 
@@ -256,7 +222,7 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
         // Pause / Menu button at top-left
         btnPause.set(24, 36, 24 + minDim * 0.24f, 36 + minDim * 0.10f);
 
-        padTextPaint.setTextSize(minDim * 0.038f);
+        padTextPaint.setTextSize(Math.max(12f, minDim * 0.038f));
     }
 
     private void setCircleRect(RectF r, float cx, float cy, float radius) {
@@ -310,8 +276,13 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
             cachedKeyReleased.setAccessible(true);
         } catch (Exception ignored) {}
         try {
-            cachedFieldC = canvasClass.getDeclaredField("c");
-            cachedFieldC.setAccessible(true);
+            for (Field f : canvasClass.getDeclaredFields()) {
+                if ("c".equals(f.getName()) && f.getType() == boolean.class) {
+                    f.setAccessible(true);
+                    cachedFieldC = f;
+                    break;
+                }
+            }
         } catch (Exception ignored) {}
     }
 
@@ -323,9 +294,6 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
             // Dynamic Framerate Target (60 FPS default = ~16ms, 120 FPS = ~8ms, 30 FPS = ~33ms)
             int fps = Math.max(15, Math.min(120, targetFps));
             long frameDuration = 1000 / fps;
-
-            // Unlock and sync Gish physics tick rate with target FPS
-            setEngineSpeed(midlet, fps);
 
             Displayable current = null;
             try {
@@ -345,8 +313,7 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
                             ? t.getCause() : t;
                         Log.e(TAG, "Paint invocation error", cause);
                         lastErrorMessage = cause.getMessage();
-                    } finally {
-                        // Crucial fix: Always ensure ad.c is cleared so ad.m() loop never deadlocks
+                        // Reset ad.c so Main thread loop in ad.m() does not deadlock waiting for repaint to finish
                         if (cachedFieldC != null) {
                             try {
                                 cachedFieldC.setBoolean(canvas, false);
@@ -370,8 +337,8 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
                     // Draw stretched or letterboxed game screen
                     c.drawBitmap(androidBitmap, srcRect, dstRect, paint);
 
-                    // Draw Virtual Gamepad overlay if enabled
-                    if (showVirtualGamepad) {
+                    // Draw Virtual Gamepad overlay if enabled and surface has valid size
+                    if (showVirtualGamepad && surfaceWidth > 0 && surfaceHeight > 0) {
                         drawVirtualGamepad(c);
                     }
 
@@ -558,8 +525,10 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
         float touchX = event.getX() - offsetX;
         float touchY = event.getY() - offsetY;
 
-        int gx = (int) (touchX / scaleX);
-        int gy = (int) (touchY / scaleY);
+        float sx = scaleX > 0.001f ? scaleX : 1.0f;
+        float sy = scaleY > 0.001f ? scaleY : 1.0f;
+        int gx = (int) (touchX / sx);
+        int gy = (int) (touchY / sy);
         gx = Math.max(0, Math.min(GAME_WIDTH - 1, gx));
         gy = Math.max(0, Math.min(GAME_HEIGHT - 1, gy));
 
