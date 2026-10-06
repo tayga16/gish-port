@@ -36,3 +36,6 @@ native-pc/*.o
 
 # Logs
 *.log
+
+# RMS local temp
+core/src/main/resources/rms/
