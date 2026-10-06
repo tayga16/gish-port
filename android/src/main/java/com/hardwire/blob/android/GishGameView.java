@@ -97,6 +97,11 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
     private final RectF btnExpand = new RectF();
     private final RectF btnOk = new RectF();
     private final RectF btnPause = new RectF();
+    private final RectF btnSkipCutscene = new RectF();
+
+    private Paint skipBgPaint;
+    private Paint skipStrokePaint;
+    private Paint skipTextPaint;
 
     public GishGameView(Context context, Main midlet) {
         super(context);
@@ -144,6 +149,23 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
         padTextPaint.setTextAlign(Paint.Align.CENTER);
         padTextPaint.setFakeBoldText(true);
         padTextPaint.setAntiAlias(true);
+
+        skipBgPaint = new Paint();
+        skipBgPaint.setColor(0xDD1E1E28);
+        skipBgPaint.setStyle(Paint.Style.FILL);
+        skipBgPaint.setAntiAlias(true);
+
+        skipStrokePaint = new Paint();
+        skipStrokePaint.setColor(0xFFFFD54F); // Warm gold border
+        skipStrokePaint.setStyle(Paint.Style.STROKE);
+        skipStrokePaint.setStrokeWidth(3.0f);
+        skipStrokePaint.setAntiAlias(true);
+
+        skipTextPaint = new Paint();
+        skipTextPaint.setColor(0xFFFFD54F);
+        skipTextPaint.setTextAlign(Paint.Align.CENTER);
+        skipTextPaint.setFakeBoldText(true);
+        skipTextPaint.setAntiAlias(true);
     }
 
     @Override
@@ -216,13 +238,23 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
         // 4. Expand button (Cyan, top-left above Sticky)
         setCircleRect(btnExpand, actCx - bR * 1.50f, actCy - bR * 1.35f, bR * 0.95f);
 
-        // 5. OK / Fire button (Action / Dialogue skip, placed comfortably below/between)
-        setCircleRect(btnOk, actCx - bR * 0.15f, actCy + bR * 1.85f, bR * 0.92f);
+        // 5. OK / Fire button (Action / Dialogue skip, placed comfortably to the left/below)
+        setCircleRect(btnOk, actCx - bR * 2.80f, actCy + bR * 1.50f, bR * 0.85f);
 
         // Pause / Menu button at top-left
         btnPause.set(24, 36, 24 + minDim * 0.24f, 36 + minDim * 0.10f);
 
+        // Skip Cutscene Button at top-center
+        float skipBtnW = Math.min(surfaceWidth * 0.48f, minDim * 0.65f);
+        float skipBtnH = Math.max(52f, minDim * 0.09f);
+        float skipLeft = (surfaceWidth - skipBtnW) / 2f;
+        float skipTop = 20f;
+        btnSkipCutscene.set(skipLeft, skipTop, skipLeft + skipBtnW, skipTop + skipBtnH);
+
         padTextPaint.setTextSize(Math.max(12f, minDim * 0.038f));
+        if (skipTextPaint != null) {
+            skipTextPaint.setTextSize(Math.max(13f, minDim * 0.038f));
+        }
     }
 
     private void setCircleRect(RectF r, float cx, float cy, float radius) {
@@ -300,6 +332,9 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
                 current = Display.getDisplay(midlet).getCurrent();
             } catch (Exception ignored) {}
 
+            // Update cutscene watchdog to ensure intro cutscenes never freeze or drift endlessly
+            CutsceneHelper.updateWatchdog(midlet);
+
             if (current instanceof javax.microedition.lcdui.Canvas) {
                 javax.microedition.lcdui.Canvas canvas = (javax.microedition.lcdui.Canvas) current;
                 updateCachedMethods(canvas.getClass());
@@ -341,6 +376,8 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
                     // Draw Virtual Gamepad overlay if enabled and surface has valid size
                     if (showVirtualGamepad && surfaceWidth > 0 && surfaceHeight > 0) {
                         drawVirtualGamepad(c);
+                    } else if (CutsceneHelper.isCutsceneActive(midlet) && surfaceWidth > 0 && surfaceHeight > 0) {
+                        drawSkipCutsceneButton(c);
                     }
 
                     // Show error on screen if any critical failure occurred
@@ -394,6 +431,18 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
         c.drawRoundRect(btnPause, 16, 16, padStrokePaint);
         float pTextY = btnPause.centerY() + (padTextPaint.getTextSize() * 0.35f);
         c.drawText("⏸ MENU", btnPause.centerX(), pTextY, padTextPaint);
+
+        // 4. Skip Cutscene button if in cutscene
+        if (CutsceneHelper.isCutsceneActive(midlet)) {
+            drawSkipCutsceneButton(c);
+        }
+    }
+
+    private void drawSkipCutsceneButton(Canvas c) {
+        c.drawRoundRect(btnSkipCutscene, 22, 22, skipBgPaint);
+        c.drawRoundRect(btnSkipCutscene, 22, 22, skipStrokePaint);
+        float skipTextY = btnSkipCutscene.centerY() + (skipTextPaint.getTextSize() * 0.35f);
+        c.drawText("⏭ ПРОПУСТИТЬ КАТСЦЕНУ", btnSkipCutscene.centerX(), skipTextY, skipTextPaint);
     }
 
     private void drawDpadDirection(Canvas c, int keyCode, float x, float y, String symbol) {
@@ -428,6 +477,25 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
 
         int action = event.getActionMasked();
         boolean hitAnyControl = false;
+
+        boolean isCutscene = CutsceneHelper.isCutsceneActive(midlet);
+        boolean isDialogue = (CutsceneHelper.getCurrentMode(midlet) == 6);
+
+        // 0. Handle Skip Cutscene button tap immediately
+        if (isCutscene) {
+            int pointerCount = event.getPointerCount();
+            for (int i = 0; i < pointerCount; i++) {
+                float px = event.getX(i);
+                float py = event.getY(i);
+                if (isInside(btnSkipCutscene, px, py)) {
+                    hitAnyControl = true;
+                    if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
+                        CutsceneHelper.skipCutscene(midlet);
+                        return true;
+                    }
+                }
+            }
+        }
 
         // 1. If Virtual Gamepad is enabled, process multi-touch virtual buttons
         if (showVirtualGamepad) {
@@ -488,6 +556,12 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
                     hitAnyControl = true;
                 }
                 if (isInside(btnOk, px, py)) {
+                    if (isCutscene && !isDialogue) {
+                        CutsceneHelper.skipCutscene(midlet);
+                    }
+                    if (isDialogue) {
+                        CutsceneHelper.ensureDialogueDismissible(midlet);
+                    }
                     newPressedKeys.add(KEY_OK);
                     newPressedKeys.add(KEY_FIRE);
                     hitAnyControl = true;
@@ -517,11 +591,17 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
 
             // Tap anywhere on screen (outside controls) during dialogue or menu to skip/confirm
             if (!hitAnyControl && (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN)) {
-                // Instantly advance dialogue / cutscene
-                invokeCanvasKey(canvas, cachedKeyPressed, KEY_OK);
-                invokeCanvasKey(canvas, cachedKeyPressed, KEY_FIRE);
-                invokeCanvasKey(canvas, cachedKeyReleased, KEY_OK);
-                invokeCanvasKey(canvas, cachedKeyReleased, KEY_FIRE);
+                if (isCutscene && !isDialogue) {
+                    CutsceneHelper.skipCutscene(midlet);
+                } else {
+                    if (isDialogue) {
+                        CutsceneHelper.ensureDialogueDismissible(midlet);
+                    }
+                    invokeCanvasKey(canvas, cachedKeyPressed, KEY_OK);
+                    invokeCanvasKey(canvas, cachedKeyPressed, KEY_FIRE);
+                    invokeCanvasKey(canvas, cachedKeyReleased, KEY_OK);
+                    invokeCanvasKey(canvas, cachedKeyReleased, KEY_FIRE);
+                }
             }
         }
 
@@ -530,37 +610,49 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
         if (!hitAnyControl) {
             float touchX = event.getX() - offsetX;
             float touchY = event.getY() - offsetY;
+            int viewW = (int) (GAME_WIDTH * scaleX);
+            int viewH = (int) (GAME_HEIGHT * scaleY);
 
-            float sx = scaleX > 0.001f ? scaleX : 1.0f;
-            float sy = scaleY > 0.001f ? scaleY : 1.0f;
-            int gx = (int) (touchX / sx);
-            int gy = (int) (touchY / sy);
-            gx = Math.max(0, Math.min(GAME_WIDTH - 1, gx));
-            gy = Math.max(0, Math.min(GAME_HEIGHT - 1, gy));
+            // Bounds check: only forward pointer events when touch is actually inside game viewport
+            if (touchX >= 0 && touchX <= viewW && touchY >= 0 && touchY <= viewH) {
+                float sx = scaleX > 0.001f ? scaleX : 1.0f;
+                float sy = scaleY > 0.001f ? scaleY : 1.0f;
+                int gx = (int) (touchX / sx);
+                int gy = (int) (touchY / sy);
+                gx = Math.max(0, Math.min(GAME_WIDTH - 1, gx));
+                gy = Math.max(0, Math.min(GAME_HEIGHT - 1, gy));
 
-            try {
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                    case MotionEvent.ACTION_POINTER_DOWN:
-                        if (cachedPointerPressed != null) {
-                            cachedPointerPressed.invoke(canvas, gx, gy);
-                        }
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        if (cachedPointerDragged != null) {
-                            cachedPointerDragged.invoke(canvas, gx, gy);
-                        }
-                        break;
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_POINTER_UP:
-                    case MotionEvent.ACTION_CANCEL:
-                        if (cachedPointerReleased != null) {
-                            cachedPointerReleased.invoke(canvas, gx, gy);
-                        }
-                        break;
+                try {
+                    switch (action) {
+                        case MotionEvent.ACTION_DOWN:
+                        case MotionEvent.ACTION_POINTER_DOWN:
+                            if (cachedPointerPressed != null) {
+                                cachedPointerPressed.invoke(canvas, gx, gy);
+                            }
+                            break;
+                        case MotionEvent.ACTION_MOVE:
+                            if (cachedPointerDragged != null) {
+                                cachedPointerDragged.invoke(canvas, gx, gy);
+                            }
+                            break;
+                        case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_POINTER_UP:
+                        case MotionEvent.ACTION_CANCEL:
+                            if (cachedPointerReleased != null) {
+                                cachedPointerReleased.invoke(canvas, gx, gy);
+                            }
+                            break;
+                    }
+                } catch (Throwable e) {
+                    Log.e(TAG, "Touch event handler failed", e);
                 }
-            } catch (Throwable e) {
-                Log.e(TAG, "Touch event handler failed", e);
+            } else if (isDialogue && (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN)) {
+                // Tapping in pillarboxes during dialogue advances dialogue
+                CutsceneHelper.ensureDialogueDismissible(midlet);
+                invokeCanvasKey(canvas, cachedKeyPressed, KEY_OK);
+                invokeCanvasKey(canvas, cachedKeyPressed, KEY_FIRE);
+                invokeCanvasKey(canvas, cachedKeyReleased, KEY_OK);
+                invokeCanvasKey(canvas, cachedKeyReleased, KEY_FIRE);
             }
         }
 
