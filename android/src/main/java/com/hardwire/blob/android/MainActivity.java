@@ -71,6 +71,11 @@ public class MainActivity extends Activity {
             return;
         }
 
+        android.content.SharedPreferences prefs = getSharedPreferences("gish_prefs", MODE_PRIVATE);
+        GishGameView.fullScreenStretch = prefs.getBoolean("fullScreenStretch", false); // Default: без растяжения (4:3)
+        GishGameView.targetFps = prefs.getInt("targetFps", 60);
+        GishGameView.showVirtualGamepad = prefs.getBoolean("showVirtualGamepad", true);
+
         FrameLayout root = new FrameLayout(this);
         gameView = new GishGameView(this, midlet);
         root.addView(gameView, new FrameLayout.LayoutParams(
@@ -196,16 +201,20 @@ public class MainActivity extends Activity {
                     break;
                 case 6:
                     GishGameView.fullScreenStretch = !GishGameView.fullScreenStretch;
+                    getSharedPreferences("gish_prefs", MODE_PRIVATE).edit()
+                        .putBoolean("fullScreenStretch", GishGameView.fullScreenStretch).apply();
                     if (gameView != null) gameView.updateLayout();
                     Toast.makeText(this, GishGameView.fullScreenStretch
                         ? "Включен Полный Экран (Растянуто)!"
-                        : "Включен оригинальный формат 4:3 (С полосами)", Toast.LENGTH_SHORT).show();
+                        : "Включен оригинальный формат 4:3 (Без растяжения)", Toast.LENGTH_SHORT).show();
                     break;
                 case 7:
                     showFpsDialog();
                     break;
                 case 8:
                     GishGameView.showVirtualGamepad = !GishGameView.showVirtualGamepad;
+                    getSharedPreferences("gish_prefs", MODE_PRIVATE).edit()
+                        .putBoolean("showVirtualGamepad", GishGameView.showVirtualGamepad).apply();
                     Toast.makeText(this, GishGameView.showVirtualGamepad
                         ? "Виртуальный геймпад ВКЛЮЧЕН"
                         : "Виртуальный геймпад СКРЫТ", Toast.LENGTH_SHORT).show();
@@ -229,6 +238,8 @@ public class MainActivity extends Activity {
         builder.setItems(fpsOptions, (dialog, which) -> {
             int fps = fpsValues[which];
             GishGameView.targetFps = fps;
+            getSharedPreferences("gish_prefs", MODE_PRIVATE).edit()
+                .putInt("targetFps", fps).apply();
             Toast.makeText(this, "Установлено " + fps + " FPS!", Toast.LENGTH_SHORT).show();
         });
         builder.setNegativeButton("Отмена", null);

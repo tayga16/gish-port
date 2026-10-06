@@ -29,8 +29,8 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
     private static final int GAME_WIDTH = 240;
     private static final int GAME_HEIGHT = 320;
 
-    // Public customizable settings
-    public static volatile boolean fullScreenStretch = true;
+    // Public customizable settings (default: false = no stretching, pure aspect ratio)
+    public static volatile boolean fullScreenStretch = false;
     public static volatile int targetFps = 60;
     public static volatile boolean showVirtualGamepad = true;
 
