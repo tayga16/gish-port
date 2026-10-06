@@ -194,30 +194,30 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
         float baseRadius = minDim * 0.17f;
 
         // D-Pad positioned at bottom-left
-        dpadCx = surfaceWidth * 0.22f;
-        dpadCy = surfaceHeight * 0.81f;
-        dpadRadius = baseRadius;
+        dpadCx = surfaceWidth * 0.17f;
+        dpadCy = surfaceHeight * 0.77f;
+        dpadRadius = baseRadius * 1.05f;
         dpadDeadZone = dpadRadius * 0.22f;
 
-        // Action buttons positioned at bottom-right
-        float actCx = surfaceWidth * 0.78f;
-        float actCy = surfaceHeight * 0.81f;
-        float bR = minDim * 0.082f;
+        // Action buttons positioned at bottom-right - spread out with comfortable spacing
+        float actCx = surfaceWidth * 0.82f;
+        float actCy = surfaceHeight * 0.75f;
+        float bR = minDim * 0.076f;
 
-        // Jump button (Big primary button)
-        setCircleRect(btnJump, actCx + bR * 0.95f, actCy + bR * 0.55f, bR * 1.15f);
+        // 1. Jump button (Primary large button, bottom-right thumb rest)
+        setCircleRect(btnJump, actCx + bR * 1.35f, actCy + bR * 0.70f, bR * 1.18f);
 
-        // Sticky button (Yellow)
-        setCircleRect(btnSticky, actCx - bR * 1.25f, actCy - bR * 0.45f, bR);
+        // 2. Sticky button (Yellow, left of Jump)
+        setCircleRect(btnSticky, actCx - bR * 1.65f, actCy + bR * 0.45f, bR * 0.95f);
 
-        // Heavy button (Red/Purple)
-        setCircleRect(btnHeavy, actCx + bR * 0.15f, actCy - bR * 1.35f, bR);
+        // 3. Heavy button (Red, top-right above Jump)
+        setCircleRect(btnHeavy, actCx + bR * 0.35f, actCy - bR * 1.55f, bR * 0.95f);
 
-        // Expand button (Cyan)
-        setCircleRect(btnExpand, actCx - bR * 1.05f, actCy - bR * 1.65f, bR);
+        // 4. Expand button (Cyan, top-left above Sticky)
+        setCircleRect(btnExpand, actCx - bR * 1.50f, actCy - bR * 1.35f, bR * 0.95f);
 
-        // OK / Skip Dialogue button (White)
-        setCircleRect(btnOk, actCx - bR * 0.15f, actCy + bR * 0.65f, bR * 0.85f);
+        // 5. OK / Fire button (Action / Dialogue skip, placed comfortably below/between)
+        setCircleRect(btnOk, actCx - bR * 0.15f, actCy + bR * 1.85f, bR * 0.92f);
 
         // Pause / Menu button at top-left
         btnPause.set(24, 36, 24 + minDim * 0.24f, 36 + minDim * 0.10f);
@@ -313,7 +313,8 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
                             ? t.getCause() : t;
                         Log.e(TAG, "Paint invocation error", cause);
                         lastErrorMessage = cause.getMessage();
-                        // Reset ad.c so Main thread loop in ad.m() does not deadlock waiting for repaint to finish
+                    } finally {
+                        // ALWAYS reset ad.c so Main thread loop in ad.m() never deadlocks waiting for repaint
                         if (cachedFieldC != null) {
                             try {
                                 cachedFieldC.setBoolean(canvas, false);
@@ -405,7 +406,7 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
     }
 
     private void drawActionButton(Canvas c, RectF bounds, int keyCode, String label, int defaultColor, int pressedColor) {
-        boolean active = activePressedKeys.contains(keyCode);
+        boolean active = activePressedKeys.contains(keyCode) || (keyCode == KEY_OK && activePressedKeys.contains(KEY_FIRE));
         padBgPaint.setColor(active ? pressedColor : defaultColor);
         c.drawOval(bounds, padBgPaint);
         c.drawOval(bounds, padStrokePaint);
@@ -426,11 +427,11 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
         updateCachedMethods(canvas.getClass());
 
         int action = event.getActionMasked();
+        boolean hitAnyControl = false;
 
         // 1. If Virtual Gamepad is enabled, process multi-touch virtual buttons
         if (showVirtualGamepad) {
             Set<Integer> newPressedKeys = new HashSet<Integer>();
-            boolean hitAnyControl = false;
 
             int pointerCount = event.getPointerCount();
             for (int i = 0; i < pointerCount; i++) {
@@ -488,6 +489,7 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
                 }
                 if (isInside(btnOk, px, py)) {
                     newPressedKeys.add(KEY_OK);
+                    newPressedKeys.add(KEY_FIRE);
                     hitAnyControl = true;
                 }
                 if (isInside(btnPause, px, py)) {
@@ -517,58 +519,64 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
             if (!hitAnyControl && (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN)) {
                 // Instantly advance dialogue / cutscene
                 invokeCanvasKey(canvas, cachedKeyPressed, KEY_OK);
+                invokeCanvasKey(canvas, cachedKeyPressed, KEY_FIRE);
                 invokeCanvasKey(canvas, cachedKeyReleased, KEY_OK);
+                invokeCanvasKey(canvas, cachedKeyReleased, KEY_FIRE);
             }
         }
 
-        // 2. Also forward raw screen pointer coords into virtual 240x320 space for J2ME menus
-        float touchX = event.getX() - offsetX;
-        float touchY = event.getY() - offsetY;
+        // 2. Also forward raw screen pointer coords into virtual 240x320 space ONLY when not pressing gamepad controls,
+        // so virtual gamepad touches do not conflict with J2ME touch steering or cancel Gish's forces
+        if (!hitAnyControl) {
+            float touchX = event.getX() - offsetX;
+            float touchY = event.getY() - offsetY;
 
-        float sx = scaleX > 0.001f ? scaleX : 1.0f;
-        float sy = scaleY > 0.001f ? scaleY : 1.0f;
-        int gx = (int) (touchX / sx);
-        int gy = (int) (touchY / sy);
-        gx = Math.max(0, Math.min(GAME_WIDTH - 1, gx));
-        gy = Math.max(0, Math.min(GAME_HEIGHT - 1, gy));
+            float sx = scaleX > 0.001f ? scaleX : 1.0f;
+            float sy = scaleY > 0.001f ? scaleY : 1.0f;
+            int gx = (int) (touchX / sx);
+            int gy = (int) (touchY / sy);
+            gx = Math.max(0, Math.min(GAME_WIDTH - 1, gx));
+            gy = Math.max(0, Math.min(GAME_HEIGHT - 1, gy));
 
-        try {
-            switch (action) {
-                case MotionEvent.ACTION_DOWN:
-                case MotionEvent.ACTION_POINTER_DOWN:
-                    if (cachedPointerPressed != null) {
-                        cachedPointerPressed.invoke(canvas, gx, gy);
-                    }
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    if (cachedPointerDragged != null) {
-                        cachedPointerDragged.invoke(canvas, gx, gy);
-                    }
-                    break;
-                case MotionEvent.ACTION_UP:
-                case MotionEvent.ACTION_POINTER_UP:
-                case MotionEvent.ACTION_CANCEL:
-                    if (cachedPointerReleased != null) {
-                        cachedPointerReleased.invoke(canvas, gx, gy);
-                    }
-                    if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-                        // Release all keys when no fingers remain on screen
-                        for (Integer code : activePressedKeys) {
-                            invokeCanvasKey(canvas, cachedKeyReleased, code);
+            try {
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                    case MotionEvent.ACTION_POINTER_DOWN:
+                        if (cachedPointerPressed != null) {
+                            cachedPointerPressed.invoke(canvas, gx, gy);
                         }
-                        activePressedKeys.clear();
-                    }
-                    break;
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        if (cachedPointerDragged != null) {
+                            cachedPointerDragged.invoke(canvas, gx, gy);
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_POINTER_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        if (cachedPointerReleased != null) {
+                            cachedPointerReleased.invoke(canvas, gx, gy);
+                        }
+                        break;
+                }
+            } catch (Throwable e) {
+                Log.e(TAG, "Touch event handler failed", e);
             }
-        } catch (Throwable e) {
-            Log.e(TAG, "Touch event handler failed", e);
+        }
+
+        if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
+            // Release all keys when no fingers remain on screen
+            for (Integer code : activePressedKeys) {
+                invokeCanvasKey(canvas, cachedKeyReleased, code);
+            }
+            activePressedKeys.clear();
         }
 
         return true;
     }
 
     private boolean isInside(RectF rect, float x, float y) {
-        float padding = 15f; // Extra generous touch target
+        float padding = 8f; // Precise touch target margin without overlapping neighbors
         return x >= rect.left - padding && x <= rect.right + padding
             && y >= rect.top - padding && y <= rect.bottom + padding;
     }

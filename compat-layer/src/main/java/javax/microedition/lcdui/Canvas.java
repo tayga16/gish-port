@@ -29,12 +29,23 @@ public abstract class Canvas extends Displayable {
         this.height = 320;
     }
 
+    @Override
+    public boolean isShown() {
+        return true;
+    }
+
     public boolean isDoubleBuffered() { return true; }
     public void setFullScreenMode(boolean mode) {}
 
-    public void repaint() {}
-    public void repaint(int x, int y, int width, int height) {}
-    public void serviceRepaints() {}
+    public void repaint() {
+        try {
+            java.lang.reflect.Field f = getClass().getDeclaredField("c");
+            f.setAccessible(true);
+            f.setBoolean(this, false);
+        } catch (Throwable ignored) {}
+    }
+    public void repaint(int x, int y, int width, int height) { repaint(); }
+    public void serviceRepaints() { repaint(); }
 
     public int getGameAction(int keyCode) {
         switch (keyCode) {
