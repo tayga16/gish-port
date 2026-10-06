@@ -75,9 +75,17 @@ public abstract class MIDlet {
         System.out.println("[MIDlet] Game terminated.");
     }
 
+    public static String defaultLanguage = "en";
+
     public String getAppProperty(String key) {
+        if ("default-lang".equalsIgnoreCase(key)) return defaultLanguage;
+        if ("MIDlet-Vendor".equalsIgnoreCase(key)) return "Hardwire";
+        if ("MIDlet-Name".equalsIgnoreCase(key)) return "Gish";
+        if ("MIDlet-Version".equalsIgnoreCase(key)) return "1.3.3";
         if ("MIDlet-Touch-Support".equalsIgnoreCase(key)) return "TRUE";
         if ("Nokia-MIDlet-On-Screen-Keypad".equalsIgnoreCase(key)) return "no";
+        if ("zc-ac-enabled".equalsIgnoreCase(key)) return "false";
         return null;
     }
 }
+

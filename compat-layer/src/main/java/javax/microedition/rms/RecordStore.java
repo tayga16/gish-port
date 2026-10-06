@@ -21,6 +21,23 @@ public class RecordStore {
             rs = new RecordStore(recordStoreName);
             stores.put(recordStoreName, rs);
         }
+        if ("gisettings".equals(recordStoreName) && rs.records.isEmpty()) {
+            try {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                DataOutputStream dos = new DataOutputStream(baos);
+                dos.writeByte(5);       // volume: 5
+                dos.writeBoolean(true); // sound: true
+                dos.writeByte(1);       // vibration: 1
+                dos.writeByte(1);       // backlight: 1
+                dos.writeBoolean(true); // controls
+                dos.writeByte(0);       // lang: 0 (English)
+                dos.writeBoolean(true); // hint
+                dos.writeByte(0);       // difficulty: normal
+                dos.flush();
+                byte[] data = baos.toByteArray();
+                rs.addRecord(data, 0, data.length);
+            } catch (Exception ignored) {}
+        }
         return rs;
     }
 

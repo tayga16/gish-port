@@ -145,6 +145,7 @@ public class MainActivity extends Activity {
             godmode ? "🛡 Бессмертие (Godmode): [ВКЛ]" : "🛡 Бессмертие (Godmode): [ВЫКЛ]",
             "🔓 Разблокировать ВСЕ уровни игры (100%)",
             "🔄 Перезапустить текущий уровень",
+            "🌐 Сменить язык игры (Language)",
             "❌ Закрыть меню"
         };
 
@@ -170,6 +171,9 @@ public class MainActivity extends Activity {
                     break;
                 case 4:
                     restartCurrentLevel();
+                    break;
+                case 5:
+                    showLanguageSelectDialog();
                     break;
             }
         });
@@ -263,6 +267,63 @@ public class MainActivity extends Activity {
             Log.e(TAG, "Restart level failed", e);
         }
         Toast.makeText(this, "Не удалось перезапустить уровень", Toast.LENGTH_SHORT).show();
+    }
+
+    // ========================================================
+    // 1.5 LANGUAGE SELECTOR (СМЕНА ЯЗЫКА)
+    // ========================================================
+    private void showLanguageSelectDialog() {
+        final String[] languages = {"English", "Deutsch", "Français", "Español", "Italiano", "Čeština"};
+        final String[] codes = {"en", "de", "fr", "es", "it", "cz"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("🌐 Выберите язык игры:");
+        builder.setItems(languages, (dialog, which) -> {
+            changeLanguage(which, codes[which], languages[which]);
+        });
+        builder.setNegativeButton("Отмена", null);
+        builder.show();
+    }
+
+    private void changeLanguage(int index, String code, String name) {
+        try {
+            MIDlet.defaultLanguage = code;
+            Class<?> dClass = Class.forName("d");
+            Field dIndexField = dClass.getField("a");
+            dIndexField.setInt(null, index);
+
+            // Re-load strings in d instance
+            for (Field f : midlet.getClass().getDeclaredFields()) {
+                if (f.getType().getName().equals("d")) {
+                    f.setAccessible(true);
+                    Object daObj = f.get(midlet);
+                    if (daObj != null) {
+                        Method eMethod = dClass.getMethod("e");
+                        eMethod.invoke(daObj);
+                    }
+                    break;
+                }
+            }
+
+            // Re-load font / localized text in j
+            Class<?> jClass = Class.forName("j");
+            Method ja = jClass.getMethod("a", String.class);
+            ja.invoke(null, "/tz." + code);
+            Method jb = jClass.getMethod("b", String.class);
+            jb.invoke(null, "UTF-8");
+            Method getJ = jClass.getMethod("a");
+            Object jInst = getJ.invoke(null);
+            for (Method m : jClass.getMethods()) {
+                if (m.getName().equals("a") && m.getParameterCount() == 0 && m.getReturnType() == void.class) {
+                    m.invoke(jInst);
+                    break;
+                }
+            }
+            Toast.makeText(this, "Язык игры изменен на: " + name, Toast.LENGTH_SHORT).show();
+        } catch (Throwable t) {
+            Log.e(TAG, "Failed to change language", t);
+            Toast.makeText(this, "Ошибка смены языка: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     // ========================================================
