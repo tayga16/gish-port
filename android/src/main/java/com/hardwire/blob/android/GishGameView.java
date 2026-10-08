@@ -215,19 +215,19 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
         float minDim = Math.min(surfaceWidth, surfaceHeight);
         float baseRadius = minDim * 0.17f;
 
-        // Controls positioned lower down at bottom of screen (86.5% Y)
-        float controlCy = surfaceHeight * 0.865f;
+        // Controls positioned lower down at bottom of screen (89% Y)
+        float controlCy = surfaceHeight * 0.89f;
 
         // D-Pad positioned at bottom-left (lowered down)
-        dpadCx = surfaceWidth * 0.19f;
+        dpadCx = surfaceWidth * 0.18f;
         dpadCy = controlCy;
-        dpadRadius = baseRadius * 1.05f;
+        dpadRadius = baseRadius * 1.0f;
         dpadDeadZone = dpadRadius * 0.22f;
 
         // 1. Jump button positioned at bottom-right (lowered down, comfortable thumb rest)
-        float jumpCx = surfaceWidth * 0.81f;
+        float jumpCx = surfaceWidth * 0.82f;
         float jumpCy = controlCy;
-        float jumpRadius = minDim * 0.13f;
+        float jumpRadius = minDim * 0.125f;
         setCircleRect(btnJump, jumpCx, jumpCy, jumpRadius);
 
         // Clear unused buttons (Sticky, Heavy, Expand, OK removed per user request)
@@ -509,7 +509,7 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
                 float dy = py - dpadCy;
                 float distSq = dx * dx + dy * dy;
 
-                if (distSq <= dpadRadius * dpadRadius * 1.3f) {
+                if (distSq <= dpadRadius * dpadRadius * 1.4f || (py >= dpadCy && Math.abs(dx) <= dpadRadius * 1.1f)) {
                     hitAnyControl = true;
                     if (distSq >= dpadDeadZone * dpadDeadZone) {
                         double angle = Math.toDegrees(Math.atan2(dy, dx));
@@ -535,12 +535,12 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
                         CutsceneHelper.skipCutscene(midlet);
                         return true;
                     }
-                    if (isDialogue) {
+                    if (isDialogue || CutsceneHelper.getCurrentMode(midlet) != 0) {
                         CutsceneHelper.ensureDialogueDismissible(midlet);
+                        newPressedKeys.add(KEY_OK);
+                        newPressedKeys.add(KEY_FIRE);
                     }
                     newPressedKeys.add(KEY_UP);   // Jump
-                    newPressedKeys.add(KEY_FIRE); // Action / Fire
-                    newPressedKeys.add(KEY_OK);   // Confirm
                     hitAnyControl = true;
                 }
                 if (isInside(btnPause, px, py)) {
@@ -646,9 +646,9 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
     }
 
     private boolean isInside(RectF rect, float x, float y) {
-        float padding = 8f; // Precise touch target margin without overlapping neighbors
+        float padding = 16f; // Comfortable touch target margin
         return x >= rect.left - padding && x <= rect.right + padding
-            && y >= rect.top - padding && y <= rect.bottom + padding;
+            && y >= rect.top - padding && y <= Math.max(surfaceHeight, rect.bottom + padding);
     }
 
     private void invokeCanvasKey(javax.microedition.lcdui.Canvas canvas, Method method, int keyCode) {

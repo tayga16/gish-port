@@ -3,7 +3,6 @@ package com.hardwire.blob.android;
 import android.util.Log;
 import com.hardwire.blob.Main;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 public final class CutsceneHelper {
@@ -16,9 +15,8 @@ public final class CutsceneHelper {
     private static Field fAcInAr;
     private static Field fStageInAc;
     private static Field fDialogAnimInAc;
-    private static Method mLoadLevelInAr;
-    private static Method mSaveLevelInAr;
     private static boolean reflectionInit = false;
+    private static volatile boolean skipRequested = false;
 
     private CutsceneHelper() {}
 
@@ -41,17 +39,6 @@ public final class CutsceneHelper {
                         if (!Modifier.isStatic(f.getModifiers()) && f.getType() == byte.class && "c".equals(f.getName())) fModeInAr = f;
                         if (!Modifier.isStatic(f.getModifiers()) && f.getType() == byte.class && "d".equals(f.getName())) fNextModeInAr = f;
                         if ("ac".equals(f.getType().getName())) fAcInAr = f;
-                    }
-                    for (Method m : ar.getClass().getDeclaredMethods()) {
-                        m.setAccessible(true);
-                        if ("a".equals(m.getName()) && m.getParameterTypes().length == 2
-                                && m.getParameterTypes()[0] == byte.class && m.getParameterTypes()[1] == byte.class) {
-                            mLoadLevelInAr = m;
-                        }
-                        if ("a".equals(m.getName()) && m.getParameterTypes().length == 2
-                                && m.getParameterTypes()[0] == String.class && m.getParameterTypes()[1] == int.class) {
-                            mSaveLevelInAr = m;
-                        }
                     }
                     if (fAcInAr != null) {
                         Object ac = fAcInAr.get(ar);
@@ -102,28 +89,14 @@ public final class CutsceneHelper {
     public static synchronized boolean skipCutscene(Main midlet) {
         init(midlet);
         try {
-            if (fArInMain != null && fLevelInAr != null) {
+            if (fArInMain != null && fNextModeInAr != null) {
                 Object ar = fArInMain.get(midlet);
                 if (ar != null) {
                     int lvl = getCurrentLevel(midlet);
-                    if (lvl == 93) {
-                        Log.i(TAG, "Instantly redirecting cutscene 93 -> Level 73");
-                        // 1. Set Level = 73
-                        fLevelInAr.set(ar, 73);
-
-                        // 2. Save progress
-                        if (mSaveLevelInAr != null) {
-                            try {
-                                mSaveLevelInAr.invoke(ar, "save", 73);
-                            } catch (Throwable ignored) {}
-                        }
-
-                        // 3. Directly invoke level loader: ar.a((byte)1, (byte)0)
-                        if (mLoadLevelInAr != null) {
-                            mLoadLevelInAr.invoke(ar, (byte) 1, (byte) 0);
-                        } else if (fNextModeInAr != null) {
-                            fNextModeInAr.set(ar, (byte) 5);
-                        }
+                    if (lvl == 93 && !skipRequested) {
+                        skipRequested = true;
+                        Log.i(TAG, "Requesting clean game-thread transition to Level 73 via nextMode=5");
+                        fNextModeInAr.set(ar, (byte) 5);
                         return true;
                     }
                 }
@@ -156,9 +129,11 @@ public final class CutsceneHelper {
         init(midlet);
         try {
             int level = getCurrentLevel(midlet);
-            if (level == 93) {
-                // Cutscene 93 is completely eliminated: instantly redirect to Level 73
-                // so the screen never drifts, rolls, or gets stuck.
+            if (level != 93) {
+                skipRequested = false;
+                return;
+            }
+            if (!skipRequested) {
                 skipCutscene(midlet);
             }
         } catch (Throwable ignored) {}
