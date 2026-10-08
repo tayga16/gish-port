@@ -244,16 +244,16 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
         // Pause / Menu button at top-left
         btnPause.set(24, 36, 24 + minDim * 0.24f, 36 + minDim * 0.10f);
 
-        // Skip Cutscene Button at top-center
-        float skipBtnW = Math.min(surfaceWidth * 0.48f, minDim * 0.65f);
-        float skipBtnH = Math.max(52f, minDim * 0.09f);
+        // Skip Cutscene Button at top-center (comfortably below notch / status bar)
+        float skipBtnW = Math.min(surfaceWidth * 0.70f, 420f);
+        float skipBtnH = Math.max(56f, minDim * 0.10f);
         float skipLeft = (surfaceWidth - skipBtnW) / 2f;
-        float skipTop = 20f;
+        float skipTop = Math.max(80f, surfaceHeight * 0.08f);
         btnSkipCutscene.set(skipLeft, skipTop, skipLeft + skipBtnW, skipTop + skipBtnH);
 
         padTextPaint.setTextSize(Math.max(12f, minDim * 0.038f));
         if (skipTextPaint != null) {
-            skipTextPaint.setTextSize(Math.max(13f, minDim * 0.038f));
+            skipTextPaint.setTextSize(Math.max(14f, minDim * 0.040f));
         }
     }
 
@@ -556,8 +556,9 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
                     hitAnyControl = true;
                 }
                 if (isInside(btnOk, px, py)) {
-                    if (isCutscene && !isDialogue) {
+                    if (isCutscene) {
                         CutsceneHelper.skipCutscene(midlet);
+                        return true;
                     }
                     if (isDialogue) {
                         CutsceneHelper.ensureDialogueDismissible(midlet);
@@ -591,8 +592,9 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
 
             // Tap anywhere on screen (outside controls) during dialogue or menu to skip/confirm
             if (!hitAnyControl && (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN)) {
-                if (isCutscene && !isDialogue) {
+                if (isCutscene) {
                     CutsceneHelper.skipCutscene(midlet);
+                    return true;
                 } else {
                     if (isDialogue) {
                         CutsceneHelper.ensureDialogueDismissible(midlet);

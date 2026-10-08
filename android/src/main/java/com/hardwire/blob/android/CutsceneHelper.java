@@ -3,6 +3,7 @@ package com.hardwire.blob.android;
 import android.util.Log;
 import com.hardwire.blob.Main;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 public final class CutsceneHelper {
@@ -15,11 +16,12 @@ public final class CutsceneHelper {
     private static Field fAcInAr;
     private static Field fStageInAc;
     private static Field fDialogAnimInAc;
+    private static Method mLoadLevelInAr;
+    private static Method mSaveLevelInAr;
     private static boolean reflectionInit = false;
 
-    private static long stage2StartTime = 0;
-    private static long stage3StartTime = 0;
-    private static int lastStage = -1;
+    private static long cutscene93StartTime = 0;
+    private static boolean skipTriggered = false;
 
     private CutsceneHelper() {}
 
@@ -42,6 +44,17 @@ public final class CutsceneHelper {
                         if (!Modifier.isStatic(f.getModifiers()) && f.getType() == byte.class && "c".equals(f.getName())) fModeInAr = f;
                         if (!Modifier.isStatic(f.getModifiers()) && f.getType() == byte.class && "d".equals(f.getName())) fNextModeInAr = f;
                         if ("ac".equals(f.getType().getName())) fAcInAr = f;
+                    }
+                    for (Method m : ar.getClass().getDeclaredMethods()) {
+                        m.setAccessible(true);
+                        if ("a".equals(m.getName()) && m.getParameterTypes().length == 2
+                                && m.getParameterTypes()[0] == byte.class && m.getParameterTypes()[1] == byte.class) {
+                            mLoadLevelInAr = m;
+                        }
+                        if ("a".equals(m.getName()) && m.getParameterTypes().length == 2
+                                && m.getParameterTypes()[0] == String.class && m.getParameterTypes()[1] == int.class) {
+                            mSaveLevelInAr = m;
+                        }
                     }
                     if (fAcInAr != null) {
                         Object ac = fAcInAr.get(ar);
@@ -89,16 +102,35 @@ public final class CutsceneHelper {
         return getCurrentLevel(midlet) == 93;
     }
 
-    public static boolean skipCutscene(Main midlet) {
+    public static synchronized boolean skipCutscene(Main midlet) {
         init(midlet);
         try {
-            if (fArInMain != null && fNextModeInAr != null) {
+            if (fArInMain != null && fLevelInAr != null) {
                 Object ar = fArInMain.get(midlet);
                 if (ar != null) {
                     int lvl = getCurrentLevel(midlet);
                     if (lvl == 93) {
-                        Log.i(TAG, "Skipping intro cutscene 93 -> nextMode=5 (Level 73)");
-                        fNextModeInAr.set(ar, (byte) 5);
+                        Log.i(TAG, "Fast-skipping cutscene 93 -> Level 73 directly");
+                        // 1. Set Level = 73
+                        fLevelInAr.set(ar, 73);
+
+                        // 2. Save progress
+                        if (mSaveLevelInAr != null) {
+                            try {
+                                mSaveLevelInAr.invoke(ar, "save", 73);
+                            } catch (Throwable ignored) {}
+                        }
+
+                        // 3. Directly invoke level loader: ar.a((byte)1, (byte)0)
+                        if (mLoadLevelInAr != null) {
+                            mLoadLevelInAr.invoke(ar, (byte) 1, (byte) 0);
+                        } else {
+                            // Fallback to mode 5 if direct loader not found
+                            if (fNextModeInAr != null) {
+                                fNextModeInAr.set(ar, (byte) 5);
+                            }
+                        }
+                        skipTriggered = true;
                         return true;
                     }
                 }
@@ -132,39 +164,25 @@ public final class CutsceneHelper {
         try {
             int level = getCurrentLevel(midlet);
             if (level != 93) {
-                stage2StartTime = 0;
-                stage3StartTime = 0;
-                lastStage = -1;
+                cutscene93StartTime = 0;
+                skipTriggered = false;
                 return;
             }
 
-            Object ar = fArInMain != null ? fArInMain.get(midlet) : null;
-            Object ac = (ar != null && fAcInAr != null) ? fAcInAr.get(ar) : null;
-            if (ac == null) return;
+            if (skipTriggered) {
+                return;
+            }
 
-            int stage = fStageInAc != null ? ((Number) fStageInAc.get(ac)).intValue() : -1;
             long now = System.currentTimeMillis();
-
-            if (stage != lastStage) {
-                lastStage = stage;
-                if (stage == 2) stage2StartTime = now;
-                if (stage == 3) stage3StartTime = now;
+            if (cutscene93StartTime == 0) {
+                cutscene93StartTime = now;
             }
 
-            // Watchdog 1: Stage 2 (Monster pulling Brea down into pipe)
-            // If stuck for > 6 seconds, advance to next stage or skip to Level 73
-            if (stage == 2 && stage2StartTime > 0 && (now - stage2StartTime) > 6000) {
-                Log.w(TAG, "Watchdog: Cutscene 93 Stage 2 timeout (>6s), auto-advancing to Level 73");
+            // Auto-advance watchdog: if Level 93 runs for > 2000ms (2 seconds),
+            // auto-advance straight to Level 73 so the camera never freezes or drifts.
+            if ((now - cutscene93StartTime) > 2000) {
+                Log.w(TAG, "Watchdog: Cutscene 93 timer exceeded (>2s), auto-loading Level 73");
                 skipCutscene(midlet);
-                stage2StartTime = 0;
-            }
-
-            // Watchdog 2: Stage 3 (Gish jumping to pipe)
-            // If taking > 4 seconds, complete level transition
-            if (stage == 3 && stage3StartTime > 0 && (now - stage3StartTime) > 4000) {
-                Log.w(TAG, "Watchdog: Cutscene 93 Stage 3 timeout (>4s), auto-advancing to Level 73");
-                skipCutscene(midlet);
-                stage3StartTime = 0;
             }
         } catch (Throwable ignored) {}
     }
