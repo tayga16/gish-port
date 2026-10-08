@@ -571,10 +571,8 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
                 if (isCutscene) {
                     CutsceneHelper.skipCutscene(midlet);
                     return true;
-                } else {
-                    if (isDialogue) {
-                        CutsceneHelper.ensureDialogueDismissible(midlet);
-                    }
+                } else if (isDialogue || CutsceneHelper.getCurrentMode(midlet) != 0) {
+                    CutsceneHelper.ensureDialogueDismissible(midlet);
                     invokeCanvasKey(canvas, cachedKeyPressed, KEY_OK);
                     invokeCanvasKey(canvas, cachedKeyPressed, KEY_FIRE);
                     invokeCanvasKey(canvas, cachedKeyReleased, KEY_OK);
@@ -583,9 +581,9 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
             }
         }
 
-        // 2. Also forward raw screen pointer coords into virtual 240x320 space ONLY when not pressing gamepad controls,
-        // so virtual gamepad touches do not conflict with J2ME touch steering or cancel Gish's forces
-        if (!hitAnyControl) {
+        // 2. Forward raw screen pointer coords into virtual 240x320 space for menus/dialogue or when gamepad is disabled,
+        // preventing legacy touch-steering from conflicting with virtual gamepad controls during active gameplay
+        if (!hitAnyControl && (!showVirtualGamepad || CutsceneHelper.getCurrentMode(midlet) != 0)) {
             float touchX = event.getX() - offsetX;
             float touchY = event.getY() - offsetY;
             int viewW = (int) (GAME_WIDTH * scaleX);
