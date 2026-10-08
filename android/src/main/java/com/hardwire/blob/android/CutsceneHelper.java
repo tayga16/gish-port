@@ -20,9 +20,6 @@ public final class CutsceneHelper {
     private static Method mSaveLevelInAr;
     private static boolean reflectionInit = false;
 
-    private static long cutscene93StartTime = 0;
-    private static boolean skipTriggered = false;
-
     private CutsceneHelper() {}
 
     public static synchronized void init(Main midlet) {
@@ -110,7 +107,7 @@ public final class CutsceneHelper {
                 if (ar != null) {
                     int lvl = getCurrentLevel(midlet);
                     if (lvl == 93) {
-                        Log.i(TAG, "Fast-skipping cutscene 93 -> Level 73 directly");
+                        Log.i(TAG, "Instantly redirecting cutscene 93 -> Level 73");
                         // 1. Set Level = 73
                         fLevelInAr.set(ar, 73);
 
@@ -124,13 +121,9 @@ public final class CutsceneHelper {
                         // 3. Directly invoke level loader: ar.a((byte)1, (byte)0)
                         if (mLoadLevelInAr != null) {
                             mLoadLevelInAr.invoke(ar, (byte) 1, (byte) 0);
-                        } else {
-                            // Fallback to mode 5 if direct loader not found
-                            if (fNextModeInAr != null) {
-                                fNextModeInAr.set(ar, (byte) 5);
-                            }
+                        } else if (fNextModeInAr != null) {
+                            fNextModeInAr.set(ar, (byte) 5);
                         }
-                        skipTriggered = true;
                         return true;
                     }
                 }
@@ -163,25 +156,9 @@ public final class CutsceneHelper {
         init(midlet);
         try {
             int level = getCurrentLevel(midlet);
-            if (level != 93) {
-                cutscene93StartTime = 0;
-                skipTriggered = false;
-                return;
-            }
-
-            if (skipTriggered) {
-                return;
-            }
-
-            long now = System.currentTimeMillis();
-            if (cutscene93StartTime == 0) {
-                cutscene93StartTime = now;
-            }
-
-            // Auto-advance watchdog: if Level 93 runs for > 2000ms (2 seconds),
-            // auto-advance straight to Level 73 so the camera never freezes or drifts.
-            if ((now - cutscene93StartTime) > 2000) {
-                Log.w(TAG, "Watchdog: Cutscene 93 timer exceeded (>2s), auto-loading Level 73");
+            if (level == 93) {
+                // Cutscene 93 is completely eliminated: instantly redirect to Level 73
+                // so the screen never drifts, rolls, or gets stuck.
                 skipCutscene(midlet);
             }
         } catch (Throwable ignored) {}

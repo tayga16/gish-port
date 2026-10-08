@@ -215,31 +215,26 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
         float minDim = Math.min(surfaceWidth, surfaceHeight);
         float baseRadius = minDim * 0.17f;
 
-        // D-Pad positioned at bottom-left
-        dpadCx = surfaceWidth * 0.17f;
-        dpadCy = surfaceHeight * 0.77f;
+        // Controls positioned lower down at bottom of screen (86.5% Y)
+        float controlCy = surfaceHeight * 0.865f;
+
+        // D-Pad positioned at bottom-left (lowered down)
+        dpadCx = surfaceWidth * 0.19f;
+        dpadCy = controlCy;
         dpadRadius = baseRadius * 1.05f;
         dpadDeadZone = dpadRadius * 0.22f;
 
-        // Action buttons positioned at bottom-right - spread out with comfortable spacing
-        float actCx = surfaceWidth * 0.82f;
-        float actCy = surfaceHeight * 0.75f;
-        float bR = minDim * 0.076f;
+        // 1. Jump button positioned at bottom-right (lowered down, comfortable thumb rest)
+        float jumpCx = surfaceWidth * 0.81f;
+        float jumpCy = controlCy;
+        float jumpRadius = minDim * 0.13f;
+        setCircleRect(btnJump, jumpCx, jumpCy, jumpRadius);
 
-        // 1. Jump button (Primary large button, bottom-right thumb rest)
-        setCircleRect(btnJump, actCx + bR * 1.35f, actCy + bR * 0.70f, bR * 1.18f);
-
-        // 2. Sticky button (Yellow, left of Jump)
-        setCircleRect(btnSticky, actCx - bR * 1.65f, actCy + bR * 0.45f, bR * 0.95f);
-
-        // 3. Heavy button (Red, top-right above Jump)
-        setCircleRect(btnHeavy, actCx + bR * 0.35f, actCy - bR * 1.55f, bR * 0.95f);
-
-        // 4. Expand button (Cyan, top-left above Sticky)
-        setCircleRect(btnExpand, actCx - bR * 1.50f, actCy - bR * 1.35f, bR * 0.95f);
-
-        // 5. OK / Fire button (Action / Dialogue skip, placed comfortably to the left/below)
-        setCircleRect(btnOk, actCx - bR * 2.80f, actCy + bR * 1.50f, bR * 0.85f);
+        // Clear unused buttons (Sticky, Heavy, Expand, OK removed per user request)
+        btnSticky.setEmpty();
+        btnHeavy.setEmpty();
+        btnExpand.setEmpty();
+        btnOk.setEmpty();
 
         // Pause / Menu button at top-left
         btnPause.set(24, 36, 24 + minDim * 0.24f, 36 + minDim * 0.10f);
@@ -417,12 +412,8 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
         drawDpadDirection(c, KEY_LEFT, dpadCx - dpadRadius * 0.62f, dpadCy, "◀");
         drawDpadDirection(c, KEY_RIGHT, dpadCx + dpadRadius * 0.62f, dpadCy, "▶");
 
-        // 2. Action Buttons
+        // 2. Action Button (Only Jump button per user request)
         drawActionButton(c, btnJump, KEY_UP, "JUMP", 0x772E7D32, 0xCC4CAF50);       // Green
-        drawActionButton(c, btnSticky, KEY_STICKY, "STICK", 0x77F57F17, 0xCCFBC02D);  // Amber/Yellow
-        drawActionButton(c, btnHeavy, KEY_HEAVY, "HEAVY", 0x77C2185B, 0xCCE91E63);    // Red/Pink
-        drawActionButton(c, btnExpand, KEY_EXPAND, "EXPAND", 0x7700838F, 0xCC00BCD4); // Cyan
-        drawActionButton(c, btnOk, KEY_OK, "OK", 0x77424242, 0xCC9E9E9E);             // Grey
 
         // 3. Pause Button
         boolean pausePressed = activePressedKeys.contains(KEY_PAUSE);
@@ -538,24 +529,8 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
                     }
                 }
 
-                // Check Action Buttons
+                // Check Jump Button
                 if (isInside(btnJump, px, py)) {
-                    newPressedKeys.add(KEY_UP); // Jump is UP in Gish
-                    hitAnyControl = true;
-                }
-                if (isInside(btnSticky, px, py)) {
-                    newPressedKeys.add(KEY_STICKY);
-                    hitAnyControl = true;
-                }
-                if (isInside(btnHeavy, px, py)) {
-                    newPressedKeys.add(KEY_HEAVY);
-                    hitAnyControl = true;
-                }
-                if (isInside(btnExpand, px, py)) {
-                    newPressedKeys.add(KEY_EXPAND);
-                    hitAnyControl = true;
-                }
-                if (isInside(btnOk, px, py)) {
                     if (isCutscene) {
                         CutsceneHelper.skipCutscene(midlet);
                         return true;
@@ -563,8 +538,9 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
                     if (isDialogue) {
                         CutsceneHelper.ensureDialogueDismissible(midlet);
                     }
-                    newPressedKeys.add(KEY_OK);
-                    newPressedKeys.add(KEY_FIRE);
+                    newPressedKeys.add(KEY_UP);   // Jump
+                    newPressedKeys.add(KEY_FIRE); // Action / Fire
+                    newPressedKeys.add(KEY_OK);   // Confirm
                     hitAnyControl = true;
                 }
                 if (isInside(btnPause, px, py)) {
