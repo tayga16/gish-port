@@ -91,6 +91,8 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
     // Virtual button bounds
     private float dpadCx, dpadCy, dpadRadius;
     private float dpadDeadZone;
+    private float jumpCx, jumpCy, jumpRadius;
+    private int touchSteeringPointerId = -1;
     private final RectF btnJump = new RectF();
     private final RectF btnSticky = new RectF();
     private final RectF btnHeavy = new RectF();
@@ -225,9 +227,9 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
         dpadDeadZone = dpadRadius * 0.22f;
 
         // 1. Jump button positioned at bottom-right (lowered down, comfortable thumb rest)
-        float jumpCx = surfaceWidth * 0.82f;
-        float jumpCy = controlCy;
-        float jumpRadius = minDim * 0.125f;
+        this.jumpCx = surfaceWidth * 0.82f;
+        this.jumpCy = controlCy;
+        this.jumpRadius = minDim * 0.125f;
         setCircleRect(btnJump, jumpCx, jumpCy, jumpRadius);
 
         // Clear unused buttons (Sticky, Heavy, Expand, OK removed per user request)
@@ -467,7 +469,9 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
         updateCachedMethods(canvas.getClass());
 
         int action = event.getActionMasked();
+        int actionIndex = event.getActionIndex();
         boolean hitAnyControl = false;
+        Set<Integer> controlPointerIds = new HashSet<Integer>();
 
         boolean isCutscene = CutsceneHelper.isCutsceneActive(midlet);
         boolean isDialogue = (CutsceneHelper.getCurrentMode(midlet) == 6);
@@ -480,6 +484,7 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
                 float py = event.getY(i);
                 if (isInside(btnSkipCutscene, px, py)) {
                     hitAnyControl = true;
+                    controlPointerIds.add(event.getPointerId(i));
                     if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
                         CutsceneHelper.skipCutscene(midlet);
                         return true;
@@ -494,7 +499,7 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
 
             int pointerCount = event.getPointerCount();
             for (int i = 0; i < pointerCount; i++) {
-                if (action == MotionEvent.ACTION_POINTER_UP && i == event.getActionIndex()) {
+                if (action == MotionEvent.ACTION_POINTER_UP && i == actionIndex) {
                     continue; // Skip the pointer that was just lifted
                 }
                 if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
@@ -503,6 +508,7 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
 
                 float px = event.getX(i);
                 float py = event.getY(i);
+                int pId = event.getPointerId(i);
 
                 // Check D-Pad
                 float dx = px - dpadCx;
@@ -511,6 +517,7 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
 
                 if (distSq <= dpadRadius * dpadRadius * 1.4f || (py >= dpadCy && Math.abs(dx) <= dpadRadius * 1.1f)) {
                     hitAnyControl = true;
+                    controlPointerIds.add(pId);
                     if (distSq >= dpadDeadZone * dpadDeadZone) {
                         double angle = Math.toDegrees(Math.atan2(dy, dx));
                         // Angle: -180 to 180 (0 is Right, 90 is Down, -90 is Up, 180 is Left)
@@ -529,8 +536,10 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
                     }
                 }
 
-                // Check Jump Button
-                if (isInside(btnJump, px, py)) {
+                // Check Jump Button (allow comfortable thumb rest below jump center as well)
+                boolean hitJump = isInside(btnJump, px, py) || (py >= jumpCy && Math.abs(px - jumpCx) <= jumpRadius * 1.1f);
+                if (hitJump) {
+                    controlPointerIds.add(pId);
                     if (isCutscene) {
                         CutsceneHelper.skipCutscene(midlet);
                         return true;
@@ -543,7 +552,10 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
                     newPressedKeys.add(KEY_UP);   // Jump
                     hitAnyControl = true;
                 }
+
+                // Check Pause / Menu Button (strictly bounded at top-left)
                 if (isInside(btnPause, px, py)) {
+                    controlPointerIds.add(pId);
                     newPressedKeys.add(KEY_PAUSE);
                     hitAnyControl = true;
                 }
@@ -581,54 +593,85 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
             }
         }
 
-        // 2. Forward raw screen pointer coords into virtual 240x320 space for menus/dialogue or when gamepad is disabled,
-        // preventing legacy touch-steering from conflicting with virtual gamepad controls during active gameplay
-        if (!hitAnyControl && (!showVirtualGamepad || CutsceneHelper.getCurrentMode(midlet) != 0)) {
-            float touchX = event.getX() - offsetX;
-            float touchY = event.getY() - offsetY;
-            int viewW = (int) (GAME_WIDTH * scaleX);
-            int viewH = (int) (GAME_HEIGHT * scaleY);
+        // 2. Forward in-game canvas touch steering (pointerPressed, pointerDragged, pointerReleased)
+        // for any touch on the 4:3 game viewport that is NOT hitting virtual buttons
+        int viewW = (int) (GAME_WIDTH * scaleX);
+        int viewH = (int) (GAME_HEIGHT * scaleY);
 
-            // Bounds check: only forward pointer events when touch is actually inside game viewport
-            if (touchX >= 0 && touchX <= viewW && touchY >= 0 && touchY <= viewH) {
+        if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
+            int pId = event.getPointerId(actionIndex);
+            if (!controlPointerIds.contains(pId)) {
+                float touchX = event.getX(actionIndex) - offsetX;
+                float touchY = event.getY(actionIndex) - offsetY;
+                if (touchX >= 0 && touchX <= viewW && touchY >= 0 && touchY <= viewH) {
+                    touchSteeringPointerId = pId;
+                    float sx = scaleX > 0.001f ? scaleX : 1.0f;
+                    float sy = scaleY > 0.001f ? scaleY : 1.0f;
+                    int gx = Math.max(0, Math.min(GAME_WIDTH - 1, (int) (touchX / sx)));
+                    int gy = Math.max(0, Math.min(GAME_HEIGHT - 1, (int) (touchY / sy)));
+                    try {
+                        if (cachedPointerPressed != null) {
+                            cachedPointerPressed.invoke(canvas, gx, gy);
+                        }
+                    } catch (Throwable e) {
+                        Log.e(TAG, "pointerPressed invocation failed", e);
+                    }
+                }
+            }
+        } else if (action == MotionEvent.ACTION_MOVE) {
+            if (touchSteeringPointerId != -1) {
+                int pIdx = event.findPointerIndex(touchSteeringPointerId);
+                if (pIdx != -1) {
+                    float touchX = event.getX(pIdx) - offsetX;
+                    float touchY = event.getY(pIdx) - offsetY;
+                    float sx = scaleX > 0.001f ? scaleX : 1.0f;
+                    float sy = scaleY > 0.001f ? scaleY : 1.0f;
+                    int gx = Math.max(0, Math.min(GAME_WIDTH - 1, (int) (touchX / sx)));
+                    int gy = Math.max(0, Math.min(GAME_HEIGHT - 1, (int) (touchY / sy)));
+                    try {
+                        if (cachedPointerDragged != null) {
+                            cachedPointerDragged.invoke(canvas, gx, gy);
+                        }
+                    } catch (Throwable e) {
+                        Log.e(TAG, "pointerDragged invocation failed", e);
+                    }
+                }
+            }
+        } else if (action == MotionEvent.ACTION_POINTER_UP) {
+            int pId = event.getPointerId(actionIndex);
+            if (pId == touchSteeringPointerId) {
+                float touchX = event.getX(actionIndex) - offsetX;
+                float touchY = event.getY(actionIndex) - offsetY;
                 float sx = scaleX > 0.001f ? scaleX : 1.0f;
                 float sy = scaleY > 0.001f ? scaleY : 1.0f;
-                int gx = (int) (touchX / sx);
-                int gy = (int) (touchY / sy);
-                gx = Math.max(0, Math.min(GAME_WIDTH - 1, gx));
-                gy = Math.max(0, Math.min(GAME_HEIGHT - 1, gy));
-
+                int gx = Math.max(0, Math.min(GAME_WIDTH - 1, (int) (touchX / sx)));
+                int gy = Math.max(0, Math.min(GAME_HEIGHT - 1, (int) (touchY / sy)));
                 try {
-                    switch (action) {
-                        case MotionEvent.ACTION_DOWN:
-                        case MotionEvent.ACTION_POINTER_DOWN:
-                            if (cachedPointerPressed != null) {
-                                cachedPointerPressed.invoke(canvas, gx, gy);
-                            }
-                            break;
-                        case MotionEvent.ACTION_MOVE:
-                            if (cachedPointerDragged != null) {
-                                cachedPointerDragged.invoke(canvas, gx, gy);
-                            }
-                            break;
-                        case MotionEvent.ACTION_UP:
-                        case MotionEvent.ACTION_POINTER_UP:
-                        case MotionEvent.ACTION_CANCEL:
-                            if (cachedPointerReleased != null) {
-                                cachedPointerReleased.invoke(canvas, gx, gy);
-                            }
-                            break;
+                    if (cachedPointerReleased != null) {
+                        cachedPointerReleased.invoke(canvas, gx, gy);
                     }
                 } catch (Throwable e) {
-                    Log.e(TAG, "Touch event handler failed", e);
+                    Log.e(TAG, "pointerReleased invocation failed", e);
                 }
-            } else if (isDialogue && (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN)) {
-                // Tapping in pillarboxes during dialogue advances dialogue
-                CutsceneHelper.ensureDialogueDismissible(midlet);
-                invokeCanvasKey(canvas, cachedKeyPressed, KEY_OK);
-                invokeCanvasKey(canvas, cachedKeyPressed, KEY_FIRE);
-                invokeCanvasKey(canvas, cachedKeyReleased, KEY_OK);
-                invokeCanvasKey(canvas, cachedKeyReleased, KEY_FIRE);
+                touchSteeringPointerId = -1;
+            }
+        } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
+            if (touchSteeringPointerId != -1) {
+                int pIdx = event.findPointerIndex(touchSteeringPointerId);
+                float touchX = (pIdx != -1 ? event.getX(pIdx) : event.getX()) - offsetX;
+                float touchY = (pIdx != -1 ? event.getY(pIdx) : event.getY()) - offsetY;
+                float sx = scaleX > 0.001f ? scaleX : 1.0f;
+                float sy = scaleY > 0.001f ? scaleY : 1.0f;
+                int gx = Math.max(0, Math.min(GAME_WIDTH - 1, (int) (touchX / sx)));
+                int gy = Math.max(0, Math.min(GAME_HEIGHT - 1, (int) (touchY / sy)));
+                try {
+                    if (cachedPointerReleased != null) {
+                        cachedPointerReleased.invoke(canvas, gx, gy);
+                    }
+                } catch (Throwable e) {
+                    Log.e(TAG, "pointerReleased invocation failed", e);
+                }
+                touchSteeringPointerId = -1;
             }
         }
 
@@ -646,7 +689,7 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
     private boolean isInside(RectF rect, float x, float y) {
         float padding = 16f; // Comfortable touch target margin
         return x >= rect.left - padding && x <= rect.right + padding
-            && y >= rect.top - padding && y <= Math.max(surfaceHeight, rect.bottom + padding);
+            && y >= rect.top - padding && y <= rect.bottom + padding;
     }
 
     private void invokeCanvasKey(javax.microedition.lcdui.Canvas canvas, Method method, int keyCode) {
