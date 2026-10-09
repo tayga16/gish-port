@@ -18,6 +18,14 @@ public final class CutsceneHelper {
     private static boolean reflectionInit = false;
     private static volatile boolean skipRequested = false;
 
+    // Watchdog: let the intro cutscene (level 93) play through its natural
+    // transition into Level 1 so the level/physics initialize correctly. Only
+    // force a skip as a safety net if it stays stuck far longer than normal.
+    // Instantly skipping (the old behaviour) dropped Gish into Level 1 before
+    // spawn/camera init, which is what caused the "camera slides away" bug.
+    private static volatile long cutsceneStartTime = 0L;
+    private static final long CUTSCENE_WATCHDOG_MS = 15000L;
+
     private CutsceneHelper() {}
 
     public static synchronized void init(Main midlet) {
@@ -130,10 +138,18 @@ public final class CutsceneHelper {
         try {
             int level = getCurrentLevel(midlet);
             if (level != 93) {
+                // Not in the intro cutscene: reset watchdog state.
+                cutsceneStartTime = 0L;
                 skipRequested = false;
                 return;
             }
-            if (!skipRequested) {
+            // In the intro cutscene: let it run so Level 1 initializes properly.
+            long nowMs = System.currentTimeMillis();
+            if (cutsceneStartTime == 0L) {
+                cutsceneStartTime = nowMs;
+            }
+            if (!skipRequested && (nowMs - cutsceneStartTime) >= CUTSCENE_WATCHDOG_MS) {
+                Log.w(TAG, "Intro cutscene stuck > " + CUTSCENE_WATCHDOG_MS + "ms; forcing transition to Level 1");
                 skipCutscene(midlet);
             }
         } catch (Throwable ignored) {}
