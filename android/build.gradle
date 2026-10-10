@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.hardwire.blob"
-        minSdk 21
+        minSdk 19
         targetSdk 34
         versionCode 1
         versionName "1.3.3"
