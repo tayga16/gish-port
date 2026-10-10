@@ -25,6 +25,12 @@ import java.util.Set;
 public class GishGameView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
     private static final String TAG = "GISH_VIEW";
 
+    // Shared lock so the UI thread (onTouchEvent -> keyPressed/pointer*) and the
+    // render thread (run -> paint / watchdog) never mutate the obfuscated engine
+    // state concurrently. The original J2ME engine is not thread-safe; letting two
+    // threads reflect into it at once produced the erratic/"broken" input.
+    private static final Object ENGINE_LOCK = new Object();
+
     // Virtual game screen buffer dimensions (J2ME standard)
     private static final int GAME_WIDTH = 240;
     private static final int GAME_HEIGHT = 320;
@@ -330,27 +336,29 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
             } catch (Exception ignored) {}
 
             // Update cutscene watchdog to ensure intro cutscenes never freeze or drift endlessly
-            CutsceneHelper.updateWatchdog(midlet);
+            synchronized (ENGINE_LOCK) {
+                CutsceneHelper.updateWatchdog(midlet);
 
-            if (current instanceof javax.microedition.lcdui.Canvas) {
-                javax.microedition.lcdui.Canvas canvas = (javax.microedition.lcdui.Canvas) current;
-                updateCachedMethods(canvas.getClass());
+                if (current instanceof javax.microedition.lcdui.Canvas) {
+                    javax.microedition.lcdui.Canvas canvas = (javax.microedition.lcdui.Canvas) current;
+                    updateCachedMethods(canvas.getClass());
 
-                if (cachedPaintMethod != null) {
-                    try {
-                        cachedPaintMethod.invoke(canvas, gameGraphics);
-                        lastErrorMessage = null;
-                    } catch (Throwable t) {
-                        Throwable cause = (t instanceof InvocationTargetException && t.getCause() != null)
-                            ? t.getCause() : t;
-                        Log.e(TAG, "Paint invocation error", cause);
-                        lastErrorMessage = cause.getMessage();
-                    } finally {
-                        // ALWAYS reset ad.c so Main thread loop in ad.m() never deadlocks waiting for repaint
-                        if (cachedFieldC != null) {
-                            try {
-                                cachedFieldC.setBoolean(canvas, false);
-                            } catch (Throwable ignored) {}
+                    if (cachedPaintMethod != null) {
+                        try {
+                            cachedPaintMethod.invoke(canvas, gameGraphics);
+                            lastErrorMessage = null;
+                        } catch (Throwable t) {
+                            Throwable cause = (t instanceof InvocationTargetException && t.getCause() != null)
+                                ? t.getCause() : t;
+                            Log.e(TAG, "Paint invocation error", cause);
+                            lastErrorMessage = cause.getMessage();
+                        } finally {
+                            // ALWAYS reset ad.c so Main thread loop in ad.m() never deadlocks waiting for repaint
+                            if (cachedFieldC != null) {
+                                try {
+                                    cachedFieldC.setBoolean(canvas, false);
+                                } catch (Throwable ignored) {}
+                            }
                         }
                     }
                 }
@@ -468,6 +476,9 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
         javax.microedition.lcdui.Canvas canvas = (javax.microedition.lcdui.Canvas) current;
         updateCachedMethods(canvas.getClass());
 
+        // Hold the engine lock for the whole input dispatch so key/pointer events
+        // are never injected while the render thread is painting the same engine.
+        synchronized (ENGINE_LOCK) {
         int action = event.getActionMasked();
         int actionIndex = event.getActionIndex();
         boolean hitAnyControl = false;
@@ -515,7 +526,8 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
                 float dy = py - dpadCy;
                 float distSq = dx * dx + dy * dy;
 
-                if (distSq <= dpadRadius * dpadRadius * 1.4f || (py >= dpadCy && Math.abs(dx) <= dpadRadius * 1.1f)) {
+                if (distSq <= dpadRadius * dpadRadius * 1.4f
+                        || (py >= dpadCy && py <= dpadCy + dpadRadius * 1.4f && Math.abs(dx) <= dpadRadius * 1.1f)) {
                     hitAnyControl = true;
                     controlPointerIds.add(pId);
                     if (distSq >= dpadDeadZone * dpadDeadZone) {
@@ -537,7 +549,8 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
                 }
 
                 // Check Jump Button (allow comfortable thumb rest below jump center as well)
-                boolean hitJump = isInside(btnJump, px, py) || (py >= jumpCy && Math.abs(px - jumpCx) <= jumpRadius * 1.1f);
+                boolean hitJump = isInside(btnJump, px, py)
+                        || (py >= jumpCy && py <= jumpCy + jumpRadius * 1.4f && Math.abs(px - jumpCx) <= jumpRadius * 1.1f);
                 if (hitJump) {
                     controlPointerIds.add(pId);
                     if (isCutscene) {
@@ -682,6 +695,7 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
             }
             activePressedKeys.clear();
         }
+        } // end synchronized (ENGINE_LOCK)
 
         return true;
     }
