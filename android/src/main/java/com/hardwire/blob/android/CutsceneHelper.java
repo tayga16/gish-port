@@ -3,6 +3,7 @@ package com.hardwire.blob.android;
 import android.util.Log;
 import com.hardwire.blob.Main;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 public final class CutsceneHelper {
@@ -15,16 +16,17 @@ public final class CutsceneHelper {
     private static Field fAcInAr;
     private static Field fStageInAc;
     private static Field fDialogAnimInAc;
+    private static Method mLoadLevelInAr; // ar.a(byte,byte) — same loader the level-select cheat uses
     private static boolean reflectionInit = false;
     private static volatile boolean skipRequested = false;
 
-    // Watchdog: let the intro cutscene (level 93) play through its natural
-    // transition into Level 1 so the level/physics initialize correctly. Only
-    // force a skip as a safety net if it stays stuck far longer than normal.
-    // Instantly skipping (the old behaviour) dropped Gish into Level 1 before
-    // spawn/camera init, which is what caused the "camera slides away" bug.
-    private static volatile long cutsceneStartTime = 0L;
-    private static final long CUTSCENE_WATCHDOG_MS = 15000L;
+    // New Game boots into the intro cutscene (level 93). The engine's own
+    // cutscene -> level transition drops Gish FAR inside Level 1 (not at the
+    // entrance), so he immediately slides down the slope and the follow-camera
+    // "runs away". Instead, as soon as the intro cutscene is detected we do one
+    // clean, deterministic load of Level 1 (index 0) at its real start — exactly
+    // what the level-select cheat does (ar.b = 0; ar.a(0,0)).
+    private static volatile boolean levelOneLoaded = false;
 
     private CutsceneHelper() {}
 
@@ -47,6 +49,12 @@ public final class CutsceneHelper {
                         if (!Modifier.isStatic(f.getModifiers()) && f.getType() == byte.class && "c".equals(f.getName())) fModeInAr = f;
                         if (!Modifier.isStatic(f.getModifiers()) && f.getType() == byte.class && "d".equals(f.getName())) fNextModeInAr = f;
                         if ("ac".equals(f.getType().getName())) fAcInAr = f;
+                    }
+                    try {
+                        mLoadLevelInAr = ar.getClass().getMethod("a", byte.class, byte.class);
+                        mLoadLevelInAr.setAccessible(true);
+                    } catch (Throwable t) {
+                        Log.e(TAG, "Could not resolve ar.a(byte,byte) level loader", t);
                     }
                     if (fAcInAr != null) {
                         Object ac = fAcInAr.get(ar);
@@ -136,22 +144,34 @@ public final class CutsceneHelper {
     public static void updateWatchdog(Main midlet) {
         init(midlet);
         try {
-            int level = getCurrentLevel(midlet);
-            if (level != 93) {
-                // Not in the intro cutscene: reset watchdog state.
-                cutsceneStartTime = 0L;
-                skipRequested = false;
-                return;
-            }
-            // In the intro cutscene: let it run so Level 1 initializes properly.
-            long nowMs = System.currentTimeMillis();
-            if (cutsceneStartTime == 0L) {
-                cutsceneStartTime = nowMs;
-            }
-            if (!skipRequested && (nowMs - cutsceneStartTime) >= CUTSCENE_WATCHDOG_MS) {
-                Log.w(TAG, "Intro cutscene stuck > " + CUTSCENE_WATCHDOG_MS + "ms; forcing transition to Level 1");
-                skipCutscene(midlet);
+            // One-shot. The first time the intro cutscene (scene 93) appears after
+            // launch is New Game -> clean-load Level 1 at its entrance. After that
+            // NEVER touch scene 93 again: natural end-of-level transitions can also
+            // pass through it, and re-hijacking them froze the game ("при переходе
+            // зависает").
+            if (levelOneLoaded) return;
+            if (getCurrentLevel(midlet) == 93) {
+                levelOneLoaded = true;
+                startLevelOne(midlet);
             }
         } catch (Throwable ignored) {}
+    }
+
+    /** Clean, deterministic load of Level 1 (index 0) at its start — the exact
+     *  mechanism the level-select cheat uses (ar.b = 0; ar.a(0,0)). */
+    private static void startLevelOne(Main midlet) {
+        try {
+            if (fArInMain == null || fLevelInAr == null || mLoadLevelInAr == null) {
+                Log.w(TAG, "startLevelOne: reflection not ready, leaving cutscene as-is");
+                return;
+            }
+            Object ar = fArInMain.get(midlet);
+            if (ar == null) return;
+            fLevelInAr.setInt(ar, 0);                       // level index 0 = Sewer 1
+            mLoadLevelInAr.invoke(ar, (byte) 0, (byte) 0);  // load it at its entrance
+            Log.i(TAG, "New Game: clean-loaded Level 1 (index 0) at its start");
+        } catch (Throwable t) {
+            Log.e(TAG, "startLevelOne failed", t);
+        }
     }
 }

@@ -486,6 +486,10 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
 
         boolean isCutscene = CutsceneHelper.isCutsceneActive(midlet);
         boolean isDialogue = (CutsceneHelper.getCurrentMode(midlet) == 6);
+        // Not in gameplay (main menu, submenus, dialogues, cutscene). In these
+        // contexts the game draws an "OK / select" (✓) hint over the bottom-left
+        // pad, so a tap there must confirm — not just send a direction.
+        boolean notInGame = (CutsceneHelper.getCurrentMode(midlet) != 0);
 
         // 0. Handle Skip Cutscene button tap immediately
         if (isCutscene) {
@@ -545,6 +549,11 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
                         if (angle >= -157.5 && angle <= -22.5) {
                             newPressedKeys.add(KEY_UP);
                         }
+                    } else if (notInGame) {
+                        // Centre of the pad (where the game draws the ✓ hint) acts
+                        // as OK / select in menus & dialogues so selection works there.
+                        newPressedKeys.add(KEY_OK);
+                        newPressedKeys.add(KEY_FIRE);
                     }
                 }
 
@@ -557,12 +566,16 @@ public class GishGameView extends SurfaceView implements SurfaceHolder.Callback,
                         CutsceneHelper.skipCutscene(midlet);
                         return true;
                     }
-                    if (isDialogue || CutsceneHelper.getCurrentMode(midlet) != 0) {
+                    if (isDialogue || notInGame) {
+                        // In menus/dialogues JUMP confirms (OK) and must NOT also
+                        // send UP, which previously moved the cursor and e.g.
+                        // jumped selection to "Quit".
                         CutsceneHelper.ensureDialogueDismissible(midlet);
                         newPressedKeys.add(KEY_OK);
                         newPressedKeys.add(KEY_FIRE);
+                    } else {
+                        newPressedKeys.add(KEY_UP);   // Jump (in-game only)
                     }
-                    newPressedKeys.add(KEY_UP);   // Jump
                     hitAnyControl = true;
                 }
 
