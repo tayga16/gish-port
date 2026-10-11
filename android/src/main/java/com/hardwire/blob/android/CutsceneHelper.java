@@ -144,17 +144,13 @@ public final class CutsceneHelper {
     public static void updateWatchdog(Main midlet) {
         init(midlet);
         try {
-            int level = getCurrentLevel(midlet);
-            if (level != 93) {
-                // Left the intro cutscene (we are in a real level) — reset state.
-                levelOneLoaded = false;
-                skipRequested = false;
-                return;
-            }
-            // Intro cutscene detected (New Game). Do ONE clean load of Level 1 at
-            // its real entrance instead of the engine transition that drops Gish
-            // deep inside the level. Fires once per cutscene entry.
-            if (!levelOneLoaded) {
+            // One-shot. The first time the intro cutscene (scene 93) appears after
+            // launch is New Game -> clean-load Level 1 at its entrance. After that
+            // NEVER touch scene 93 again: natural end-of-level transitions can also
+            // pass through it, and re-hijacking them froze the game ("при переходе
+            // зависает").
+            if (levelOneLoaded) return;
+            if (getCurrentLevel(midlet) == 93) {
                 levelOneLoaded = true;
                 startLevelOne(midlet);
             }
